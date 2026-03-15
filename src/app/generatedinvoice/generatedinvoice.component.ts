@@ -31,7 +31,7 @@ export class GeneratedinvoiceComponent implements OnInit {
   houseNum: any;
   area: any;
   pan: any;
-  balancerow: number = 23;
+  balancerow: number = 30;
   balancerows: any[] = [];
   invoiceNum: any;
   invoiceType: string = "Original";
