@@ -1,0 +1,160 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 div-head">Invoice No.</div>
+        <div class="col-lg-3 div-head">{{invoiceNumber}}</div>
+        <div class="col-lg-3 div-head">Place of Supply</div>
+        <div class="col-lg-3 div-head">
+            {{customer.customerState}}
+                
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 div-head">Invoice Date</div>
+        <div class="col-lg-3 div-head"><input type="date" name="todaysDate" [(ngModel)]="todaysDate" id=""> | {{todaysDate | date:'dd-MMM-yyyy'}}</div>
+        <div class="col-lg-3 div-head">Reverse Charge</div>
+        <div class="col-lg-3 div-head">{{reverseCharge}}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 div-head">Billed To</div>
+        <div class="col-lg-3 div-head">
+            <input list="customers" name="customer" id="customer"  #gst (change)="populateCustomerFields(gst.value)" [(ngModel)]="customerName">
+
+            <datalist id="customers">
+                <option value="{{customer.customerName}}" *ngFor="let customer of customers;">{{customer.customerGst}}
+                </option>
+            </datalist>
+        </div>
+        <div class="col-lg-3 div-head">Customer PAN</div>
+        <div class="col-lg-3 div-head">{{customer.customerPan}}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 div-head">{{customer.customerAddress}}</div>
+        <!-- <div class="col-lg-3 div-head"></div> -->
+        <div class="col-lg-3 div-head">Customer Contact</div>
+        <div class="col-lg-3 div-head">{{customer.customerContact}}</div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 div-head"></div>
+        <!-- <div class="col-lg-3 div-head"></div> -->
+        <div class="col-lg-3 div-head">Customer GSTIN</div>
+        <div class="col-lg-3 div-head">{{customer.customerGst}}</div>
+    </div>
+    <div class="row" >
+        <div class="col-lg-3 "></div>
+        <div class="col-lg-3 "></div>
+        <div class="col-lg-3 "></div>
+        <div class="col-lg-3 " >
+            <div style="text-align: right; margin-right: -90px; ">
+                <img (click)="addRow()" style="cursor: pointer ; " src="./assets/img/icons8-add-64.png" alt="" height="35px" width="35px">
+                <img (click)="deleteRow()" style="cursor: pointer ;  " src="./assets/img/icons8-remove-48.png" alt="" height="35px" width="35px">
+          
+            </div>
+            <!-- <div style="text-align: right;"><button (click)="addRow()" style="text-align: right;" class="btn btn-primary">Add Product</button></div> -->
+            <!-- <button (click)="sendData()">Submit</button></div> -->
+        
+    </div>
+    <div class="row" style="margin-top: -3%;">
+        <div class="col-lg-1 div-head">Sr No.</div>
+        <div class="col-lg-3 div-head">Product Name</div>
+        <div class="col-lg-1 div-head">Unit</div>
+        <div class="col-lg-1 div-head">HSN</div>
+        <div class="col-lg-1 div-head">Tax Rate</div>
+        <div class="col-lg-1 div-head">Quantity</div>
+        <div class="col-lg-1 div-head">Rate</div>
+        <div class="col-lg-1 div-head" *ngIf="!interstate">SGST</div>
+        <div class="col-lg-1 div-head" *ngIf="!interstate">CGST</div>
+        <div class="col-lg-2 div-head" *ngIf="interstate">IGST</div>
+        
+        <div class="col-lg-1 div-head">Amount</div>
+
+    </div>
+    <div style="height: 290px; overflow-y: scroll; width: 102%;">
+    <div class="row" *ngFor="let invoice of invoiceView; let i=index; ">
+        <div class="col-lg-1 div-head"><input type="text" name="" value="{{i+1}}" id="id1"></div>
+        <div class="col-lg-3 div-head">
+            <!-- <select id="" name="{{invoice.productName}}" [(ngModel)]="invoice.productName"
+                (change)="populateFields(invoice.productName,i)">
+                <option value="{{product.productName}}" *ngFor="let product of products; let in=index;">
+                    {{product.productName}}</option>
+
+            </select> -->
+            <input list="products" name="{{invoice.productName}}" id="" #gst (change)="populateFields(invoice.productName,i)" [(ngModel)]="invoice.productName">
+
+            <datalist id="products">
+                <option value="{{product.productName}}" *ngFor="let product of products; let in=index;">{{product.productName}}
+                </option>
+            </datalist>
+            <br>
+            <input type="text" name="{{invoice.description}}" id="id3" [(ngModel)]="invoice.description">
+        </div>
+        <div class="col-lg-1 div-head"><input type="text" name="{{invoice.unit}}" id="id3" [(ngModel)]="invoice.unit" disabled>
+        </div>
+        <div class="col-lg-1 div-head"><input type="text" name="{{invoice.hsn}}" id="id3" [(ngModel)]="invoice.hsn" disabled>
+        </div>
+        <div class="col-lg-1 div-head"><input type="text" [(ngModel)]="invoice.taxRate" name="{{invoice.taxRate}}"
+                id="id4" disabled></div>
+        <div class="col-lg-1 div-head"><input type="text" [(ngModel)]="invoice.quantity" name="{{invoice.quantity}}"
+                id="id5" (keyup)="calculateAmount(i)"></div>
+        <div class="col-lg-1 div-head"><input type="text" [(ngModel)]="invoice.rate" name="{{invoice.rate}}" id="id6" (keyup)="calculateAmount(i)">
+        </div>
+        <div class="col-lg-1 div-head" *ngIf="!interstate"><input type="text" [(ngModel)]="invoice.sgst" name="{{invoice.sgst}}" id="id8" disabled>
+        </div>
+        <div class="col-lg-1 div-head" *ngIf="!interstate"><input type="text" [(ngModel)]="invoice.cgst" name="{{invoice.cgst}}" id="id9" disabled>
+        </div>
+        <div class="col-lg-2 div-head" *ngIf="interstate"><input type="text" [(ngModel)]="invoice.Igst" name="{{invoice.Igst}}" id="id9" disabled>
+        </div>
+        
+
+        <div class="col-lg-1 div-head"><input type="text" [(ngModel)]="invoice.amount" name="{{invoice.amount}}"
+                id="id7" disabled></div>
+    </div>
+    </div>
+    
+    <br>
+
+    <!-- <select name="" id=""><option value="option value">option Value</option></select> -->
+    <div class="footer">
+        <button (click)="toggleView()" class="btn btn-primary">Toggle View</button>
+        <div class="taxDescription">
+            <table class="mytable" *ngIf="showTaxBrief">
+                <tr class="rowheight"><td>TaxRate</td><td *ngIf="interstate">IGST</td><td *ngIf="!interstate">SGST</td><td *ngIf="!interstate">CGST</td><td>TotalTax</td><td>TotalTaxable</td></tr>
+                <tr class="rowheight"><td>Tax 28%</td><td *ngIf="interstate">{{igstamt28}}</td><td *ngIf="!interstate">{{sgstorcgstamt28}}</td><td *ngIf="!interstate">{{sgstorcgstamt28}}</td><td *ngIf="interstate">{{igstamt28}}</td><td *ngIf="!interstate">{{sgstorcgstamt28*2}}</td><td>{{taxable28}}</td></tr>
+                <tr class="rowheight"><td>Tax 18%</td><td *ngIf="interstate">{{igstamt18}}</td><td *ngIf="!interstate">{{sgstorcgstamt18}}</td><td *ngIf="!interstate">{{sgstorcgstamt18}}</td><td *ngIf="interstate">{{igstamt18}}</td><td *ngIf="!interstate">{{sgstorcgstamt18*2}}</td><td>{{taxable18}}</td></tr>
+                <tr class="rowheight"><td>Tax 12%</td><td *ngIf="interstate">{{igstamt12}}</td><td *ngIf="!interstate">{{sgstorcgstamt12}}</td><td *ngIf="!interstate">{{sgstorcgstamt12}}</td><td *ngIf="interstate">{{igstamt12}}</td><td *ngIf="!interstate">{{sgstorcgstamt12*2}}</td><td>{{taxable12}}</td></tr>
+                <tr class="rowheight"><td>Tax 5%</td><td *ngIf="interstate">{{igstamt5}}</td><td *ngIf="!interstate">{{sgstorcgstamt5}}</td><td *ngIf="!interstate">{{sgstorcgstamt5}}</td><td *ngIf="interstate">{{igstamt5}}</td><td *ngIf="!interstate">{{sgstorcgstamt5*2}}</td><td>{{taxable5}}</td></tr>
+            </table>
+
+        </div>
+        <div>
+            <table *ngIf="!showTaxBrief">
+                <tr>
+                    <td>Total Tax:</td>
+                    <td>Rs. {{totalTax}}</td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td> Total Taxable Value:</td>
+                    <td>Rs. {{totalTaxableValue}}</td>
+                    <td>&nbsp;&nbsp;</td>
+                    <td>Total Invoice Value:</td>
+                    <td>Rs. {{totalInvoiceValue}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="invTotal">
+            <button (click)="createInvoice()" class="btn btn-primary">{{isEditMode?'Update':'Create'}} Invoice</button>
+            <table *ngIf="showTaxBrief">
+                <tr>
+                    <td>Total Tax:</td>
+                    <td>Rs. {{totalTax}}</td>
+                <tr>
+                    <td> Total Taxable Value:</td>
+                    <td>Rs. {{totalTaxableValue}}</td>
+                </tr>
+                <tr>
+                    <td>Total Invoice Value:</td>
+                    <td>Rs. {{totalInvoiceValue}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,273 @@
+<div class="sales-summary-container">
+  <!-- Filter Section -->
+<div style="display: flex; flex-wrap: wrap;">
+    <div class="filter-section" style="flex: 100%;">
+        <div class="filter-card">
+          <h3 class="section-title">
+            <i class="pi pi-filter"></i>
+            Filter Records
+          </h3>
+          <div class="filter-form">
+            <div class="date-input-group">
+              <label for="startDate">
+                <i class="pi pi-calendar"></i>
+                Start Date
+              </label>
+              <input 
+                type="date" 
+                id="startDate"
+                class="form-control date-input" 
+                [(ngModel)]="startDate"
+                placeholder="Start Date">
+            </div>
+            <div class="date-input-group">
+              <label for="endDate">
+                <i class="pi pi-calendar"></i>
+                End Date
+              </label>
+              <input 
+                type="date" 
+                id="endDate"
+                class="form-control date-input" 
+                [(ngModel)]="endDate"
+                placeholder="End Date">
+            </div>
+            <button 
+              class="btn btn-primary filter-btn" 
+              (click)="filterRecords()"
+              type="button">
+              <i class="pi pi-search"></i>
+              <span class="btn-text">Filter</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Download Section -->
+      <div class="download-section" style="flex: 100%;">
+        <h3 class="section-title">
+          <i class="pi pi-download"></i>
+          Export Reports
+        </h3>
+        <div class="download-buttons">
+          <button 
+            class="btn btn-outline-primary download-btn" 
+            (click)="downloadCSVForB2B()"
+            type="button">
+            <i class="pi pi-file"></i>
+            <span class="btn-text">B2B Summary</span>
+          </button>
+          <button 
+            class="btn btn-outline-primary download-btn" 
+            (click)="downloadCSVForB2C()"
+            type="button">
+            <i class="pi pi-file"></i>
+            <span class="btn-text">B2C Summary</span>
+          </button>
+          <button 
+            class="btn btn-primary download-btn" 
+            (click)="downloadCSVCurrentReport()"
+            type="button">
+            <i class="pi pi-file-pdf"></i>
+            <span class="btn-text">All Summary</span>
+          </button>
+        </div>
+      </div>
+</div>
+
+  <!-- Desktop Table View -->
+  <div class="table-container desktop-view" *ngIf="summary">
+    <p-table 
+      #dt1
+      [value]="summary"
+      dataKey="id"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="false"
+      [scrollable]="true"
+      [paginator]="true"
+      scrollHeight="calc(100vh - 400px)"
+      [globalFilterFields]="['customer.customerName', 'customer.customerGst', 'invoiceNo']"
+      styleClass="p-datatable-striped modern-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>GSTIN</th>
+          <th>State of Supply</th>
+          <th>Invoice Number</th>
+          <th>Date</th>
+          <th>Invoice Value</th>
+          <th>Taxable Value</th>
+          <th>IGST</th>
+          <th>CGST</th>
+          <th>SGST</th>
+          <th>Total Tax</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-detail let-i="rowIndex">
+        <tr [class.bgRowOdd]="i%2!=0">
+          <td class="customer-name">{{detail.customer.customerName}}</td>
+          <td class="gstin">{{detail.customer.customerGst || 'N/A'}}</td>
+          <td>{{detail.customer.customerState}}</td>
+          <td class="invoice-no">{{detail.invoiceNo}}</td>
+          <td>{{detail.invoiceDate | date:'dd-MMM-yyyy'}}</td>
+          <td class="amount">{{detail.totalInvoiceValue | number : '1.2-2'}}</td>
+          <td class="amount">{{detail.totalTaxableValue | number : '1.2-2'}}</td>
+          <td class="amount">{{detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</td>
+          <td class="amount">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</td>
+          <td class="amount">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</td>
+          <td class="amount total-tax">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</td>
+          <td class="action-buttons">
+            <button 
+              class="btn-action btn-edit" 
+              (click)="editInvoice(detail._id, detail.invoiceType)"
+              type="button"
+              title="Edit Invoice">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              class="btn-action btn-view" 
+              (click)="viewInvoice(detail._id)"
+              type="button"
+              title="View Invoice">
+              <i class="pi pi-eye"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="12" class="empty-message">
+            <div class="empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>No records found</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-view" *ngIf="summary">
+    <div class="invoice-card" *ngFor="let detail of summary; let i = index">
+      <div class="card-header">
+        <div class="invoice-info">
+          <h4 class="customer-name">{{detail.customer.customerName}}</h4>
+          <span class="invoice-no">#{{detail.invoiceNo}}</span>
+        </div>
+        <div class="card-actions">
+          <button 
+            class="btn-action btn-edit" 
+            (click)="editInvoice(detail._id, detail.invoiceType)"
+            type="button"
+            title="Edit">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button 
+            class="btn-action btn-view" 
+            (click)="viewInvoice(detail._id)"
+            type="button"
+            title="View">
+            <i class="pi pi-eye"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-label">
+            <i class="pi pi-id-card"></i>
+            GSTIN:
+          </span>
+          <span class="info-value">{{detail.customer.customerGst || 'N/A'}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">
+            <i class="pi pi-map-marker"></i>
+            State:
+          </span>
+          <span class="info-value">{{detail.customer.customerState}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">
+            <i class="pi pi-calendar"></i>
+            Date:
+          </span>
+          <span class="info-value">{{detail.invoiceDate | date:'dd-MMM-yyyy'}}</span>
+        </div>
+        
+        <div class="amounts-section">
+          <div class="amount-item">
+            <span class="amount-label">Invoice Value</span>
+            <span class="amount-value primary">{{detail.totalInvoiceValue | number : '1.2-2'}}</span>
+          </div>
+          <div class="amount-item">
+            <span class="amount-label">Taxable Value</span>
+            <span class="amount-value">{{detail.totalTaxableValue | number : '1.2-2'}}</span>
+          </div>
+        </div>
+        
+        <div class="tax-section">
+          <div class="tax-row">
+            <span class="tax-label">IGST</span>
+            <span class="tax-value">{{detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</span>
+          </div>
+          <div class="tax-row">
+            <span class="tax-label">CGST</span>
+            <span class="tax-value">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</span>
+          </div>
+          <div class="tax-row">
+            <span class="tax-label">SGST</span>
+            <span class="tax-value">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</span>
+          </div>
+          <div class="tax-row total">
+            <span class="tax-label">Total Tax</span>
+            <span class="tax-value total-tax">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="empty-state-mobile" *ngIf="!summary || summary.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>No records found</p>
+    </div>
+  </div>
+</div>
+<!-- <div class="summary-container">
+    <div class="row bgRowOdd" style="border-top: 1px solid black; border-bottom: 1px solid black;">
+        <div class="col-lg-1">Name</div>
+        <div class="col-lg-1">GSTIN</div>
+        <div class="col-lg-1">State of Supply</div>
+        <div class="col-lg-1">Invoice Number</div>
+        <div class="col-lg-1">Date</div>
+        <div class="col-lg-1">Invoice Value</div>
+        <div class="col-lg-1">Taxable Value</div>
+        <div class="col-lg-1">IGST AMT</div>
+        <div class="col-lg-1">CGST AMT</div>
+        <div class="col-lg-1">SGST AMT</div>
+        <div class="col-lg-1">Total Tax</div>
+        
+        <div class="col-lg-1">Edit/ View</div>
+    </div>
+    <div  class="summaryData">
+        <div class="row"  *ngFor="let detail of summary;  let in=index; " [class.bgRowOdd]="in%2!=0">
+            <div class="col-lg-1" style="    content-visibility: auto;     overflow-x: auto;">{{detail.customer.customerName}}</div>
+            <div class="col-lg-1" style="    content-visibility: auto;     overflow-x: auto;">{{detail.customer.customerGst}}</div>
+            <div class="col-lg-1" style="    content-visibility: auto;     overflow-x: auto;">{{detail.customer.customerState}}</div>
+            <div class="col-lg-1">{{detail.invoiceNo}}</div>
+            <div class="col-lg-1" style="    content-visibility: auto;">{{detail.invoiceDate | date:'dd-MMM-yyyy'}}</div>
+            <div class="col-lg-1">{{detail.totalInvoiceValue | number : '1.2-2'}}</div>
+            <div class="col-lg-1">{{detail.totalTaxableValue | number : '1.2-2'}}</div>
+            <div class="col-lg-1">{{detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</div>
+            <div class="col-lg-1">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</div>
+            <div class="col-lg-1">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 | number : '1.2-2'}}</div>
+            <div class="col-lg-1">{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28+detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</div>
+            <div class="col-lg-1">
+                <span style="cursor: pointer; background-color: cornflowerblue; color: cornsilk; border-color: darkblue; border: 1px solid;"  (click)="editInvoice(in)">EDIT</span>
+                 <span style="cursor: pointer; background-color: cornflowerblue; color: cornsilk; border-color: darkblue; border: 1px solid;" (click)="viewInvoice(in)">VIEW</span> </div>
+            </div></div>
+  
+</div> -->

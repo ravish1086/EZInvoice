@@ -1,0 +1,40 @@
+<div *ngIf="isImport">
+  <input type="file" (change)="onFileChange($event)" multiple="false" />
+  </div>
+<table>
+    <tbody>
+        <tr *ngFor="let row of data">
+                <td *ngFor="let cell of row">
+                        {{cell}}
+                </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="container">
+    <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Seller Name</th>
+            <th scope="col">Seller GST</th>
+            <th scope="col">Seller Pan</th>
+            <th scope="col">Seller Contact</th>
+            <th scope="col">Seller Address</th>
+     
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of savedSellers">
+            <th scope="row">{{entry.sellerName}}</th>
+            <td>{{entry.sellerGst}}</td>
+            <td>{{entry.sellerPan}}</td>
+            <td>{{entry.sellerContact}}</td>
+            <td>{{entry.sellerAddress}}</td>
+            
+          </tr>
+         
+        </tbody>
+      </table>
+</div>
+

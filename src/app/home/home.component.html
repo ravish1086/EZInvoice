@@ -1,0 +1,262 @@
+<div class="home-container">
+  <!-- Header Section -->
+  <div class="home-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-shopping-cart"></i>
+        <h2>Stock Entry Management</h2>
+      </div>
+      <div class="header-actions">
+        <button 
+          (click)="openStockEntryModal()" 
+          pButton 
+          pRipple 
+          label="Add Stock Entry" 
+          icon="pi pi-plus"
+          class="p-button-primary btn-add-entry">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Entry Form Modal -->
+  <p-dialog 
+    header="Add Stock Entry" 
+    [modal]="true" 
+    [(visible)]="showStockEntryModal" 
+    [style]="{ width: '90vw', maxWidth: '900px' }"
+    [closable]="true"
+    styleClass="stock-entry-dialog">
+    <div class="form-section">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="invoiceNum">
+              <i class="pi pi-file"></i>
+              Invoice Number <span class="required">*</span>
+            </label>
+            <input 
+              id="float-input" 
+              type="text" 
+              pInputText 
+              name="invoiceNum" 
+              formControlName="invoiceNum"
+              placeholder="Enter invoice number"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="purchasedFrom">
+              <i class="pi pi-building"></i>
+              Purchased From <span class="required">*</span>
+            </label>
+            <input 
+              id="seller" 
+              list="sellers" 
+              formControlName="purchasedFrom"
+              placeholder="Select or enter seller name"
+              class="form-input">
+            <datalist id="sellers">
+              <option [value]="seller.sellerName" *ngFor="let seller of sellers">{{seller.sellerName}}</option>
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label for="productName">
+              <i class="pi pi-box"></i>
+              Product Name <span class="required">*</span>
+            </label>
+            <input 
+              id="product" 
+              list="products" 
+              formControlName="productName" 
+              (change)="mapSelectedProduct()"
+              placeholder="Select or enter product name"
+              class="form-input">
+            <datalist id="products">
+              <option [value]="product.productName" *ngFor="let product of products">{{product.productName}}</option>
+            </datalist>
+          </div>
+
+          <div class="form-group">
+            <label for="datePurchase">
+              <i class="pi pi-calendar"></i>
+              Date of Purchase <span class="required">*</span>
+            </label>
+            <input 
+              type="date" 
+              name="datePurchase" 
+              formControlName="datePurchase"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">
+              <i class="pi pi-sort-numeric-up"></i>
+              Quantity <span class="required">*</span>
+            </label>
+            <input 
+              type="number" 
+              name="quantity" 
+              formControlName="quantity"
+              placeholder="Enter quantity"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="unit">
+              <i class="pi pi-tag"></i>
+              Unit <span class="required">*</span>
+            </label>
+            <select 
+              name="unit" 
+              formControlName="unit"
+              class="form-input">
+              <option value="">Select unit</option>
+              <option [value]="product.productUnit" *ngFor="let product of products">{{product.productUnit}}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rate">
+              <i class="pi pi-dollar"></i>
+              Rate <span class="required">*</span>
+            </label>
+            <input 
+              type="number" 
+              name="rate" 
+              formControlName="rate"
+              placeholder="Enter rate"
+              step="0.01"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="amount">
+              <i class="pi pi-money-bill"></i>
+              Amount <span class="required">*</span>
+            </label>
+            <input 
+              type="number" 
+              name="amount" 
+              formControlName="amount"
+              placeholder="Enter amount"
+              step="0.01"
+              class="form-input">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            [disabled]="!productForm.valid" 
+            class="btn btn-primary btn-submit">
+            <i class="pi pi-check"></i>
+            <span>Add Entry</span>
+          </button>
+          <button 
+            type="button" 
+            (click)="closeStockEntryModal()" 
+            class="btn btn-secondary btn-cancel">
+            <i class="pi pi-times"></i>
+            <span>Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </p-dialog>
+
+  <!-- Customer Summary Section -->
+  <div class="summary-section">
+    <div class="summary-header">
+      <h3 class="summary-title">
+        <i class="pi pi-chart-bar"></i>
+        Customer Summary
+      </h3>
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="table-wrapper desktop-view" *ngIf="NetTotalForEachCustomer">
+      <p-table 
+        [value]="NetTotalForEachCustomer" 
+        [paginator]="true" 
+        [rows]="20" 
+     
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        styleClass="p-datatable-striped summary-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Sr No.</th>
+            <th>Customer Name</th>
+            <th>Net Invoice Value</th>
+            <th>Net Payment Received</th>
+            <th>Balance</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record let-rowIndex="rowIndex">
+          <tr>
+            <td class="serial-number">{{rowIndex + 1}}</td>
+            <td class="customer-name">{{record.customerName}}</td>
+            <td class="amount-cell invoice-value">Rs. {{record.netInvoiceValue | number:'1.2-2'}}</td>
+            <td class="amount-cell payment-value">Rs. {{record.totalPaymentReceived | number:'1.2-2'}}</td>
+            <td class="amount-cell balance-value" [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
+              Rs. {{(record.netInvoiceValue - record.totalPaymentReceived) | number:'1.2-2'}}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="empty-message">
+              <div class="empty-state">
+                <i class="pi pi-inbox"></i>
+                <p>No customer data available</p>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="mobile-view" *ngIf="NetTotalForEachCustomer">
+      <div class="summary-card" *ngFor="let record of NetTotalForEachCustomer; let i = index">
+        <div class="card-header">
+          <div class="card-title-section">
+            <span class="serial-badge">{{i + 1}}</span>
+            <h4 class="customer-name">{{record.customerName}}</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="summary-item">
+            <span class="summary-label">
+              <i class="pi pi-file-invoice"></i>
+              Invoice Value
+            </span>
+            <span class="summary-value invoice-value">Rs. {{record.netInvoiceValue | number:'1.2-2'}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">
+              <i class="pi pi-check-circle"></i>
+              Payment Received
+            </span>
+            <span class="summary-value payment-value">Rs. {{record.totalPaymentReceived | number:'1.2-2'}}</span>
+          </div>
+          <div class="summary-item balance-item">
+            <span class="summary-label">
+              <i class="pi pi-wallet"></i>
+              Balance
+            </span>
+            <span class="summary-value balance-value" [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
+              Rs. {{(record.netInvoiceValue - record.totalPaymentReceived) | number:'1.2-2'}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state-mobile" *ngIf="!NetTotalForEachCustomer || NetTotalForEachCustomer.length === 0">
+        <i class="pi pi-inbox"></i>
+        <p>No customer data available</p>
+      </div>
+    </div>
+  </div>
+</div>

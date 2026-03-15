@@ -1,0 +1,63 @@
+.div-head
+{
+    border:1px solid black;
+}
+input,select
+{
+    display: inline-block;
+    width: 100%;
+}
+.footer
+{
+ bottom: 0;
+ position: fixed;   
+ height: auto;
+ display: flex;
+ align-items: center;
+ justify-content: space-around;
+ border-top:1px solid black;
+ right: 0;
+ left: 0;
+ background-color: rgb(177, 177, 177);
+}
+.invTotal
+{
+    /* bottom: 0;
+    right: 0;
+    position: fixed; */
+    /* float: right; */
+}
+.taxDescription
+{
+    /* bottom:0;
+    left: 0;
+    position: fixed; */
+}
+
+.mytable
+{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+}
+.rowheight
+{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.mytable td{
+    width: 80px;
+}
+input{
+    border-radius: 5px;
+    border-color: #0d6efd!important;
+    border: 1px solid;
+    font-weight: 600;
+}
+select
+{
+    border-radius: 5px;
+    border-color: #0d6efd!important;
+    border: 1px solid;
+    font-weight: 600;
+}

@@ -1,4 +1,22 @@
 import { Routes } from '@angular/router';
+import { AddedproductsComponent } from './addedproducts/addedproducts.component';
+import { AddedstockentriesComponent } from './addedstockentries/addedstockentries.component';
+import { CreateinvoiceComponent } from './createinvoice/createinvoice.component';
+import { CreatenegativeinvoiceComponent } from './createnegativeinvoice/createnegativeinvoice.component';
+import { CustomersComponent } from './customers/customers.component';
+import { GeneratedinvoiceComponent } from './generatedinvoice/generatedinvoice.component';
+
+import { HomeComponent } from './home/home.component';
+import { HsnsummaryComponent } from './hsnsummary/hsnsummary.component';
+import { PaymentsComponent } from './payments/payments.component';
+import { SalesummaryComponent } from './salesummary/salesummary.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
+
+import { SellerDetailsComponent } from './seller-details/seller-details.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterUserComponent } from './register-user/register-user.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
 
 export const routes: Routes = [
       {
@@ -63,9 +81,9 @@ export const routes: Routes = [
         component: PaymentsComponent,
       },
       {
-        path: 'demo',
-        component: DemoComponent,
-      },
+        path: 'analytics',
+        component: AnalyticsComponent,
+      }
     ],
   },
 

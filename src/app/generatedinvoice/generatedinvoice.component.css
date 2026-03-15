@@ -1,0 +1,59 @@
+.container
+{
+    font-size: 10px;
+}
+.inv
+{
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 10px;
+    margin: 0 auto;
+  transform-origin: top left;
+}
+@media (max-width: 880px) {
+    .inv {
+      /* transform: scale(0.6);  */
+      zoom: 0.6;
+      width: calc(210mm / 0.6); /* maintain layout width accounting for scale */
+    }
+  }
+.bg-color
+{
+    background-color: #c7c2c2;
+}
+#sectionToPrint
+{
+    padding-left: 4%;
+    overflow: scroll;
+}
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.leftalign
+{
+    display: inline-block;
+    padding-left: 10px;
+}
+.addPadding-left
+{
+    padding-left: 5px;
+}
+.addPadding-right
+{
+    padding-left: 10px;
+}
+.float-right
+{
+    float:right;
+    padding-right: 10px;
+}
+
+.align-center
+{
+    text-align: center;
+}

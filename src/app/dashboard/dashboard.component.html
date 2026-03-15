@@ -1,0 +1,84 @@
+<div #screen>
+  <nav class="navbar navbar-dark bg-primary" id="nav-div" *ngIf="sessionService.isUserInSystem">
+    <div class="navbar-container">
+      <!-- Logo/Title Section -->
+      <div class="navbar-brand">
+        <span class="brand-icon">
+          <i class="pi pi-file-invoice"></i>
+        </span>
+        <span class="title">
+          EZInvoice
+        </span>
+      </div>
+
+      <!-- Right Section -->
+      <div class="nav-right">
+        <!-- Hamburger menu button (visible on mobile only) -->
+        <button class="hamburger-btn mobile-only" (click)="toggleSidebar()" aria-label="Toggle menu" type="button">
+          <i class="pi pi-bars"></i>
+        </button>
+
+        <!-- Screenshot Button -->
+        <button class="action-btn screenshot-btn" (click)="capture()" aria-label="Take screenshot" type="button"
+          title="Take Screenshot">
+          <i class="pi pi-camera"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Desktop TabMenu (hidden on mobile) -->
+  <p-menubar [model]="items" id="ul-div" class="desktop-menu" *ngIf="sessionService.isUserInSystem"></p-menubar>
+  <!-- Mobile Sidebar Menu -->
+  <p-drawer [(visible)]="sidebarVisible" position="left" [modal]="true" [dismissible]="true" [showCloseIcon]="true"
+    styleClass="mobile-sidebar" *ngIf="sessionService.isUserInSystem">
+    <ng-template pTemplate="header">
+      <h3 style="margin: 0; font-weight: 600;">Menu</h3>
+    </ng-template>
+    <p-menu [model]="items" [style]="{'width': '100%', 'border': 'none'}" styleClass="mobile-menu-items"></p-menu>
+  </p-drawer>
+  <!-- <ul class="nav justify-content-center" id="ul-div">
+    <li class="nav-item">
+      <a class="nav-link active" routerLink="home" routerLinkActive="active-link">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="addedStockEntries" routerLinkActive="active-link">All Stock Entries</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="sellerdetails" routerLinkActive="active-link">Seller Details</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link " routerLink="productdetails" routerLinkActive="active-link">Product Details</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link " routerLink="createInvoice" routerLinkActive="active-link">Create Invoice</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link " routerLink="customers" routerLinkActive="active-link">Customers</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="saleSummary" routerLinkActive="active-link">Sales Summary</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="hsnSummary" routerLinkActive="active-link">HSN Summary</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="analytics" routerLinkActive="active-link">Analytics Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="createNegativeInvoice" routerLinkActive="active-link">Create Negative Invoice</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="payments" routerLinkActive="active-link">Payments</a>
+    </li>
+    
+  </ul> -->
+  <div class="content-outlet">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
+<div id="screenshot-div">
+  <a class="view-btn-attach" *ngIf="show" [href]="selectedFileBLOB" target="_blank">View</a>
+
+</div>

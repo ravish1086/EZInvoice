@@ -1,0 +1,24 @@
+.title
+{
+    margin-left: 2%;
+    font-weight: 800;
+    font-size: 20px;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.content-outlet
+{
+    
+    overflow-x: hidden;
+}
+.active-link
+{
+    background-color: #062c8d;
+    border-radius: 10px;
+    color: white;
+}
+a{
+    font-weight: 600;
+    padding: 7px;
+    margin: 2px;
+}

@@ -1,0 +1,39 @@
+<div class="main-container-login flex-jc-ac" style="flex-direction: column;">
+    <div class="login-container flex-jc-ac">
+        <div class="flex-jc-ac">
+
+            <form [formGroup]="loginForm" class=" flex-jc-ac flex-d-col">
+                <div class="app-logo flex-jc-ac">EZInvoice</div>
+                <br>
+                <div class="flex-jc-ac">
+                    <img src="./assets/img/login_logo.png" alt="" class="logo-icon">
+                </div>
+                <br>
+                <div class="flex-jc-ac gap-20px flex-d-col" style="    width: 100%;">
+                    <p-inputGroup>
+                        <p-inputGroupAddon>
+                            <i class="pi pi-user"></i>
+                        </p-inputGroupAddon>
+                        <input pInputText placeholder="Username" formControlName="userId" />
+                    </p-inputGroup>
+                    <p-inputGroup>
+                        <p-inputGroupAddon>
+                            <i class="pi pi-key"></i>
+                        </p-inputGroupAddon>
+                        <input pInputText formControlName="password" placeholder="Password" />
+
+                    </p-inputGroup>
+
+                </div>
+
+                <div class="flex-jc-ac margin-top-20px">
+                    <p-button [label]="'Login'" type="button" [styleClass]="'login-btn p-button-primary'"
+                        (onClick)="authenticate()"></p-button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <span style="color: cornflowerblue; cursor:pointer;" (click)="navigateToRegister()">New To EZInvoice ? Click here to
+        Register</span>
+
+</div>

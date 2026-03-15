@@ -1,0 +1,400 @@
+<!-- Add Product Dialog -->
+<p-dialog 
+  header="Add New Product" 
+  [modal]="true" 
+  [(visible)]="addProductsForm" 
+  [style]="{ width: '90vw', maxWidth: '600px' }"
+  [closable]="true"
+  styleClass="product-dialog">
+  <div class="product-form-container">
+    <div class="form-group">
+      <label for="productName">
+        <i class="pi pi-tag"></i>
+        Product Name <span class="required">*</span>
+      </label>
+      <input 
+        pInputText 
+        type="text" 
+        id="productName"
+        [(ngModel)]="name"
+        placeholder="Enter product name"
+        class="form-input">
+    </div>
+    
+    <div class="form-group">
+      <label for="productHsn">
+        <i class="pi pi-barcode"></i>
+        Product HSN <span class="required">*</span>
+      </label>
+      <input 
+        pInputText 
+        type="text" 
+        id="productHsn"
+        [(ngModel)]="hsn"
+        placeholder="Enter HSN code"
+        class="form-input">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="productPrice">
+          <i class="pi pi-indian-rupee"></i>
+          Product Price <span class="required">*</span>
+        </label>
+        <p-inputNumber 
+          [(ngModel)]="price" 
+          inputId="productPrice" 
+          mode="decimal" 
+          locale="en-IN" 
+          [minFractionDigits]="2"
+          placeholder="0.00"
+          styleClass="form-input-number">
+        </p-inputNumber>
+      </div>
+      
+      <div class="form-group">
+        <label for="productTaxRate">
+          <i class="pi pi-percentage"></i>
+          Tax Rate (%) <span class="required">*</span>
+        </label>
+        <p-inputNumber 
+          [(ngModel)]="taxrate" 
+          inputId="productTaxRate" 
+          mode="decimal" 
+          locale="en-IN" 
+          [minFractionDigits]="2"
+          placeholder="0.00"
+          styleClass="form-input-number">
+        </p-inputNumber>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="productUnit">
+        <i class="pi pi-box"></i>
+        Product Unit <span class="required">*</span>
+      </label>
+      <input 
+        pInputText 
+        type="text" 
+        id="productUnit"
+        [(ngModel)]="unit"
+        placeholder="e.g., kg, pcs, ltr"
+        class="form-input">
+    </div>
+    
+    <div class="form-actions">
+      <button 
+        (click)="addProduct()" 
+        pButton 
+        pRipple 
+        label="Add Product" 
+        icon="pi pi-check"
+        class="p-button-success btn-add-product">
+      </button>
+      <button 
+        (click)="showForm()" 
+        pButton 
+        pRipple 
+        label="Cancel" 
+        icon="pi pi-times"
+        class="p-button-secondary btn-cancel">
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Main Content -->
+<div class="products-container">
+  <!-- Header Section -->
+  <div class="products-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-box"></i>
+        <h2>Product Management</h2>
+      </div>
+      <div class="header-actions">
+        <button 
+          (click)="showForm()" 
+          pButton 
+          pRipple 
+          label="Add Product" 
+          icon="pi pi-plus"
+          class="p-button-primary btn-add-header">
+        </button>
+        <div class="import-section" *ngIf="isImport">
+          <label for="fileInput" class="btn-import">
+            <i class="pi pi-upload"></i>
+            <span class="import-text">Import Excel</span>
+            <input 
+              type="file" 
+              id="fileInput"
+              (change)="onFileChange($event)" 
+              multiple="false"
+              accept=".xlsx,.xls"
+              style="display: none;">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section (Shared for both views) -->
+  <div class="search-section" *ngIf="savedProducts">
+    <div class="search-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input 
+        pInputText 
+        type="text" 
+        [(ngModel)]="searchValue" 
+        (input)="searchProduct(searchValue)" 
+        placeholder="Search products by name, HSN, or unit..." 
+        class="search-input" />
+    </div>
+    <button 
+      pButton 
+      label="Clear" 
+      [outlined]="true" 
+      icon="pi pi-filter-slash" 
+      (onClick)="clearSearch()"
+      class="btn-clear">
+    </button>
+  </div>
+
+  <!-- Desktop Table View -->
+  <div class="table-wrapper desktop-view" *ngIf="savedProducts">
+    <p-table 
+      #dt1
+      [value]="savedProducts"
+      dataKey="id"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [loading]="false"
+      [scrollable]="true"
+      [paginator]="true"
+      scrollHeight="calc(100vh - 320px)"
+      [globalFilterFields]="['productName', 'productHsn', 'productUnit']"
+      styleClass="p-datatable-striped products-table">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Product Name</th>
+          <th>HSN Code</th>
+          <th>Price</th>
+          <th>Tax Rate (%)</th>
+          <th>In Stock</th>
+          <th>Unit</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-entry let-i="rowIndex">
+        <tr [class.bgRowOdd]="i%2!=0">
+          <td class="product-name-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.productName"
+              placeholder="Product name">
+            <span class="editmode2">{{entry.productName}}</span>
+          </td>
+          <td>
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.productHsn"
+              placeholder="HSN code">
+            <span class="editmode2">{{entry.productHsn}}</span>
+          </td>
+          <td class="amount-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.productPrice"
+              placeholder="0.00">
+            <span class="editmode2">{{entry.productPrice | number:'1.2-2'}}</span>
+          </td>
+          <td class="amount-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.productTaxRate"
+              placeholder="0.00">
+            <span class="editmode2">{{entry.productTaxRate | number:'1.2-2'}}%</span>
+          </td>
+          <td class="stock-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.inStock"
+              placeholder="0">
+            <span class="editmode2" [class.low-stock]="entry.inStock < 10">
+              {{entry.inStock}}
+            </span>
+          </td>
+          <td>
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.productUnit"
+              placeholder="Unit">
+            <span class="editmode2">{{entry.productUnit}}</span>
+          </td>
+          <td class="action-buttons-cell">
+            <button 
+              class="btn-action btn-edit" 
+              (click)="toggleEdit(i)"
+              type="button"
+              title="Edit">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              class="btn-action btn-save" 
+              (click)="SaveRecords(entry, i)"
+              type="button"
+              title="Save">
+              <i class="pi pi-check"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="empty-message">
+            <div class="empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>No products found</p>
+              <button 
+                (click)="showForm()" 
+                pButton 
+                label="Add Your First Product" 
+                icon="pi pi-plus"
+                class="p-button-primary">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-view" *ngIf="savedProducts">
+    <div class="product-card" *ngFor="let entry of savedProducts; let i = index">
+      <div class="card-header">
+        <div class="product-title-section">
+          <h3 class="product-name">
+            <input 
+              class="editmode1-mobile form-input-mobile" 
+              type="text" 
+              [(ngModel)]="entry.productName"
+              placeholder="Product name">
+            <span class="editmode2-mobile">{{entry.productName}}</span>
+          </h3>
+          <span class="product-hsn">
+            <i class="pi pi-barcode"></i>
+            <input 
+              class="editmode1-mobile form-input-mobile" 
+              type="text" 
+              [(ngModel)]="entry.productHsn"
+              placeholder="HSN">
+            <span class="editmode2-mobile">{{entry.productHsn}}</span>
+          </span>
+        </div>
+        <div class="card-actions">
+          <button 
+            class="btn-action btn-edit" 
+            (click)="toggleEdit(i)"
+            type="button"
+            title="Edit">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button 
+            class="btn-action btn-save" 
+            (click)="SaveRecords(entry, i)"
+            type="button"
+            title="Save">
+            <i class="pi pi-check"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-indian-rupee"></i>
+              Price
+            </span>
+            <span class="info-value amount-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.productPrice"
+                placeholder="0.00">
+              <span class="editmode2-mobile">{{entry.productPrice | number:'1.2-2'}}</span>
+            </span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-percentage"></i>
+              Tax Rate
+            </span>
+            <span class="info-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.productTaxRate"
+                placeholder="0.00">
+              <span class="editmode2-mobile">{{entry.productTaxRate | number:'1.2-2'}}%</span>
+            </span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-box"></i>
+              Unit
+            </span>
+            <span class="info-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.productUnit"
+                placeholder="Unit">
+              <span class="editmode2-mobile">{{entry.productUnit}}</span>
+            </span>
+          </div>
+          
+          <div class="info-item stock-item">
+            <span class="info-label">
+              <i class="pi pi-shopping-cart"></i>
+              In Stock
+            </span>
+            <span class="info-value stock-value" [class.low-stock]="entry.inStock < 10">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.inStock"
+                placeholder="0">
+              <span class="editmode2-mobile">{{entry.inStock}}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="empty-state-mobile" *ngIf="!savedProducts || savedProducts.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>No products found</p>
+      <button 
+        (click)="showForm()" 
+        pButton 
+        label="Add Your First Product" 
+        icon="pi pi-plus"
+        class="p-button-primary">
+      </button>
+    </div>
+  </div>
+</div>

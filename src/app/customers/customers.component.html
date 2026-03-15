@@ -1,0 +1,448 @@
+<!-- Add Customer Dialog -->
+<p-dialog 
+  header="Add New Customer" 
+  [modal]="true" 
+  [(visible)]="addCustomerForm" 
+  [style]="{ width: '90vw', maxWidth: '800px' }"
+  [closable]="true"
+  styleClass="customer-dialog">
+  <div class="customer-form-container">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="customerName">
+          <i class="pi pi-user"></i>
+          Customer Name <span class="required">*</span>
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerName"
+          [(ngModel)]="name"
+          placeholder="Enter customer name"
+          class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="customerGst">
+          <i class="pi pi-id-card"></i>
+          Customer GST <span class="required">*</span>
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerGst"
+          [(ngModel)]="gst"
+          (input)="updateState()"
+          placeholder="Enter GST number"
+          maxlength="15"
+          class="form-input">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="customerPan">
+          <i class="pi pi-credit-card"></i>
+          Customer PAN
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerPan"
+          [(ngModel)]="pan"
+          placeholder="Enter PAN number"
+          class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="customerContact">
+          <i class="pi pi-phone"></i>
+          Customer Contact
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerContact"
+          [(ngModel)]="contact"
+          placeholder="Enter contact number"
+          class="form-input">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="customerAddress">
+        <i class="pi pi-map-marker"></i>
+        Customer Address
+      </label>
+      <input 
+        pInputText 
+        type="text" 
+        id="customerAddress"
+        [(ngModel)]="address"
+        placeholder="Enter full address"
+        class="form-input">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="customerShopNo">
+          <i class="pi pi-building"></i>
+          Shop Number
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerShopNo"
+          [(ngModel)]="shopno"
+          placeholder="Shop/Unit number"
+          class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="customerArea">
+          <i class="pi pi-map"></i>
+          Area
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerArea"
+          [(ngModel)]="area"
+          placeholder="Area/Locality"
+          class="form-input">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="customerCity">
+          <i class="pi pi-home"></i>
+          City
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerCity"
+          [(ngModel)]="city"
+          placeholder="Enter city"
+          class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="customerState">
+          <i class="pi pi-globe"></i>
+          State
+        </label>
+        <input 
+          pInputText 
+          type="text" 
+          id="customerState"
+          [(ngModel)]="state"
+          placeholder="Enter state"
+          class="form-input">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="customerCountry">
+        <i class="pi pi-flag"></i>
+        Country
+      </label>
+      <input 
+        pInputText 
+        type="text" 
+        id="customerCountry"
+        [(ngModel)]="country"
+        placeholder="Enter country"
+        class="form-input">
+    </div>
+    
+    <div class="form-actions">
+      <button 
+        (click)="addCustomer()" 
+        pButton 
+        pRipple 
+        label="Add Customer" 
+        icon="pi pi-check"
+        class="p-button-success btn-add-customer">
+      </button>
+      <button 
+        (click)="showForm()" 
+        pButton 
+        pRipple 
+        label="Cancel" 
+        icon="pi pi-times"
+        class="p-button-secondary btn-cancel">
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Main Content -->
+<div class="customers-container">
+  <!-- Header Section -->
+  <div class="customers-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-users"></i>
+        <h2>Customer Management</h2>
+      </div>
+      <div class="header-actions">
+        <button 
+          (click)="showForm()" 
+          pButton 
+          pRipple 
+          label="Add Customer" 
+          icon="pi pi-plus"
+          class="p-button-primary btn-add-header">
+        </button>
+        <div class="import-section" *ngIf="isImport">
+          <label for="fileInput" class="btn-import">
+            <i class="pi pi-upload"></i>
+            <span class="import-text">Import Excel</span>
+            <input 
+              type="file" 
+              id="fileInput"
+              (change)="onFileChange($event)" 
+              multiple="false"
+              accept=".xlsx,.xls"
+              style="display: none;">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section" *ngIf="savedCustomers">
+    <div class="search-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input 
+        pInputText 
+        type="text" 
+        [(ngModel)]="searchValue"
+        (input)="dt1.filterGlobal(searchValue, 'contains')" 
+        placeholder="Search customers by name, GST, PAN, contact, or address..." 
+        class="search-input" />
+    </div>
+    <button 
+      pButton 
+      label="Clear" 
+      [outlined]="true" 
+      icon="pi pi-filter-slash" 
+      (onClick)="clear(dt1)"
+      class="btn-clear">
+    </button>
+  </div>
+
+  <!-- Desktop Table View -->
+  <div class="table-wrapper desktop-view">
+    <p-table 
+      #dt1
+      [value]="savedCustomers"
+      dataKey="id"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [loading]="false"
+      [scrollable]="true"
+      [paginator]="true"
+      scrollHeight="calc(100vh - 320px)"
+      [globalFilterFields]="['customerName', 'customerGst', 'customerPan', 'customerContact', 'customerAddress']"
+      styleClass="p-datatable-striped customers-table">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Customer Name</th>
+          <th>GST Number</th>
+          <th>PAN</th>
+          <th>Contact</th>
+          <th>Address</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-entry let-i="rowIndex">
+        <tr [class.bgRowOdd]="i%2!=0">
+          <td class="customer-name-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.customerName"
+              placeholder="Customer name">
+            <span class="editmode2">{{entry.customerName}}</span>
+          </td>
+          <td class="gst-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.customerGst"
+              placeholder="GST number">
+            <span class="editmode2">{{entry.customerGst || 'N/A'}}</span>
+          </td>
+          <td>
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.customerPan"
+              placeholder="PAN number">
+            <span class="editmode2">{{entry.customerPan || 'N/A'}}</span>
+          </td>
+          <td>
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.customerContact"
+              placeholder="Contact number">
+            <span class="editmode2">{{entry.customerContact || 'N/A'}}</span>
+          </td>
+          <td class="address-cell">
+            <input 
+              class="editmode1 form-input-inline" 
+              type="text" 
+              [(ngModel)]="entry.customerAddress"
+              placeholder="Address">
+            <span class="editmode2">{{entry.customerAddress || 'N/A'}}</span>
+          </td>
+          <td class="action-buttons-cell">
+            <button 
+              class="btn-action btn-edit" 
+              (click)="toggleEdit(i)"
+              type="button"
+              title="Edit">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              class="btn-action btn-save" 
+              (click)="SaveRecords(entry, i)"
+              type="button"
+              title="Save">
+              <i class="pi pi-check"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="empty-message">
+            <div class="empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>No customers found</p>
+              <button 
+                (click)="showForm()" 
+                pButton 
+                label="Add Your First Customer" 
+                icon="pi pi-plus"
+                class="p-button-primary">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-view" *ngIf="savedCustomers">
+    <div class="customer-card" *ngFor="let entry of savedCustomers; let i = index">
+      <div class="card-header">
+        <div class="customer-title-section">
+          <h3 class="customer-name">
+            <input 
+              class="editmode1-mobile form-input-mobile" 
+              type="text" 
+              [(ngModel)]="entry.customerName"
+              placeholder="Customer name">
+            <span class="editmode2-mobile">{{entry.customerName}}</span>
+          </h3>
+          <span class="customer-gst">
+            <i class="pi pi-id-card"></i>
+            <input 
+              class="editmode1-mobile form-input-mobile" 
+              type="text" 
+              [(ngModel)]="entry.customerGst"
+              placeholder="GST">
+            <span class="editmode2-mobile">{{entry.customerGst || 'N/A'}}</span>
+          </span>
+        </div>
+        <div class="card-actions">
+          <button 
+            class="btn-action btn-edit" 
+            (click)="toggleEdit(i)"
+            type="button"
+            title="Edit">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button 
+            class="btn-action btn-save" 
+            (click)="SaveRecords(entry, i)"
+            type="button"
+            title="Save">
+            <i class="pi pi-check"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-credit-card"></i>
+              PAN
+            </span>
+            <span class="info-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.customerPan"
+                placeholder="PAN">
+              <span class="editmode2-mobile">{{entry.customerPan || 'N/A'}}</span>
+            </span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-phone"></i>
+              Contact
+            </span>
+            <span class="info-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.customerContact"
+                placeholder="Contact">
+              <span class="editmode2-mobile">{{entry.customerContact || 'N/A'}}</span>
+            </span>
+          </div>
+          
+          <div class="info-item full-width">
+            <span class="info-label">
+              <i class="pi pi-map-marker"></i>
+              Address
+            </span>
+            <span class="info-value address-value">
+              <input 
+                class="editmode1-mobile form-input-mobile" 
+                type="text" 
+                [(ngModel)]="entry.customerAddress"
+                placeholder="Address">
+              <span class="editmode2-mobile">{{entry.customerAddress || 'N/A'}}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="empty-state-mobile" *ngIf="!savedCustomers || savedCustomers.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>No customers found</p>
+      <button 
+        (click)="showForm()" 
+        pButton 
+        label="Add Your First Customer" 
+        icon="pi pi-plus"
+        class="p-button-primary">
+      </button>
+    </div>
+  </div>
+</div>

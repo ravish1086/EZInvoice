@@ -1,1 +1,63 @@
 /* You can add global styles to this file, and also import other style files */
+
+// @import url(node_modules/bootstrap/dist/css/bootstrap.min.css) layer(bootstrap);
+// @import url(node_modules/primeng/resources/themes/lara-light-blue/theme.css);
+// @import url(node_modules/primeng/resources/primeng.min.css);
+@import url(primeicons/primeicons.css);
+input{
+    font-size : 16px;
+}
+.printPadding{
+    padding: 0px 20px;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+    padding: 0.5rem;
+    font-size: 14px;
+    font-weight: 600;
+
+}
+.p-inputtext {
+    font-size: 14px;
+
+    padding: 0.25rem 0.75rem;
+
+}
+.container{
+    max-width: 98vw;
+    margin: auto;
+}
+.flex{
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.5rem 0.25rem;
+    font-size: 14px;
+}
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 0.5rem 1rem;
+    background-color: #212129;
+    color: white;
+    font-weight: 500;
+}
+.p-datatable-scrollable{
+    // margin: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.p-datatable .p-datatable-header {
+    padding: 0.5rem 1rem;
+}
+.p-button {
+    padding: 0.25rem .75rem;
+    font-size: 1rem;
+
+}
+.login-btn{
+    width: 300px;
+    padding: 0.5rem 0.75rem;;
+}

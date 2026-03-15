@@ -1,0 +1,90 @@
+<div class="hsn-summary-container">
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="filter-card">
+      <h3 class="section-title">
+        <i class="pi pi-filter"></i>
+        Filter HSN Summary
+      </h3>
+      <div class="filter-form">
+        <div class="date-input-group">
+          <label for="startDate">
+            <i class="pi pi-calendar"></i>
+            Start Date
+          </label>
+          <input 
+            type="date" 
+            id="startDate"
+            class="form-control date-input" 
+            [(ngModel)]="startDate"
+            placeholder="Start Date">
+        </div>
+        <div class="date-input-group">
+          <label for="endDate">
+            <i class="pi pi-calendar"></i>
+            End Date
+          </label>
+          <input 
+            type="date" 
+            id="endDate"
+            class="form-control date-input" 
+            [(ngModel)]="endDate"
+            placeholder="End Date">
+        </div>
+        <button 
+          class="btn btn-primary filter-btn" 
+          (click)="filterRecords()"
+          type="button">
+          <i class="pi pi-search"></i>
+          <span class="btn-text">Filter</span>
+        </button>
+        <button 
+          class="btn btn-success export-btn" 
+          (click)="downloadHSNCSV()"
+          type="button">
+          <i class="pi pi-download"></i>
+          <span class="btn-text">Export CSV</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HSN Summary Table -->
+  <div class="table-container" *ngIf="generatedHSNsummary && generatedHSNsummary.length > 0">
+    <div class="table-wrapper">
+      <table class="hsn-table">
+        <thead>
+          <tr>
+            <th>HSN</th>
+            <th>Unit</th>
+            <th>CGST</th>
+            <th>SGST</th>
+            <th>IGST</th>
+            <th>Tax Rate</th>
+            <th>Taxable Amount</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of generatedHSNsummary; let i = index" [class.bgRowOdd]="i%2!=0">
+            <td class="hsn-code">{{item.hsn}}</td>
+            <td>{{item.unit}}</td>
+            <td class="amount-cell">Rs. {{item.cgst | number : '1.2-2'}}</td>
+            <td class="amount-cell">Rs. {{item.sgst | number : '1.2-2'}}</td>
+            <td class="amount-cell">Rs. {{item.igst | number : '1.2-2'}}</td>
+            <td class="tax-rate">{{item.taxRate}}%</td>
+            <td class="amount-cell taxable-amount">Rs. {{item.taxableAmount | number : '1.2-2'}}</td>
+            <td class="quantity-cell">{{item.quantity}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!generatedHSNsummary || generatedHSNsummary.length === 0">
+    <i class="pi pi-inbox"></i>
+    <p>No HSN summary data available</p>
+    <span class="empty-hint">Select date range and click Filter to generate summary</span>
+  </div>
+</div>

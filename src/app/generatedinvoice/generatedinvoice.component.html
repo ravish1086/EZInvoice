@@ -1,0 +1,549 @@
+<div id="buttons">
+    <input type="button" (click)="onPrintO('sectionToPrint')" value="Print" /> &nbsp; &nbsp;
+    <!-- <input type="button" (click)="onPrintD('sectionToPrint')" value="Print Duplicate" /> -->
+    <span style="float: right;"><input type="button" (click)="toggleOD('Original')" value="Set Original" />
+        <input type="button" (click)="toggleOD('Duplicate')" value="Set Duplicate" />
+    </span>
+</div>
+<div id="sectionToPrint" #sectionToPrint *ngIf="generatedInvoice">
+    <br>
+    <div class="inv" style="border: 1px solid black; font-size: 14px;">
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div>
+                    <div class="leftalign"><strong>GSTIN : {{gstin}}</strong></div>
+                    <div class="float-right" [class.bg-color]="invoiceType=='Duplicate'">
+                        <strong>&nbsp;{{invoiceType}}</strong></div>
+                </div>
+
+                <br>
+                <div style="border-bottom: 1px solid black;">
+                    <div class="align-center">
+                        <strong>TAX INVOICE</strong>
+                    </div>
+
+                    <div class="align-center"><strong style="font-size:30px;">{{companyName}}</strong></div>
+
+                    <div class="align-center" style="padding-left: 90px;">{{houseNum}} {{area}}, {{city}} <div
+                            class="float-right">
+                            State Code: {{stateCode}}</div>
+                    </div>
+
+
+                    <br>
+                    <div>
+                        <div class="leftalign">Mob: +91 {{mob}}</div>
+                        <div class="float-right">Email: {{email}}</div>
+                    </div>
+
+                    <div class="align-center"><strong>PAN: {{pan}}</strong></div>
+                </div>
+            </div>
+        </div>
+        <div style="border-bottom: 1px solid black; font-size: large;">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"
+                            style="border-right: 1px solid black; font-size:14px ;">
+
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4"><span
+                                        class="addPadding-left"><strong>Invoice No. :</strong></span></div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-8"><span
+                                        class="addPadding-left">{{generatedInvoice.invoiceNo}}</span></div>
+                                <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div> -->
+                                <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4"><span
+                                        class="addPadding-left"><strong>Invoice Date :</strong></span></div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-8"><span
+                                        class="addPadding-left">{{generatedInvoice.invoiceDate |
+                                        date:'dd-MMM-yyyy'}}</span></div>
+                                <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div> -->
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="font-size:14px ;">
+
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4"><span><strong>Place Of Supply
+                                            :</strong></span></div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                                    <span>{{generatedInvoice.customer.customerState}}</span>
+                                </div>
+                                <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div> -->
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-4"><strong>Reverse Charge :</strong></div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-8">N</div>
+                                <!-- <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-3"></div> -->
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="border-bottom: 1px solid black; font-size:14px ;">
+
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="border-right: 1px solid black;">
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">&nbsp;&nbsp;<strong>Billed To :</strong>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                            &nbsp;&nbsp;{{generatedInvoice.customer.customerName}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                            &nbsp;&nbsp;{{generatedInvoice.customer.customerAddress}}</div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"><strong>Party PAN :</strong></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-8">{{generatedInvoice.customer.customerPan}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"><strong>Party Mob :</strong></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                            {{generatedInvoice.customer.customerContact}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"><strong>Party GSTIN :</strong></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-8">
+                            {{generatedInvoice.customer.customerGst}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div style="border-bottom: 1px solid black; font-size: 14px;">
+            <div class="row">
+                <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1">Sr. No</div> -->
+                <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                            &nbsp;<strong>Sr.N</strong></div>
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-10"
+                            style="border-right: 1px solid black; text-align: center;">
+                            <strong>Description of Product</strong>
+                        </div>
+                        <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                            <strong>HSN</strong></div> -->
+                    </div>
+                </div>
+                <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">HSN</div> -->
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>HSN</strong>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>QTY</strong>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>Unit</strong>
+                        </div>
+                        <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                            <strong>Rate</strong></div> -->
+                    </div>
+                </div>
+                <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">HSN Code</div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">QTY</div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Unit</div> -->
+                <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Rate</div> -->
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-2"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>Rate</strong>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-2"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>Taxable</strong>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-1"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>Tax</strong>
+                        </div>
+                        <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>CGST</strong>
+                        </div>
+                        <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>SGST</strong>
+                        </div>
+                        <div *ngIf="interstate" class="col-lg-4 col-md-4 col-sm-4 col-4"
+                            style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                            <strong>IGST</strong>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-3"><strong>Net&nbsp;Amt</strong></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div style="height:483px; font-size: 14px;">
+            <div *ngFor="let productInf of generatedInvoice.products; index as sr;">
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                &nbsp;&nbsp;{{sr+1}}.</div>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-10"
+                                style="border-right: 1px solid black; overflow-y:hidden; padding-left: 2px; padding-right:2px; white-space: nowrap;  overflow-x: hidden;">
+                                {{productInf.productName}} <span *ngIf="productInf.description != ''"> |
+                                    {{productInf.description?productInf.description:""}} </span></div>
+                            <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                {{productInf.hsn}}</div> -->
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">{{productInf.hsn}}</div> -->
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                        <div class="row">
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.hsn}}</div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.quantity}}</div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.unit}}</div>
+                            <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                                {{productInf.rate}}</div> -->
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">HSN Code</div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">QTY</div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Unit</div> -->
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Rate</div> -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.rate | number : '1.2-2'}}</div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.taxableAmount | number : '1.2-2'}}</div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-1"
+                                style="border-right: 1px solid black; padding-left: 5px; padding-right: 3px;">
+                                {{productInf.taxRate }}%</div>
+                            <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.cgst | number : '1.2-2'}}</div>
+                            <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.sgst | number : '1.2-2'}}</div>
+                            <div *ngIf="interstate" class="col-lg-4 col-md-4 col-sm-4 col-4"
+                                style="border-right: 1px solid black;  padding-left: 5px; padding-right: 3px;">
+                                {{productInf.Igst | number : '1.2-2'}}</div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-3">{{productInf.amount | number : '1.2-2'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- balance rows  -->
+            <div *ngFor="let i of balancerows">
+                <div class="row">
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                &nbsp;&nbsp;</div>
+                            <div class="col-lg-10 col-md-10 col-sm-10 col-10"
+                                style="border-right: 1px solid black; overflow-y:hidden; padding-left: 2px; padding-right:2px; white-space: nowrap;  overflow-x: hidden;">
+                                &nbsp;</div>
+                            <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                {{productInf.hsn}}</div> -->
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">{{productInf.hsn}}</div> -->
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                        <div class="row">
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">HSN Code</div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">QTY</div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Unit</div> -->
+                    <!-- <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" style="border-right: 1px solid black;">Rate</div> -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-1" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div *ngIf="!interstate" class="col-lg-2 col-md-2 col-sm-2 col-2" style="border-right: 1px solid black;">
+                                    &nbsp;</div>
+                            <div *ngIf="interstate" class="col-lg-4 col-md-4 col-sm-4 col-4" style="border-right: 1px solid black;">
+                                &nbsp;</div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-3">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div>
+            <div class="align-center"
+                style="border-bottom: 1px solid black;  border-top: 1px solid black; font-size: 14px;">
+                <strong>Total Taxable Amount: Rs. {{generatedInvoice.totalTaxableValue | number : '1.2-2'}}</strong>
+            </div>
+            <div style="text-align:right; border-bottom: 1px solid black; padding-right: 10px; font-size: 14px;">
+                <strong> Total Amount: Rs. {{generatedInvoice.totalInvoiceValue | number : '1.2-2'}}</strong>
+            </div>
+        </div>
+
+
+        <div style="border-bottom: 1px solid black; font-size: 14px; margin-left: 1px;">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">&nbsp;&nbsp;<strong>TaxRate</strong></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"> <strong>Taxable</strong></div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-3">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4 col-4" *ngIf="!interstate">
+                            <strong>SGST</strong></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-3 col-3" *ngIf="!interstate">
+                            <strong>CGST</strong></div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-3 col-3" *ngIf="interstate">
+                            <strong>IGST</strong></div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-5 col-5"><strong>Total Tax</strong></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="row" style="font-size: 14px;margin-left: 1px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">&nbsp; &nbsp;5%</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"> {{generatedInvoice.taxable5 | number :
+                            '1.2-2'}}</div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst5 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst5 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst5+generatedInvoice.taxAmtsgstorcgst5 | number : '1.2-2'}}
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst5 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst5 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1">&nbsp;</div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-5">
+                    <div *ngIf="generatedInvoice.invoiceType?(generatedInvoice.invoiceType == 'negative'):false"
+                        style="background-color:rgb(216, 216, 216); text-align: center; margin-top: 1px;">
+                        <b>Exposed and Developed Film</b>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1">&nbsp;</div>
+            </div>
+        </div>
+        <div>
+            <div class="row" style="font-size: 14px;margin-left: 1px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">&nbsp;&nbsp;12%</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"> {{generatedInvoice.taxable12 | number :
+                            '1.2-2'}}</div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst12 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst12 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst12+generatedInvoice.taxAmtsgstorcgst12 | number : '1.2-2'}}</div>
+
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst12 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst12 | number : '1.2-2'}}</div>
+
+            </div>
+        </div>
+        <div>
+            <div class="row" style="font-size: 14px;margin-left: 1px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">&nbsp;&nbsp;18%</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"> {{generatedInvoice.taxable18 | number :
+                            '1.2-2'}}</div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst18 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst18 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst18+generatedInvoice.taxAmtsgstorcgst18}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst18 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst18 | number : '1.2-2'}}</div>
+            </div>
+        </div>
+        <div>
+            <div class="row" style="font-size: 14px;margin-left: 1px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">&nbsp;&nbsp;28%</div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-6"> {{generatedInvoice.taxable28 | number :
+                            '1.2-2'}}</div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst28 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst28 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="!interstate">
+                    {{generatedInvoice.taxAmtsgstorcgst28+generatedInvoice.taxAmtsgstorcgst28 | number : '1.2-2'}}</div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst28 | number : '1.2-2'}}</div>
+                <div class="col-lg-2 col-md-1 col-sm-1 col-1 col-1" *ngIf="interstate">
+                    {{generatedInvoice.taxAmtIgst28 | number : '1.2-2'}}</div>
+            </div>
+        </div>
+
+
+        <div class="row" style="font-size: 14px; margin-left: 1px;">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-2">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="border-top:1px solid black;">Total</div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="border-top:1px solid black;">
+                        {{generatedInvoice.totalTaxableValue | number : '1.2-2'}}</div>
+                </div>
+            </div>
+            <div *ngIf="!interstate" class="col-lg-1 col-md-1 col-sm-1 col-1 " style="border-top:1px solid black;">
+                {{generatedInvoice.taxAmtsgstorcgst28+generatedInvoice.taxAmtsgstorcgst18+generatedInvoice.taxAmtsgstorcgst12+generatedInvoice.taxAmtsgstorcgst5
+                | number : '1.2-2'}}</div>
+            <div *ngIf="!interstate" class="col-lg-1 col-md-1 col-sm-1 col-1 " style="border-top:1px solid black;">
+                {{generatedInvoice.taxAmtsgstorcgst28+generatedInvoice.taxAmtsgstorcgst18+generatedInvoice.taxAmtsgstorcgst12+generatedInvoice.taxAmtsgstorcgst5
+                | number : '1.2-2'}}</div>
+            <div *ngIf="!interstate" class="col-lg-1 col-md-1 col-sm-1 col-1 " style="border-top:1px solid black;">
+                {{2*generatedInvoice.taxAmtsgstorcgst28+2*generatedInvoice.taxAmtsgstorcgst18+2*generatedInvoice.taxAmtsgstorcgst12+2*generatedInvoice.taxAmtsgstorcgst5
+                | number : '1.2-2'}}</div>
+
+            <div *ngIf="interstate" class="col-lg-1 col-md-1 col-sm-1 col-1 " style="border-top:1px solid black;">
+                {{generatedInvoice.taxAmtIgst28+generatedInvoice.taxAmtIgst18+generatedInvoice.taxAmtIgst12+generatedInvoice.taxAmtIgst5
+                | number : '1.2-2'}}</div>
+            <div *ngIf="interstate" class="col-lg-2 col-md-1 col-sm-1 col-1" style="border-top:1px solid black;">
+                {{generatedInvoice.taxAmtIgst28+generatedInvoice.taxAmtIgst18+generatedInvoice.taxAmtIgst12+generatedInvoice.taxAmtIgst5
+                | number : '1.2-2'}}</div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-4 ">&nbsp;
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-3 " style="text-align: right;"><b>Round Off:
+                    {{(generatedInvoice.totalInvoiceValue.toFixed(0) - generatedInvoice.totalInvoiceValue) | number :
+                    '1.2-2'}}&nbsp;&nbsp;</b>
+            </div>
+        </div>
+
+
+        <div style="font-size: 14px;">
+            <div style="text-align: right; border-bottom: 1px solid black;  border-top: 1px solid black; "
+                class="addPadding-right"><strong>Grand Total: Rs.
+                    {{generatedInvoice.totalInvoiceValue.toFixed(0)}}</strong>&nbsp;&nbsp;</div>
+            <div style="text-align: left; border-bottom: 1px solid black; " class="addPadding-left">
+                <strong>{{inWords(generatedInvoice.totalInvoiceValue)}}</strong>
+            </div>
+        </div>
+
+        <div class="row" style="zoom:90%">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="border-right: 1px solid black; font-size: 14px;">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12 ">
+                        <div class="addPadding-left">
+                            <strong>Terms and Conditions:</strong><br>
+                            E.&.O.E.<br>
+                            1.All claims to be setteled in Agra.<br>
+                            2.Goods once sold will not be taken back.<br>
+                            3.Subject to Agra jurisdiction only.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="addPadding-left"><br><br><br>
+                            Received By:</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-6" style="font-size: 14px;">
+                <div class="row" style="margin-right: 0px;">
+                    <div style="border-bottom: 1px solid black;">
+                        <div style="font-size: 15px; font-weight: 500;">
+                            BANK DETAILS: HDFC BANK, HING KI MANDI, AGRA-282003.
+                        </div>
+                        <div style="font-size: 16px; font-weight: 500;">
+                            A/C NO - 50200032640264 , IFSC : HDFC0000297
+                        </div>
+                    </div>
+                    <div style="text-align: right;" class="addPadding-right"><strong>For
+                            {{companyName}}&nbsp;&nbsp;</strong>
+                    </div>
+                    <br>
+                    <br><br>
+                    <br><br>
+                    <div style="text-align: right;" class="addPadding-right">Authorised Signatory&nbsp;&nbsp;</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

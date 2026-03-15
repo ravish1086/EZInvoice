@@ -1,0 +1,377 @@
+/* Main Container */
+.hsn-summary-container {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Filter Section */
+.filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.filter-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: white;
+}
+
+.section-title i {
+  font-size: 1rem;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.date-input-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+.date-input-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.date-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: white;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.filter-btn,
+.export-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-height: 32px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-btn {
+  background: white;
+  color: #667eea;
+}
+
+.filter-btn:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.export-btn {
+  background: #28a745;
+  color: white;
+}
+
+.export-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Table Container */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* HSN Table */
+.hsn-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+  font-size: 0.85rem;
+}
+
+.hsn-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.hsn-table thead th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  white-space: nowrap;
+}
+
+.hsn-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s ease;
+}
+
+.hsn-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.hsn-table tbody td {
+  padding: 1rem 0.75rem;
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
+
+.bgRowOdd {
+  background-color: #f8f9fa;
+}
+
+/* Table Cell Styles */
+.hsn-code {
+  font-weight: 600;
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+}
+
+.amount-cell {
+  text-align: right;
+  font-weight: 500;
+  color: #495057;
+  font-family: 'Courier New', monospace;
+}
+
+.taxable-amount {
+  font-weight: 700;
+  color: #28a745;
+}
+
+.tax-rate {
+  text-align: center;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.quantity-cell {
+  text-align: center;
+  font-weight: 500;
+  color: #495057;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state i {
+  font-size: 3.4rem;
+  color: #6c757d;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.empty-hint {
+  font-size: 0.85rem;
+  color: #6c757d;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+/* Responsive Design - Mobile */
+@media (max-width: 768px) {
+  .hsn-summary-container {
+    padding: 0.75rem;
+  }
+
+  .filter-card {
+    padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .filter-form {
+    flex-direction: column;
+  }
+
+  .date-input-group {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .filter-btn,
+  .export-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .table-container {
+    padding: 0.5rem;
+  }
+
+  /* Smaller font sizes for mobile table */
+  .hsn-table {
+    font-size: 0.75rem;
+    min-width: 700px;
+  }
+
+  .hsn-table thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .hsn-table tbody td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .hsn-code {
+    font-size: 0.7rem;
+  }
+
+  .amount-cell {
+    font-size: 0.7rem;
+  }
+
+  .tax-rate {
+    font-size: 0.7rem;
+  }
+
+  .quantity-cell {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hsn-summary-container {
+    padding: 0.5rem;
+  }
+
+  .filter-card {
+    padding: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 0.9rem;
+  }
+
+  .section-title i {
+    font-size: 1.1rem;
+  }
+
+  /* Even smaller fonts for very small screens */
+  .hsn-table {
+    font-size: 0.65rem;
+    min-width: 650px;
+  }
+
+  .hsn-table thead th {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.65rem;
+  }
+
+  .hsn-table tbody td {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.65rem;
+  }
+
+  .hsn-code {
+    font-size: 0.6rem;
+  }
+
+  .amount-cell {
+    font-size: 0.6rem;
+  }
+
+  .tax-rate {
+    font-size: 0.6rem;
+  }
+
+  .quantity-cell {
+    font-size: 0.6rem;
+  }
+
+  .empty-state {
+    padding: 3rem 1rem;
+  }
+
+  .empty-state i {
+    font-size: 2.6rem;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+  }
+
+  .empty-hint {
+    font-size: 0.75rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .filter-section {
+    display: none;
+  }
+
+  .hsn-table {
+    font-size: 0.8rem;
+  }
+
+  .hsn-table thead th {
+    background: #667eea !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

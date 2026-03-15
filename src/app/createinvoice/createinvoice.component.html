@@ -1,0 +1,327 @@
+<div class="container">
+    <div class="invoice-container">
+        <!-- Invoice Details Card View -->
+        <div class="invoice-mobile">
+            <div class="invoice-row">
+                <!-- <div class="invoice-field">
+        <label>Invoice No.</label>
+        <input type="text" name="invoiceNumber" [(ngModel)]="invoiceNumber" />
+      </div> -->
+                <div class="invoice-field">
+                    <label>Invoice Date</label>
+                    <div class="date-input-wrapper">
+                        <!-- <input type="date" name="todaysDate" [(ngModel)]="todaysDate" /> -->
+                        <span class="date-display">{{ todaysDate | date:'dd-MMM-yyyy' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-row">
+                <div class="invoice-field">
+                    <label>Billed To</label>
+                    <input list="customers" name="customer" id="customer" #gst
+                        (change)="populateCustomerFields(gst.value)" [(ngModel)]="customerName" />
+                    <datalist id="customers">
+                        <option *ngFor="let customer of customers" [value]="customer.customerName">
+                            {{ customer.customerGst }}
+                        </option>
+                    </datalist>
+                </div>
+            </div>
+
+            <div class="invoice-row read-only-row" *ngIf="customerName">
+                <div class="invoice-field read-only-field">
+                    <label>Place of Supply</label>
+                    <div class="field-value">{{ customer.customerState }}</div>
+                </div>
+                <div class="invoice-field read-only-field">
+                    <label>Reverse Charge</label>
+                    <div class="field-value">{{ reverseCharge }}</div>
+                </div>
+                <div class="invoice-field read-only-field">
+                    <label>Customer PAN</label>
+                    <div class="field-value">{{ customer.customerPan }}</div>
+                </div>
+                <div class="invoice-field read-only-field">
+                    <label>Customer Contact</label>
+                    <div class="field-value">{{ customer.customerContact }}</div>
+                </div>
+                <div class="invoice-field read-only-field">
+                    <label>Customer GSTIN</label>
+                    <div class="field-value">{{ customer.customerGst }}</div>
+                </div>
+            </div>
+
+            <div class="invoice-row" *ngIf="customerName">
+                <div class="invoice-field full-width">
+                    <label>Address</label>
+                    <div class="field-value">{{ customer.customerAddress }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Optional Action Buttons -->
+        <!-- <div class="invoice-actions">
+    <button class="btn btn-primary" (click)="addRow()">Add Product</button>
+    <button class="btn btn-success" (click)="sendData()">Submit</button>
+  </div> -->
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="invoice-items-desktop desktop-view" *ngIf="customerName">
+        <p-table [value]="invoiceView" [scrollable]="false" styleClass="invoice-items-table" [resizableColumns]="true"
+            [reorderableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 5%">Sr No.</th>
+                    <th style="width: 20%">Product Name</th>
+                    <th style="width: 8%">Unit</th>
+                    <th style="width: 8%">HSN</th>
+                    <th style="width: 8%">Tax Rate</th>
+                    <th style="width: 8%">Quantity</th>
+                    <th style="width: 8%">Rate</th>
+                    <th style="width: 8%" *ngIf="!interstate">SGST</th>
+                    <th style="width: 8%" *ngIf="!interstate">CGST</th>
+                    <th style="width: 16%" *ngIf="interstate">IGST</th>
+                    <th style="width: 8%">Amount</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-invoice let-i="rowIndex">
+                <tr>
+                    <td>
+                        <span>{{i + 1}}</span>
+                    </td>
+                    <td>
+                        <p-select [options]="products" [(ngModel)]="invoice.product_id" optionValue="_id"
+                            optionLabel="productName" [filter]="true" filterBy="productName"
+                            (onChange)="populateFields($event.value, i)" appendTo="body" placeholder="Select Product"
+                            [style]="{'width':'100%'}">
+                        </p-select>
+                    </td>
+                    <td>
+                        <input pInputText type="text" [(ngModel)]="invoice.unit" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td>
+                        <input pInputText type="text" [(ngModel)]="invoice.hsn" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td>
+                        <input pInputText type="text" [(ngModel)]="invoice.taxRate" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td>
+                        <input type="number" [(ngModel)]="invoice.quantity" (input)="calculateAmount(i)">
+                    </td>
+                    <td>
+                        <p-inputNumber [(ngModel)]="invoice.rate" (onInput)="calculateAmount(i)" mode="decimal"
+                            [minFractionDigits]="2" [maxFractionDigits]="2" [inputStyle]="{'width': '100%'}"
+                            [style]="{'width': '100%'}">
+                        </p-inputNumber>
+                    </td>
+                    <td *ngIf="!interstate">
+                        <input pInputText type="text" [(ngModel)]="invoice.sgst" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td *ngIf="!interstate">
+                        <input pInputText type="text" [(ngModel)]="invoice.cgst" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td *ngIf="interstate">
+                        <input pInputText type="text" [(ngModel)]="invoice.Igst" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td>
+                        <input pInputText type="text" [(ngModel)]="invoice.amount" [readonly]="true"
+                            class="p-inputtext-sm w-full">
+                    </td>
+                    <td>
+                        <img (click)="deleteRow()" class="delete-row-btn" src="./assets/img/icons8-remove-48.png"
+                            alt="Delete" height="35px" width="35px">
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="invoice-items-mobile mobile-view" *ngIf="customerName">
+        <div class="invoice-item-card" *ngFor="let invoice of invoiceView; let i = index">
+            <div class="item-header">
+                <span class="item-number">#{{i + 1}}</span>
+                <img (click)="deleteRow()" class="delete-btn-mobile" src="./assets/img/icons8-remove-48.png"
+                    alt="Delete" height="28px" width="28px">
+            </div>
+
+            <div class="item-field">
+                <label>Product Name</label>
+                <p-select [options]="products" [(ngModel)]="invoice.product_id" optionValue="_id"
+                    optionLabel="productName" filterBy="productName" (onChange)="populateFields($event.value, i)"
+                    appendTo="body" placeholder="Select Product" [style]="{'width':'100%'}">
+                </p-select>
+            </div>
+
+            <div class="item-row">
+                <div class="item-field compact">
+                    <label>Unit</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.unit" [readonly]="true" class="readonly-input">
+                </div>
+                <div class="item-field compact">
+                    <label>HSN</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.hsn" [readonly]="true" class="readonly-input">
+                </div>
+                <div class="item-field compact">
+                    <label>Tax Rate</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.taxRate" [readonly]="true"
+                        class="readonly-input">
+                </div>
+            </div>
+
+            <div class="item-row">
+                <div class="item-field">
+                    <label>Quantity</label>
+                    <input type="number" [(ngModel)]="invoice.quantity" (input)="calculateAmount(i)"
+                        class="editable-input">
+                </div>
+                <div class="item-field">
+                    <label>Rate</label>
+                    <p-inputNumber [(ngModel)]="invoice.rate" (onInput)="calculateAmount(i)" mode="decimal"
+                        [minFractionDigits]="2" [maxFractionDigits]="2" [inputStyle]="{'width': '100%'}"
+                        [style]="{'width': '100%'}">
+                    </p-inputNumber>
+                </div>
+            </div>
+
+            <div class="item-row" *ngIf="!interstate">
+                <div class="item-field compact">
+                    <label>SGST</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.sgst" [readonly]="true" class="readonly-input">
+                </div>
+                <div class="item-field compact">
+                    <label>CGST</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.cgst" [readonly]="true" class="readonly-input">
+                </div>
+            </div>
+
+            <div class="item-row" *ngIf="interstate">
+                <div class="item-field">
+                    <label>IGST</label>
+                    <input pInputText type="text" [(ngModel)]="invoice.Igst" [readonly]="true" class="readonly-input">
+                </div>
+            </div>
+
+            <div class="item-field">
+                <label>Amount</label>
+                <input pInputText type="text" [(ngModel)]="invoice.amount" [readonly]="true"
+                    class="readonly-input amount-field">
+            </div>
+        </div>
+    </div>
+    <div class="add-row-container" *ngIf="customerName">
+        <img (click)="addRow()" class="add-row-btn" src="./assets/img/icons8-add-64.png" alt="Add Product" height="35px"
+            width="35px">
+    </div>
+    <br>
+
+    <!-- Footer Section -->
+    <div class="footer" *ngIf="customerName">
+        <!-- Toggle View Button -->
+
+
+        <!-- Tax Description Section -->
+        <div class="footer-section footer-tax-section">
+            <table class="mytable" *ngIf="showTaxBrief">
+                <thead>
+                    <tr class="rowheight">
+                        <th>TaxRate</th>
+                        <th *ngIf="interstate">IGST</th>
+                        <th *ngIf="!interstate">SGST</th>
+                        <th *ngIf="!interstate">CGST</th>
+                        <th>TotalTax</th>
+                        <th>TotalTaxable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="rowheight">
+                        <td>Tax 28%</td>
+                        <td *ngIf="interstate">{{igstamt28 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt28 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt28 | number:'1.2-2'}}</td>
+                        <td *ngIf="interstate">{{igstamt28 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{(sgstorcgstamt28*2) | number:'1.2-2'}}</td>
+                        <td>{{taxable28 | number:'1.2-2'}}</td>
+                    </tr>
+                    <tr class="rowheight">
+                        <td>Tax 18%</td>
+                        <td *ngIf="interstate">{{igstamt18 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt18 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt18 | number:'1.2-2'}}</td>
+                        <td *ngIf="interstate">{{igstamt18 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{(sgstorcgstamt18*2) | number:'1.2-2'}}</td>
+                        <td>{{taxable18 | number:'1.2-2'}}</td>
+                    </tr>
+                    <tr class="rowheight">
+                        <td>Tax 12%</td>
+                        <td *ngIf="interstate">{{igstamt12 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt12 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt12 | number:'1.2-2'}}</td>
+                        <td *ngIf="interstate">{{igstamt12 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{(sgstorcgstamt12*2) | number:'1.2-2'}}</td>
+                        <td>{{taxable12 | number:'1.2-2'}}</td>
+                    </tr>
+                    <tr class="rowheight">
+                        <td>Tax 5%</td>
+                        <td *ngIf="interstate">{{igstamt5 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt5 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{sgstorcgstamt5 | number:'1.2-2'}}</td>
+                        <td *ngIf="interstate">{{igstamt5 | number:'1.2-2'}}</td>
+                        <td *ngIf="!interstate">{{(sgstorcgstamt5*2) | number:'1.2-2'}}</td>
+                        <td>{{taxable5 | number:'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary Totals Section -->
+        <div class="footer-section footer-summary-section">
+            <table class="summary-table" *ngIf="!showTaxBrief">
+                <tr>
+                    <td class="summary-label">Total Tax:</td>
+                    <td class="summary-value">Rs. {{totalTax | number:'1.2-2'}}</td>
+                </tr>
+                <tr>
+                    <td class="summary-label">Total Taxable Value:</td>
+                    <td class="summary-value">Rs. {{totalTaxableValue | number:'1.2-2'}}</td>
+                </tr>
+                <tr>
+                    <td class="summary-label">Total Invoice Value:</td>
+                    <td class="summary-value">Rs. {{totalInvoiceValue | number:'1.2-2'}}</td>
+                </tr>
+            </table>
+            <table class="summary-table-vertical" *ngIf="showTaxBrief">
+                <tr>
+                    <td class="summary-label">Total Tax:</td>
+                    <td class="summary-value">Rs. {{totalTax | number:'1.2-2'}}</td>
+                </tr>
+                <tr>
+                    <td class="summary-label">Total Taxable Value:</td>
+                    <td class="summary-value">Rs. {{totalTaxableValue | number:'1.2-2'}}</td>
+                </tr>
+                <tr>
+                    <td class="summary-label">Total Invoice Value:</td>
+                    <td class="summary-value">Rs. {{totalInvoiceValue | number:'1.2-2'}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Create Invoice Button Section -->
+        <div class="footer-section footer-button-section">
+            <button (click)="toggleView()" class="btn btn-primary">Toggle View</button>
+
+            <button (click)="createInvoice()" class="btn btn-primary btn-create">{{isEditMode?'Update':'Create'}}
+                Invoice</button>
+        </div>
+    </div>
+
+</div>

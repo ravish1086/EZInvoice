@@ -1,0 +1,29 @@
+<div class="container">
+    <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">Invoice Number</th>
+            <th scope="col">Purchased From</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Date of Purchase</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Unit</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let entry of allstockentries">
+            <th scope="row">{{entry.invoiceNum}}</th>
+            <td>{{entry.purchasedFrom}}</td>
+            <td>{{entry.productName}}</td>
+            <td>{{entry.datePurchase}}</td>
+            <td>{{entry.quantity}}</td>
+            <td>{{entry.unit}}</td>
+            <td>{{entry.rate}}</td>
+            <td>{{entry.amount}}</td>
+          </tr>
+         
+        </tbody>
+      </table>
+</div>
