@@ -4,60 +4,158 @@
 // @import url(node_modules/primeng/resources/themes/lara-light-blue/theme.css);
 // @import url(node_modules/primeng/resources/primeng.min.css);
 @import url(primeicons/primeicons.css);
-input{
-    font-size : 16px;
+
+input {
+    font-size: 16px;
 }
-.printPadding{
+
+.printPadding {
     padding: 0px 20px;
 }
+
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
     padding: 0.5rem;
     font-size: 14px;
     font-weight: 600;
 
 }
+
 .p-inputtext {
     font-size: 14px;
 
     padding: 0.25rem 0.75rem;
 
 }
-.container{
+
+.container {
     max-width: 98vw;
     margin: auto;
 }
-.flex{
+
+.flex {
     display: flex;
     // justify-content: space-between;
     align-items: center;
     gap: 20px;
 }
 
-.p-datatable .p-datatable-tbody > tr > td {
+.p-datatable .p-datatable-tbody>tr>td {
     padding: 0.5rem 0.25rem;
     font-size: 14px;
 }
-.p-datatable .p-datatable-thead > tr > th {
+
+.p-datatable .p-datatable-thead>tr>th {
     padding: 0.5rem 1rem;
     background-color: #212129;
     color: white;
     font-weight: 500;
 }
-.p-datatable-scrollable{
+
+.p-datatable-scrollable {
     // margin: 20px;
     border: 1px solid black;
     border-radius: 10px;
     overflow: hidden;
 }
+
 .p-datatable .p-datatable-header {
     padding: 0.5rem 1rem;
 }
+
 .p-button {
     padding: 0.25rem .75rem;
     font-size: 1rem;
 
 }
-.login-btn{
+
+.login-btn {
     width: 300px;
-    padding: 0.5rem 0.75rem;;
+    padding: 0.5rem 0.75rem;
 }
+
+// Manual Bootstrap Grid System
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+[class*="col-"] {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+// Mobile first or base columns
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        flex: 0 0 calc(100% / 12 * #{$i});
+        max-width: calc(100% / 12 * #{$i});
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+    @for $i from 1 through 12 {
+        .col-sm-#{$i} {
+            flex: 0 0 calc(100% / 12 * #{$i});
+            max-width: calc(100% / 12 * #{$i});
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+    @for $i from 1 through 12 {
+        .col-md-#{$i} {
+            flex: 0 0 calc(100% / 12 * #{$i});
+            max-width: calc(100% / 12 * #{$i});
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+    @for $i from 1 through 12 {
+        .col-lg-#{$i} {
+            flex: 0 0 calc(100% / 12 * #{$i});
+            max-width: calc(100% / 12 * #{$i});
+        }
+    }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+    @for $i from 1 through 12 {
+        .col-xl-#{$i} {
+            flex: 0 0 calc(100% / 12 * #{$i});
+            max-width: calc(100% / 12 * #{$i});
+        }
+    }
+}
+
+// Basic Utility Classes
+.float-right { float: right !important; }
+.float-left { float: left !important; }
+.clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.text-left { text-align: left !important; }
+
+.d-flex { display: flex !important; }
+.justify-content-between { justify-content: space-between !important; }
+.align-items-center { align-items: center !important; }
+
+// Component Specific Helpers
+.leftalign { text-align: left !important; }
+.align-center { text-align: center !important; }
+.addPadding-left { padding-left: 15px !important; }
+.addPadding-right { padding-right: 15px !important; }
+
