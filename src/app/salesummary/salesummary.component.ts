@@ -22,6 +22,13 @@ export class SalesummaryComponent implements OnInit {
   startDate!: Date;
   endDate!: Date;
   summaryBackup: any;
+
+  // KPI Stats
+  totalSales: number = 0;
+  totalTaxable: number = 0;
+  totalTax: number = 0;
+  totalInvoices: number = 0;
+
   constructor(private invoiceService:InvoiceService,private router:Router, private spinner:NgxSpinnerService) { }
 
   ngOnInit(): void {
@@ -29,16 +36,30 @@ export class SalesummaryComponent implements OnInit {
     this.invoiceService.getAllInvoicesDetails().subscribe((res:any)=>
       {
         this.summary=res;
-        this.calculateTotal(this.summary)
         this.summaryBackup=res;
+        this.calculateTotal(this.summary);
         this.spinner.hide();
-        //this.downloadCSVForB2B()
       })
-    
   }
-  calculateTotal(sumary:any)
-  {
 
+  calculateTotal(summary: any) {
+    if (!summary) return;
+    
+    this.totalSales = 0;
+    this.totalTaxable = 0;
+    this.totalTax = 0;
+    this.totalInvoices = summary.length;
+
+    summary.forEach((item: any) => {
+      this.totalSales += item.totalInvoiceValue || 0;
+      this.totalTaxable += item.totalTaxableValue || 0;
+      
+      const igst = (item.taxAmtIgst5 || 0) + (item.taxAmtIgst12 || 0) + (item.taxAmtIgst18 || 0) + (item.taxAmtIgst28 || 0);
+      const cgst = (item.taxAmtsgstorcgst5 || 0) + (item.taxAmtsgstorcgst12 || 0) + (item.taxAmtsgstorcgst18 || 0) + (item.taxAmtsgstorcgst28 || 0);
+      const sgst = (item.taxAmtsgstorcgst5 || 0) + (item.taxAmtsgstorcgst12 || 0) + (item.taxAmtsgstorcgst18 || 0) + (item.taxAmtsgstorcgst28 || 0);
+      
+      this.totalTax += (igst + cgst + sgst);
+    });
   }
   optionsb2b = { 
     fieldSeparator: ',',
@@ -151,7 +172,7 @@ downloadCSVCurrentReport()
       }
     }
     this.summary=filteredSummary;
-
+    this.calculateTotal(this.summary);
     console.log(this.summary)
 
   }
