@@ -1,29 +1,68 @@
-<div class="container">
-    <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Invoice Number</th>
-            <th scope="col">Purchased From</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Date of Purchase</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Unit</th>
-            <th scope="col">Rate</th>
-            <th scope="col">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let entry of allstockentries">
-            <th scope="row">{{entry.invoiceNum}}</th>
-            <td>{{entry.purchasedFrom}}</td>
-            <td>{{entry.productName}}</td>
-            <td>{{entry.datePurchase}}</td>
-            <td>{{entry.quantity}}</td>
-            <td>{{entry.unit}}</td>
-            <td>{{entry.rate}}</td>
-            <td>{{entry.amount}}</td>
-          </tr>
-         
-        </tbody>
-      </table>
+<!-- Main Content -->
+<div class="stock-entries-container">
+  <!-- Header Section -->
+  <div class="stock-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-inbox"></i>
+        <h2>Stock Entries</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section" *ngIf="allstockentries && allstockentries.length > 0">
+    <div class="search-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt.filterGlobal(searchValue, 'contains')"
+        placeholder="Search by invoice number, product name, vendor..." class="search-input" />
+    </div>
+    <button pButton label="Clear" [outlined]="true" icon="pi pi-filter-slash" (onClick)="clear(dt)" class="btn-clear">
+    </button>
+  </div>
+
+  <!-- Table View -->
+  <div class="table-wrapper" *ngIf="allstockentries && allstockentries.length > 0">
+    <p-table #dt [value]="allstockentries" [paginator]="true" [rows]="10" [globalFilterFields]="['invoiceNum','purchasedFrom','productName','datePurchase','quantity','unit','rate','amount']"
+      [tableStyle]="{ 'min-width': '100%' }" responsiveLayout="scroll" styleClass="stock-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="invoiceNum">Invoice Number <p-sortIcon field="invoiceNum"></p-sortIcon></th>
+          <th pSortableColumn="purchasedFrom">Purchased From <p-sortIcon field="purchasedFrom"></p-sortIcon></th>
+          <th pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+          <th pSortableColumn="datePurchase">Date of Purchase <p-sortIcon field="datePurchase"></p-sortIcon></th>
+          <th pSortableColumn="quantity" style="text-align: center">Quantity <p-sortIcon field="quantity"></p-sortIcon></th>
+          <th pSortableColumn="unit">Unit <p-sortIcon field="unit"></p-sortIcon></th>
+          <th pSortableColumn="rate" style="text-align: right">Rate <p-sortIcon field="rate"></p-sortIcon></th>
+          <th pSortableColumn="amount" style="text-align: right">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-entry let-rowIndex="rowIndex">
+        <tr [ngClass]="{ 'bgRowOdd': rowIndex % 2 !== 0 }">
+          <td class="invoice-cell"><strong>{{entry.invoiceNum}}</strong></td>
+          <td class="vendor-cell">{{entry.purchasedFrom}}</td>
+          <td class="product-cell">{{entry.productName}}</td>
+          <td class="date-cell">{{entry.datePurchase}}</td>
+          <td class="quantity-cell" style="text-align: center">{{entry.quantity}}</td>
+          <td class="unit-cell">{{entry.unit}}</td>
+          <td class="rate-cell" style="text-align: right">₹{{entry.rate | number:'1.2-2'}}</td>
+          <td class="amount-cell" style="text-align: right"><strong>₹{{entry.amount | number:'1.2-2'}}</strong></td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="empty-message">
+            <i class="pi pi-inbox"></i>
+            <p>No stock entries found</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!allstockentries || allstockentries.length === 0">
+    <i class="pi pi-inbox"></i>
+    <p>No stock entries available</p>
+  </div>
 </div>
