@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { ProductDetails } from '../models/product.model';
 import { OtherdataService } from '../services/otherdata.service';
@@ -30,7 +30,7 @@ export class AddedproductsComponent implements OnInit {
   taxrate: number | null = null;
   unit: string = '';
   // parentArray;
-  constructor(private otherdataservice: OtherdataService, private spinner: NgxSpinnerService) {
+  constructor(private otherdataservice: OtherdataService, private spinner: NgxSpinnerService, private cdr:ChangeDetectorRef) {
 
   }
 
@@ -148,6 +148,7 @@ export class AddedproductsComponent implements OnInit {
       // this.parentArray=this.savedProducts
       this.otherdataservice.loadedProducts = this.savedProducts;
       this.spinner.hide();
+      this.cdr.markForCheck();
     });
   }
 

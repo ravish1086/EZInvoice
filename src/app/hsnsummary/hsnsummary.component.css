@@ -173,7 +173,7 @@
 }
 
 .amount-cell {
-  text-align: right;
+  /* text-align: right; */
   font-weight: 500;
   color: #495057;
   font-family: 'Courier New', monospace;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CustomerModel } from '../models/customer.model';
 import { OtherdataService } from '../services/otherdata.service';
 import * as XLSX from 'xlsx';
@@ -39,7 +39,7 @@ export class CustomersComponent implements OnInit {
   constructor(
     private otherdataservice: OtherdataService, 
     private messageService: MessageService, 
-    private loader: NgxSpinnerService
+    private loader: NgxSpinnerService, private cdr:ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +125,7 @@ export class CustomersComponent implements OnInit {
            
             console.log(this.savedCustomers);
             this.otherdataservice.loadedCustomers=this.savedCustomers;
+            this.cdr.markForCheck();
         },
         error : err=>
         {
