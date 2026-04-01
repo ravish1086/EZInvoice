@@ -131,10 +131,15 @@
           <td>
             <div class="customer-info">
               <span class="customer-name">{{detail.customer.customerName}}</span>
-              <span class="customer-type" [class.b2b]="detail.customer.customerGst"
-                [class.b2c]="!detail.customer.customerGst">
-                {{ detail.customer.customerGst ? 'B2B' : 'B2C' }}
-              </span>
+              <div style="display: flex; gap: 10px;">
+                <span class="customer-type" [class.b2b]="detail.customer.customerGst"
+                  [class.b2c]="!detail.customer.customerGst">
+                  {{ detail.customer.customerGst ? 'B2B' : 'B2C' }}
+                </span>
+                <span class="invoice-type" [class.b2b]="detail.invoiceType" [class.b2c]="!detail.invoiceType">
+                  {{ detail.invoiceType }}
+                </span>
+              </div>
             </div>
           </td>
           <td class="gstin">{{detail.customer.customerGst || 'Unregistered'}}</td>
