@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "deploy-git-pages": "ng deploy --base-href=/EZInvoice/",
     "test": "ng test"
   },
   "private": true,
@@ -19,6 +20,7 @@
     "@angular/router": "^21.2.0",
     "@primeuix/themes": "^2.0.3",
     "jspdf": "^4.2.0",
+    "bootstrap": "^5.0.1",
     "ngx-csv": "^0.3.2",
     "ngx-spinner": "^21.1.0",
     "primeicons": "^7.0.0",

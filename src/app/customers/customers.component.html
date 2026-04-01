@@ -149,7 +149,7 @@
   <!-- Desktop Table View -->
   <div class="table-wrapper desktop-view">
     <p-table #dt1 [value]="savedCustomers" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50, 100]"
-      [loading]="false" [scrollable]="true" [paginator]="true" scrollHeight="500px"
+      [loading]="false" [scrollable]="true" [paginator]="false" scrollHeight="500px"
       [totalRecords]="savedCustomers.length"
       [globalFilterFields]="['customerName', 'customerGst', 'customerPan', 'customerContact', 'customerAddress']"
       styleClass="p-datatable-striped customers-table">

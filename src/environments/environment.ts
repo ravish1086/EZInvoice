@@ -9,8 +9,8 @@ export const environment = {
   apiurl:'http://localhost:4500/api/v1',
   // expressAppApiUrl:'http://localhost:4500/api/v1'
   // expressAppApiUrl:'http://ec2-13-60-19-164.eu-north-1.compute.amazonaws.com/api/v1'
-  expressAppApiUrl:'http://localhost:4500/api/v1'
-  // expressAppApiUrl:'https://ez-invoice-backend.vercel.app/api/v1'
+  // expressAppApiUrl:'http://localhost:4500/api/v1'
+  expressAppApiUrl:'https://ez-invoice-backend.vercel.app/api/v1'
 
 };
 

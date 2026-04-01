@@ -118,9 +118,10 @@ export class AddedproductsComponent implements OnInit {
         element2Mobile[j].style.display = 'block';
       }
     }
-    
+    this.spinner.show();
     this.otherdataservice.saveProducts(entry, entry.id).subscribe((res) => {
       console.log(res);
+      this.spinner.hide();
     });
   }
 

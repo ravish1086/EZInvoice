@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import jsPDF from 'jspdf';
 import { InvoiceService } from '../services/invoice.service';
@@ -113,7 +113,7 @@ toggleOD(type: any) {
   this.invoiceType = type;
 }
 
-constructor(private invoiceService: InvoiceService, private otherDataService: OtherdataService, private router: Router, private route: ActivatedRoute) { }
+constructor(private invoiceService: InvoiceService, private otherDataService: OtherdataService, private router: Router, private route: ActivatedRoute, private cdr:ChangeDetectorRef) { }
 
 ngOnInit(): void {
   this.route.params.subscribe(params => {
@@ -131,6 +131,7 @@ ngOnInit(): void {
       for (let i = 0; i < this.balancerow; i++) {
         this.balancerows.push(i);
       }
+      this.cdr.markForCheck();
     });
    
     this.otherDataService.getAppConfig().subscribe(res => {
@@ -149,6 +150,7 @@ ngOnInit(): void {
       this.houseNum = this.otherDataService.appConfig.houseNo
       this.area = this.otherDataService.appConfig.area
       this.pan = this.otherDataService.appConfig.pan
+      this.cdr.markForCheck();
     });
   })
 }

@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-// @import url(node_modules/bootstrap/dist/css/bootstrap.min.css) layer(bootstrap);
+@import url(bootstrap/dist/css/bootstrap.min.css) layer(bootstrap);
 // @import url(node_modules/primeng/resources/themes/lara-light-blue/theme.css);
 // @import url(node_modules/primeng/resources/primeng.min.css);
 @import url(primeicons/primeicons.css);
@@ -73,89 +73,121 @@ input {
     padding: 0.5rem 0.75rem;
 }
 
-// Manual Bootstrap Grid System
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
-}
+// // Manual Bootstrap Grid System
+// .row {
+//     display: flex;
+//     flex-wrap: wrap;
+//     margin-right: -15px;
+//     margin-left: -15px;
+// }
 
-[class*="col-"] {
-    position: relative;
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-}
+// [class*="col-"] {
+//     position: relative;
+//     width: 100%;
+//     padding-right: 15px;
+//     padding-left: 15px;
+// }
 
-// Mobile first or base columns
-@for $i from 1 through 12 {
-    .col-#{$i} {
-        flex: 0 0 calc(100% / 12 * #{$i});
-        max-width: calc(100% / 12 * #{$i});
-    }
-}
+// // Mobile first or base columns
+// @for $i from 1 through 12 {
+//     .col-#{$i} {
+//         flex: 0 0 calc(100% / 12 * #{$i});
+//         max-width: calc(100% / 12 * #{$i});
+//     }
+// }
 
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-    @for $i from 1 through 12 {
-        .col-sm-#{$i} {
-            flex: 0 0 calc(100% / 12 * #{$i});
-            max-width: calc(100% / 12 * #{$i});
-        }
-    }
-}
+// // Small devices (landscape phones, 576px and up)
+// @media (min-width: 576px) {
+//     @for $i from 1 through 12 {
+//         .col-sm-#{$i} {
+//             flex: 0 0 calc(100% / 12 * #{$i});
+//             max-width: calc(100% / 12 * #{$i});
+//         }
+//     }
+// }
 
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {
-    @for $i from 1 through 12 {
-        .col-md-#{$i} {
-            flex: 0 0 calc(100% / 12 * #{$i});
-            max-width: calc(100% / 12 * #{$i});
-        }
-    }
-}
+// // Medium devices (tablets, 768px and up)
+// @media (min-width: 768px) {
+//     @for $i from 1 through 12 {
+//         .col-md-#{$i} {
+//             flex: 0 0 calc(100% / 12 * #{$i});
+//             max-width: calc(100% / 12 * #{$i});
+//         }
+//     }
+// }
 
-// Large devices (desktops, 992px and up)
-@media (min-width: 992px) {
-    @for $i from 1 through 12 {
-        .col-lg-#{$i} {
-            flex: 0 0 calc(100% / 12 * #{$i});
-            max-width: calc(100% / 12 * #{$i});
-        }
-    }
-}
+// // Large devices (desktops, 992px and up)
+// @media (min-width: 992px) {
+//     @for $i from 1 through 12 {
+//         .col-lg-#{$i} {
+//             flex: 0 0 calc(100% / 12 * #{$i});
+//             max-width: calc(100% / 12 * #{$i});
+//         }
+//     }
+// }
 
-// Extra large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {
-    @for $i from 1 through 12 {
-        .col-xl-#{$i} {
-            flex: 0 0 calc(100% / 12 * #{$i});
-            max-width: calc(100% / 12 * #{$i});
-        }
-    }
-}
+// // Extra large devices (large desktops, 1200px and up)
+// @media (min-width: 1200px) {
+//     @for $i from 1 through 12 {
+//         .col-xl-#{$i} {
+//             flex: 0 0 calc(100% / 12 * #{$i});
+//             max-width: calc(100% / 12 * #{$i});
+//         }
+//     }
+// }
 
 // Basic Utility Classes
-.float-right { float: right !important; }
-.float-left { float: left !important; }
+.float-right {
+    float: right !important;
+}
+
+.float-left {
+    float: left !important;
+}
+
 .clearfix::after {
     display: block;
     clear: both;
     content: "";
 }
 
-.text-center { text-align: center !important; }
-.text-right { text-align: right !important; }
-.text-left { text-align: left !important; }
+.text-center {
+    text-align: center !important;
+}
 
-.d-flex { display: flex !important; }
-.justify-content-between { justify-content: space-between !important; }
-.align-items-center { align-items: center !important; }
+.text-right {
+    text-align: right !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
 
 // Component Specific Helpers
-.leftalign { text-align: left !important; }
-.align-center { text-align: center !important; }
-.addPadding-left { padding-left: 15px !important; }
-.addPadding-right { padding-right: 15px !important; }
-
+.leftalign {
+    text-align: left !important;
+}
+
+.align-center {
+    text-align: center !important;
+}
+
+.addPadding-left {
+    padding-left: 15px !important;
+}
+
+.addPadding-right {
+    padding-right: 15px !important;
+}
