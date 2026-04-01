@@ -509,16 +509,15 @@ export class CreateinvoiceComponent implements OnInit {
           console.log(res);
           if(res===null || res===undefined)
           {
-            alert("Something Wrong Occurred");
+            this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to update invoice.'});
           }
           else{
-            alert("Invoice Updated");
+            this.messageService.add({severity:'success', summary: 'Success', detail: 'Invoice updated successfully.'});
 
-            setTimeout((run:any)=>
-              {
-                  this.spinner.hide();
-                  this.router.navigate(['/dashboard/generatedInvoice',res._id])
-              },2000);
+            setTimeout((run:any)=>{
+              this.spinner.hide();
+              this.router.navigate(['/dashboard/generatedInvoice',res._id])
+            },200);
           }
         }
         );

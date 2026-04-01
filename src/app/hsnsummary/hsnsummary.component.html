@@ -12,11 +12,7 @@
             <i class="pi pi-calendar"></i>
             Start Date
           </label>
-          <input 
-            type="date" 
-            id="startDate"
-            class="form-control date-input" 
-            [(ngModel)]="startDate"
+          <input type="date" id="startDate" class="form-control date-input" [(ngModel)]="startDate"
             placeholder="Start Date">
         </div>
         <div class="date-input-group">
@@ -24,24 +20,17 @@
             <i class="pi pi-calendar"></i>
             End Date
           </label>
-          <input 
-            type="date" 
-            id="endDate"
-            class="form-control date-input" 
-            [(ngModel)]="endDate"
-            placeholder="End Date">
+          <input type="date" id="endDate" class="form-control date-input" [(ngModel)]="endDate" placeholder="End Date">
         </div>
-        <button 
-          class="btn btn-primary filter-btn" 
-          (click)="filterRecords()"
-          type="button">
+        <button class="btn btn-primary filter-btn" (click)="filterRecords()" type="button">
           <i class="pi pi-search"></i>
           <span class="btn-text">Filter</span>
         </button>
-        <button 
-          class="btn btn-success export-btn" 
-          (click)="downloadHSNCSV()"
-          type="button">
+        <button class="btn btn-primary" value="Filter Records" (click)="filterRecords('B2B')" name="Filter Rec">Filter
+          B2B</button>
+        <button class="btn btn-primary" value="Filter Records" (click)="filterRecords('B2C')" name="Filter Rec">Filter
+          B2C</button>
+        <button class="btn btn-success export-btn" (click)="downloadHSNCSV()" type="button">
           <i class="pi pi-download"></i>
           <span class="btn-text">Export CSV</span>
         </button>

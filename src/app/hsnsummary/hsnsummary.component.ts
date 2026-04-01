@@ -6,6 +6,7 @@ import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-hsnsummary',
@@ -106,7 +107,7 @@ export class HsnsummaryComponent implements OnInit {
       "uqc": "PAC-PACKS"
     }
   ]
-  constructor(private hsnservice:HsnService, private cdr:ChangeDetectorRef, private spinner:NgxSpinnerService) { }
+  constructor(private hsnservice:HsnService, private cdr:ChangeDetectorRef, private spinner:NgxSpinnerService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.spinner.show();
@@ -118,30 +119,37 @@ export class HsnsummaryComponent implements OnInit {
       this.cdr.markForCheck();
     })
   }
-  filterRecords() {
-    var filteredSummary: any[] = [];
-    var summary = this.allinvoicesdetails;
+ filterRecords(type?:string)
+  {
+    var filteredSummary=[];
+    var summary=this.allinvoicesdetails
+    var invdate=new Date(summary[0].invoiceDate);
+    if(this.startDate && this.endDate){
+      var startdate=new Date(this.startDate).setHours(0,0,0,0)
+      var enddate=new Date(this.endDate).setHours(0,0,0,0)
     
-    if (!this.startDate || !this.endDate) {
-      console.log('Please select both start and end dates');
-      return;
-    }
-    
-    var startdate = new Date(this.startDate).setHours(0, 0, 0, 0);
-    var enddate = new Date(this.endDate).setHours(0, 0, 0, 0);
-    
-    console.log('Start date:', startdate);
-    console.log('End date:', enddate);
-    
-    for (let i = 0; i < summary.length; i++) {
-      let date = new Date(summary[i].invoiceDate).setHours(0, 0, 0, 0);
-      if ((date >= startdate) && (date <= enddate)) {
+    for(let i=0;i<summary.length;i++)
+    {
+     let date=new Date(summary[i].invoiceDate).setHours(0,0,0,0);
+      if((date>startdate || date.valueOf() == startdate.valueOf()) && (date<enddate || date.valueOf() == enddate.valueOf()))
+      {
         filteredSummary.push(summary[i]);
       }
     }
-    
-    console.log(filteredSummary);
-    this.processData(filteredSummary);
+    if(type =='B2B')
+      filteredSummary = filteredSummary.filter(item => item?.customer?.customerGst?.trim())
+    else if(type=='B2C')
+      filteredSummary = filteredSummary.filter(item => !item?.customer?.customerGst?.trim())
+    else
+      filteredSummary=filteredSummary;
+    // this.allinvoicesdetails=filteredSummary;
+
+    console.log(filteredSummary)
+    this.processData(filteredSummary)
+  }
+  else{
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please select both start and end dates' });
+  }
   }
   hsnNumToUQC(hsn: string): string {
     let uqc: string = '';
