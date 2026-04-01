@@ -66,6 +66,7 @@
           <span>Amount</span>
           <span>Mode</span>
           <span>Details</span>
+          <span>Action</span>
         </div>
         <div class="table-row" *ngFor="let pay of filteredPaymentHistory; let i=index;" [class.alt]="i%2!=0">
           <span>{{pay.customerName}}</span>
@@ -74,6 +75,11 @@
           <span>₹{{pay.amountReceived | number : '1.2-2'}}</span>
           <span>{{pay.modeofPayment}}</span>
           <span>{{pay.paymentDetails || '-'}}</span>
+          <span>
+            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" (click)="editPayment(pay)" title="Edit Payment">
+              <i class="pi pi-pencil"></i>
+            </button>
+          </span>
         </div>
       </div>
 
@@ -84,7 +90,12 @@
               <h4>{{pay.customerName}}</h4>
               <p>{{pay.dateofReceipt | date:'dd-MMM-yyyy'}}</p>
             </div>
-            <span class="amount">₹{{pay.amountReceived | number : '1.0-0'}}</span>
+            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+              <span class="amount">₹{{pay.amountReceived | number : '1.0-0'}}</span>
+              <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem; margin-top: 0.35rem;" (click)="editPayment(pay)">
+                <i class="pi pi-pencil"></i> Edit
+              </button>
+            </div>
           </div>
           <div class="mobile-card-body">
             <div><strong>Mode:</strong> {{pay.modeofPayment}}</div>
@@ -240,7 +251,7 @@
 </div>
 
 <!-- Payment Form Modal -->
-<p-dialog header="Record Payment" [(visible)]="showPaymentFormModal" [modal]="true"
+<p-dialog [header]="isEditMode ? 'Edit Payment' : 'Record Payment'" [(visible)]="showPaymentFormModal" [modal]="true"
   [style]="{width: '55rem', maxWidth: '95vw'}">
   <form class="payment-form-card" id="paymentForm" [formGroup]="paymentForm">
     <div class="form-grid">
@@ -301,7 +312,6 @@
   </form>
   <ng-template pTemplate="footer">
     <button class="btn btn-secondary" type="button" (click)="closePaymentFormModal()">Cancel</button>
-    <button class="btn btn-primary" type="button" (click)="submitDetails()" [disabled]="paymentForm.invalid">Submit
-      Details</button>
+    <button class="btn btn-primary" type="button" (click)="submitDetails()" [disabled]="paymentForm.invalid">{{ isEditMode ? 'Update Details' : 'Submit Details' }}</button>
   </ng-template>
 </p-dialog>

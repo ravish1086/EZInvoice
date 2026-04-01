@@ -46,6 +46,8 @@ export class PaymentsComponent implements OnInit {
   simpleReport:any[]=[]
   viewButtonLabel='Show Simplifield Report';
   showPaymentFormModal: boolean = false;
+  isEditMode: boolean = false;
+  currentEditId: string | null = null;
   constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
     private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef
   ) { }
@@ -135,19 +137,33 @@ export class PaymentsComponent implements OnInit {
 
     console.log(this.paymentEntry);
 
-    this.dateservice.insertPaymentDetails(this.paymentEntry).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.messageService.add({severity:'success', summary: 'Success', detail: 'Payment details saved successfully.'});
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to save payment details.'});
-      }
-    });
+    if (this.isEditMode) {
+      this.dateservice.updatePaymentDetails(this.paymentEntry).subscribe({
+        next: (res) => {
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Payment details updated successfully.'});
+          this.showPaymentFormModal = false;
+          this.fetchPaymentDetails();
+        },
+        error: (err) => {
+          console.error(err);
+          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to update payment details.'});
+        }
+      });
+    } else {
+      this.dateservice.insertPaymentDetails(this.paymentEntry).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Payment details saved successfully.'});
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        },
+        error: (err) => {
+          console.error(err);
+          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to save payment details.'});
+        }
+      });
+    }
   }
 
   fetchPaymentDetails()
@@ -312,10 +328,39 @@ export class PaymentsComponent implements OnInit {
 
   openPaymentFormModal(): void {
     this.showPaymentFormModal = true;
+    this.isEditMode = false;
+    this.currentEditId = null;
+    this.paymentEntry._id = undefined;
     this.paymentForm.reset({
       dateofReceipt: new Date().toISOString().substring(0, 10),
       customerNameIndex: '',
       modeofPayment: ''
+    });
+  }
+
+  editPayment(payment: any): void {
+    this.isEditMode = true;
+    this.currentEditId = payment._id;
+    this.paymentEntry._id = payment._id;
+    this.showPaymentFormModal = true;
+        
+    let customerIndex = this.customerList.findIndex(c => c.customerName === payment.customerName);
+        
+    let dateString = '';
+    if (payment.dateofReceipt) {
+      let receiptDate = new Date(payment.dateofReceipt);
+      if (!isNaN(receiptDate.getTime())) {
+        dateString = receiptDate.toISOString().substring(0, 10);
+      }
+    }
+        
+    this.paymentForm.patchValue({
+      customerNameIndex: customerIndex >= 0 ? customerIndex : '',
+      dateofReceipt: dateString,
+      amountReceived: payment.amountReceived,
+      modeofPayment: payment.modeofPayment,
+      paymentDetails: payment.paymentDetails,
+      lastFYBalance: payment.lastFYBalance
     });
   }
 

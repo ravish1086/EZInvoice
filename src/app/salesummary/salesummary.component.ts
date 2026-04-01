@@ -133,10 +133,10 @@ downloadCSVCurrentReport()
   editInvoice(id:any, invoiceType:string)
   {
     id=id;
-    if(invoiceType == 'product')
+    // if(invoiceType == 'product')
       this.router.navigate(['/dashboard/editInvoice',id]);
-    else
-      this.router.navigate(['/dashboard/editNegativeInvoice',id]);
+    // else
+    //   this.router.navigate(['/dashboard/editNegativeInvoice',id]);
   }
   viewInvoice(id:any)
   {

@@ -72,6 +72,9 @@ export class OtherdataService {
   insertPaymentDetails(reqJson: any): Observable<any> {
     return this.http.post(environment.expressAppApiUrl + ApiPathExpressServer.savePaymentDetails, reqJson).pipe(catchError(this.handleError));
   }
+  updatePaymentDetails(reqJson: any): Observable<any> {
+    return this.http.patch(environment.expressAppApiUrl + ApiPathExpressServer.updatePaymentDetails, reqJson).pipe(catchError(this.handleError));
+  }
   fetchPaymentDetails():Observable<any>
   {
     return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllPaymentDetails).pipe(catchError(this.handleError));

@@ -27,6 +27,12 @@
                         </option>
                     </datalist>
                 </div>
+                <div class="invoice-field">
+                    <label>Invoice Type</label>
+                    <p-select [options]="invoiceTypes" [(ngModel)]="invoiceType" optionValue="value" optionLabel="label"
+                        appendTo="body" placeholder="Select Type" [style]="{'width':'100%'}">
+                    </p-select>
+                </div>
             </div>
 
             <div class="invoice-row read-only-row" *ngIf="customerName">
@@ -98,6 +104,11 @@
                             (onChange)="populateFields($event.value, i)" appendTo="body" placeholder="Select Product"
                             [style]="{'width':'100%'}">
                         </p-select>
+                        @if(invoiceType == 'negative') {
+                        <br>
+                        <input type="text" name="{{invoice.description}}" id="id3" [(ngModel)]="invoice.description">
+                        }
+
                     </td>
                     <td>
                         <input pInputText type="text" [(ngModel)]="invoice.unit" [readonly]="true"

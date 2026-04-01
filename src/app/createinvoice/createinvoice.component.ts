@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GenerateInvoice, Invoice } from '../models/invoice.model';
 import { FormsModule } from '@angular/forms';
 import { Table, TableModule } from 'primeng/table';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ProductDetails, ProductInvoice } from '../models/product.model';
 import { OtherdataService } from '../services/otherdata.service';
 import { CustomerModel } from '../models/customer.model';
@@ -78,7 +78,11 @@ export class CreateinvoiceComponent implements OnInit {
   balancerow: number = 40;
   balancerows: any[] = [];
   invoiceNum: any;
-  invoiceType: string = "";
+  invoiceTypes = [
+    { label: 'Product', value: 'product' },
+    { label: 'Negative', value: 'negative' }
+  ];
+  invoiceType: string = "product";
   isEditMode: boolean = false;
   invoiceId: string = '';
   
@@ -88,7 +92,8 @@ export class CreateinvoiceComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private stockservice: StockService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService, private messageService: MessageService,
+    private cdRef: ChangeDetectorRef
   ) { }
 
 
@@ -129,7 +134,6 @@ export class CreateinvoiceComponent implements OnInit {
     this.spinner.show();
     this.otherdata.getProductDetails().subscribe(res=>
       {
-        this.spinner.hide();
         this.products=res;
         this.otherdata.getCustomerDetails().subscribe(res=>{
         this.customers=res;
@@ -160,12 +164,17 @@ export class CreateinvoiceComponent implements OnInit {
             this.totalTax=this.generatedInvoice.taxAmtsgstorcgst5+this.generatedInvoice.taxAmtsgstorcgst12+this.generatedInvoice.taxAmtsgstorcgst18+this.generatedInvoice.taxAmtsgstorcgst28 + this.generatedInvoice.taxAmtIgst5+this.generatedInvoice.taxAmtIgst12+this.generatedInvoice.taxAmtIgst18+this.generatedInvoice.taxAmtIgst28
             this.totalTaxableValue=this.generatedInvoice.totalTaxableValue
             this.totalInvoiceValue=this.generatedInvoice.totalInvoiceValue
-            this.invoiceType=this.generatedInvoice.invoiceType
+            this.invoiceType = this.generatedInvoice.invoiceType;
+            if (!this.invoiceType) {
+              this.invoiceType = 'product';
+            }
             this.taxable12=this.generatedInvoice.taxable12
             this.taxable5=this.generatedInvoice.taxable5
             this.taxable18=this.generatedInvoice.taxable18
             this.taxable28=this.generatedInvoice.taxable28
-            this.populateCustomerFields(this.generatedInvoice.customer.customerName)
+            this.populateCustomerFields(this.generatedInvoice.customer.customerName);
+            this.spinner.hide();
+            this.cdRef.detectChanges();
           });
     
           this.otherdata.getAppConfig().subscribe(res=>
@@ -444,7 +453,7 @@ export class CreateinvoiceComponent implements OnInit {
         customer: this.customer,
         products: this.invoiceView,
         invoiceStatus: "valid",
-        invoiceType: "product"
+        invoiceType: this.invoiceType
       };
       console.log(generateInvoice);
       if(this.isEditMode)
@@ -459,10 +468,10 @@ export class CreateinvoiceComponent implements OnInit {
           console.log(res);
           if(res===null || res===undefined)
           {
-            alert("Something Wrong Occurred");
+            this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to generate invoice.'});
           }
           else{
-            alert("Invoice Generated");
+            this.messageService.add({severity:'success', summary: 'Success', detail: 'Invoice generated successfully.'});
             for(let j=0;j<this.invoiceView.length;j++)
             {
               setTimeout(
