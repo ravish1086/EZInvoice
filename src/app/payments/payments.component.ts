@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReceivedPayments } from '../models/payments.model';
 import { InvoiceService } from '../services/invoice.service';
@@ -13,7 +13,6 @@ import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-payments',
-  providers: [NgxSpinnerService],
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css'],
   standalone: true,
@@ -40,7 +39,7 @@ export class PaymentsComponent implements OnInit {
   viewButtonLabel='Show Simplifield Report';
   showPaymentFormModal: boolean = false;
   constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
-    private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService
+    private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -145,10 +144,11 @@ export class PaymentsComponent implements OnInit {
     this.loader.show();
     this.dateservice.fetchPaymentDetails().subscribe({
       next: (res) => {
-        this.loader.hide();
         console.log(res);
         this.paymentHistory = res;
         this.filteredPaymentHistory = this.paymentHistory;
+        this.loader.hide();
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.loader.hide();
