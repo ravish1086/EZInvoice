@@ -328,10 +328,10 @@
 
         <!-- Create Invoice Button Section -->
         <div class="footer-section footer-button-section">
-            <button (click)="toggleView()" class="btn btn-primary">Toggle View</button>
-
-            <button (click)="createInvoice()" class="btn btn-primary btn-create">{{isEditMode?'Update':'Create'}}
-                Invoice</button>
+            <button (click)="toggleView()" class="btn btn-outline-primary">Toggle View</button>
+            <button (click)="createInvoice()" class="btn btn-primary btn-create">
+                {{isEditMode?'Update':'Create'}} Invoice
+            </button>
         </div>
     </div>
 

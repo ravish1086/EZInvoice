@@ -45,6 +45,7 @@ input,select
     flex: 0 0 auto;
     min-width: 120px;
     justify-content: center;
+    gap: 15px;
 }
 
 .footer-tax-section {
@@ -155,6 +156,12 @@ input,select
 .btn-create {
     white-space: nowrap;
     min-width: 140px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-primary {
+    white-space: nowrap;
     font-weight: 600;
 }
 
