@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ProductDetails } from '../models/product.model';
 import { SellerModel } from '../models/seller.model';
@@ -10,6 +10,7 @@ import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -53,7 +54,7 @@ export class HomeComponent implements OnInit {
 
   showStockEntryModal = false;
 
-      constructor(private stockservice:StockService,private otherdataservice:OtherdataService, private invoiceService:InvoiceService)
+      constructor(private stockservice:StockService,private otherdataservice:OtherdataService, private invoiceService:InvoiceService, private cdr:ChangeDetectorRef, private spinner:NgxSpinnerService)
     {
      
     }
@@ -214,9 +215,12 @@ export class HomeComponent implements OnInit {
 
       NetTotalForEachCustomer: any[] = [];
       getNetTotalForEachCustomer(){
+        this.spinner.show();
         this.invoiceService.getTotalValueOfInvoiceAndReceivedAmount().subscribe((res:any)=>{
           this.NetTotalForEachCustomer = res;
           console.log(res);
+          this.spinner.hide();
+          this.cdr.markForCheck();
         })
       }
 

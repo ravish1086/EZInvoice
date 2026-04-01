@@ -228,11 +228,12 @@ SaveRecords(entry:any,index:number)
       element2Mobile[j].style.display='block';
     }
   }
-  
+  this.loader.show();
   this.otherdataservice.saveCustomer(entry,entry._id).subscribe(res=>
     {
+      this.loader.hide()
       console.log(res);
-    })
+    });
  
 }
 

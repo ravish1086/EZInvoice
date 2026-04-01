@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HSNforGST, HsnSummaryModel } from '../models/hsn.model';
 import { HsnService } from '../services/hsn.service';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-hsnsummary',
@@ -105,13 +106,16 @@ export class HsnsummaryComponent implements OnInit {
       "uqc": "PAC-PACKS"
     }
   ]
-  constructor(private hsnservice:HsnService) { }
+  constructor(private hsnservice:HsnService, private cdr:ChangeDetectorRef, private spinner:NgxSpinnerService) { }
 
   ngOnInit(): void {
+    this.spinner.show();
   this.hsnservice.getAllInvoicesDetails().subscribe(res=>
     {
       this.allinvoicesdetails=res;
       this.processData(this.allinvoicesdetails);
+      this.spinner.hide();
+      this.cdr.markForCheck();
     })
   }
   filterRecords() {

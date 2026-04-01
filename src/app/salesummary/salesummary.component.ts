@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InvoiceService } from '../services/invoice.service';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
@@ -29,7 +29,7 @@ export class SalesummaryComponent implements OnInit {
   totalTax: number = 0;
   totalInvoices: number = 0;
 
-  constructor(private invoiceService:InvoiceService,private router:Router, private spinner:NgxSpinnerService) { }
+  constructor(private invoiceService:InvoiceService,private router:Router, private spinner:NgxSpinnerService, private cdr:ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.spinner.show();
@@ -39,6 +39,7 @@ export class SalesummaryComponent implements OnInit {
         this.summaryBackup=res;
         this.calculateTotal(this.summary);
         this.spinner.hide();
+        this.cdr.markForCheck();
       })
   }
 

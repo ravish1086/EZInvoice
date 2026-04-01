@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { StockService } from '../services/stock.service';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-addedstockentries',
@@ -20,7 +21,7 @@ export class AddedstockentriesComponent implements OnInit {
   allstockentries: any[] = [];
   searchValue: string = '';
 
-  constructor(private stockservice: StockService) {
+  constructor(private stockservice: StockService, private spinner:NgxSpinnerService, private cdr:ChangeDetectorRef) {
 
    }
 
@@ -29,9 +30,12 @@ export class AddedstockentriesComponent implements OnInit {
   }
 
   getAllStockEntries() {
+    this.spinner.show();
     this.stockservice.getAllEntries().subscribe((res) => {
       this.allstockentries = res;
       console.log(this.allstockentries);
+      this.spinner.hide();
+      this.cdr.markForCheck();
     });
   }
 
