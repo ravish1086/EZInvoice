@@ -6,17 +6,6 @@
     margin-left: 10px;
     margin-right: 10px;
     font-size: 10px;
-    margin: 0 auto;
-    transform-origin: top left;
-}
-
-@media (max-width: 880px) {
-    .inv {
-        /* transform: scale(0.6);  */
-        zoom: 0.6;
-        width: calc(210mm / 0.6);
-        /* maintain layout width accounting for scale */
-    }
 }
 
 .bg-color {
@@ -25,8 +14,6 @@
 
 #sectionToPrint {
     padding-left: 4%;
-    padding-right: 1%;
-    /* overflow: scroll; */
 }
 
 .container,
@@ -64,8 +51,3 @@
 .align-center {
     text-align: center;
 }
-
-/* .row>div,
-.RowCon>div {
-    line-height: 20px;
-} */

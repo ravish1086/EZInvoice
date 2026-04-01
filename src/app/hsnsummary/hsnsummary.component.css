@@ -185,13 +185,13 @@
 }
 
 .tax-rate {
-  text-align: center;
+  /* text-align: center; */
   font-weight: 600;
   color: #6c757d;
 }
 
 .quantity-cell {
-  text-align: center;
+  /* text-align: center; */
   font-weight: 500;
   color: #495057;
 }

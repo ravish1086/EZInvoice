@@ -195,14 +195,13 @@
 }
 
 .amount-cell {
-  text-align: right;
   font-weight: 500;
   color: #495057;
   font-family: 'Courier New', monospace;
 }
 
 .stock-cell {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .low-stock {

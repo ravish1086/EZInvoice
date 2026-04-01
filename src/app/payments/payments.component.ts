@@ -21,7 +21,15 @@ import { DialogModule } from 'primeng/dialog';
 export class PaymentsComponent implements OnInit {
   paymentForm!: FormGroup;
   gst: any;
-  paymentEntry!: ReceivedPayments ;
+  paymentEntry: ReceivedPayments = {
+    gst: null,
+    customerName: '',
+    dateofReceipt: '',
+    amountReceived: 0,
+    modeofPayment: '',
+    paymentDetails: '',
+    lastFYBalance: null
+  };
   paymentHistory: any[] = [];
   invoiceHistory: any[] = [];
   customerList: any[] = [];
@@ -50,13 +58,16 @@ export class PaymentsComponent implements OnInit {
       })
       let $obspaymentdetails =  this.dateservice.fetchPaymentDetails();
       let $obsinvoicedetails =  this.invoiceservice.getAllInvoicesDetails();
+      this.loader.show();
       forkJoin([$obsinvoicedetails,$obspaymentdetails]).subscribe({
         next : (data)=>{
           this.invoiceHistory=data[0];
         this.filteredInvoiceHistory=data[0];
           this.paymentHistory=data[1];
         this.filteredPaymentHistory=data[1];
-        this.filterRecords("all")
+        this.filterRecords("all");
+        this.loader.hide();
+        this.cdr.markForCheck();
         }
       })
       // this.fetchPaymentDetails();
@@ -103,7 +114,7 @@ export class PaymentsComponent implements OnInit {
     
     console.log(formValue.customerNameIndex);
     this.gst = this.customerList[index].customerGst;
-    this.paymentEntry.gst = this.gst;
+    this.paymentEntry.gst = this.gst?this.gst:null;
     this.paymentEntry.customerName = this.customerList[index].customerName;
     
     // Fix date handling - use proper date conversion
