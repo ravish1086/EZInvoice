@@ -34,7 +34,7 @@
         </div>
         <div class="badge" *ngIf="filterValue != 'all'">
           <span class="label">Last FY Balance</span>
-          <strong>₹{{simpleReport[0]?.lastFy | number : '1.2-2'}}</strong>
+          <strong>₹{{lastFYBalance | number : '1.2-2'}}</strong>
         </div>
         <div class="badge">
           <span class="label">Credit Received</span>

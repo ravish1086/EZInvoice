@@ -139,10 +139,11 @@ export class PaymentsComponent implements OnInit {
       const currentYear = new Date().getFullYear();
       const financialYearStart = new Date(currentYear, 3, 1);
       openingBalanceEntry = {
-          customerName: this.paymentEntry.customerName,
-          gst: this.paymentEntry.gst,
-          balanceAmount: lastFYBal,
-          dateofReceipt: financialYearStart.toISOString()
+        customerId: this.customerList[index]._id,
+        customerName: this.paymentEntry.customerName,
+        gst: this.paymentEntry.gst,
+        balanceAmount: lastFYBal,
+        dateofReceipt: financialYearStart.toISOString()
       };
     }
 
@@ -253,6 +254,7 @@ export class PaymentsComponent implements OnInit {
       {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
+        this.lastFYBalance = this.openingBalancesHistory[i].balanceAmount;
       }
     }
 
