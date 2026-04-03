@@ -32,10 +32,10 @@
           <span class="label">Invoice Amount</span>
           <strong>₹{{netInvoiceAmount | number : '1.2-2'}}</strong>
         </div>
-        <div class="badge" *ngIf="filterValue != 'all'">
+        <!-- <div class="badge" *ngIf="filterValue != 'all'">
           <span class="label">Last FY Balance</span>
           <strong>₹{{simpleReport[0]?.lastFy | number : '1.2-2'}}</strong>
-        </div>
+        </div> -->
         <div class="badge">
           <span class="label">Credit Received</span>
           <strong>₹{{netPaymentReceived | number : '1.2-2'}}</strong>
@@ -45,6 +45,25 @@
           <strong>₹{{balanceRemaining | number : '1.2-2'}}</strong>
         </div>
       </div>
+    </div>
+
+    <!-- Opening Balance for selected customer -->
+    <div class="opening-balance-section" *ngIf="filterValue != 'all' && selectedCustomerOpeningBalances.length > 0">
+      <div class="ob-header">
+        <i class="pi pi-wallet"></i>
+        <span>Opening Balances for <strong>{{ filterValue }}</strong></span>
+      </div>
+      <div class="ob-list">
+        <div class="ob-item" *ngFor="let ob of selectedCustomerOpeningBalances">
+          <span class="ob-fy">FY {{ ob.fy }}</span>
+          <span class="ob-amount">₹{{ ob.balanceAmount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="opening-balance-section no-balance"
+      *ngIf="filterValue != 'all' && selectedCustomerOpeningBalances.length === 0">
+      <i class="pi pi-info-circle"></i>
+      <span>No opening balance recorded for <strong>{{ filterValue }}</strong></span>
     </div>
   </section>
 
@@ -62,7 +81,7 @@
         <div class="table-row table-row--head">
           <span>Customer</span>
           <span>Date</span>
-          <span>Last FY Balance</span>
+          <!-- <span>Last FY Balance</span> -->
           <span>Amount</span>
           <span>Mode</span>
           <span>Details</span>
@@ -71,7 +90,7 @@
         <div class="table-row" *ngFor="let pay of filteredPaymentHistory; let i=index;" [class.alt]="i%2!=0">
           <span>{{pay.customerName}}</span>
           <span>{{pay.dateofReceipt | date:'dd-MMM-yyyy'}}</span>
-          <span>{{pay.lastFYBalance ? '₹' + (pay.lastFYBalance | number : '1.2-2') : '-'}}</span>
+          <!-- <span>{{pay.lastFYBalance ? '₹' + (pay.lastFYBalance | number : '1.2-2') : '-'}}</span> -->
           <span>₹{{pay.amountReceived | number : '1.2-2'}}</span>
           <span>{{pay.modeofPayment}}</span>
           <span>{{pay.paymentDetails || '-'}}</span>
@@ -181,7 +200,7 @@
           <span>-</span>
           <span>₹{{simpleReport[0]?.lastFy?.toFixed(0) }}</span>
           <span>-</span>
-          <span>Last FY Balance</span>
+          <!-- <span>Last FY Balance</span> -->
         </div>
 
         <div class="table-row" *ngFor="let hist of simpleReport; let i=index;" [class.alt]="i%2!=0">
@@ -210,7 +229,7 @@
           <span class="amount">₹{{simpleReport[0]?.lastFy?.toFixed(0) }}</span>
         </div>
         <div class="mobile-card-body">
-          <div>Last FY Balance</div>
+          <!-- <div>Last FY Balance</div> -->
         </div>
       </div>
 
@@ -315,13 +334,13 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label>Last FY Balance</label>
         <div class="input-wrapper">
           <i class="pi pi-chart-line"></i>
           <input type="number" placeholder="0.00" formControlName="lastFYBalance">
         </div>
-      </div>
+      </div> -->
     </div>
   </form>
   <ng-template pTemplate="footer">

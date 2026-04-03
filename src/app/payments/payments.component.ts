@@ -51,6 +51,7 @@ export class PaymentsComponent implements OnInit {
   showPaymentFormModal: boolean = false;
   isEditMode: boolean = false;
   currentEditId: string | null = null;
+  selectedCustomerOpeningBalances: any[] = [];
   constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
     private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef,
     private confirmationService:ConfirmationService
@@ -254,12 +255,13 @@ export class PaymentsComponent implements OnInit {
       {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
-       
       }
     }
+    this.selectedCustomerOpeningBalances = filteredOpeningBalances;
 
     // Combine and process data for simplified report
-    this.paymentInvoiceCombined = this.filteredInvoiceHistory.concat(this.filteredPaymentHistory).concat(filteredOpeningBalances);
+    this.paymentInvoiceCombined = this.filteredInvoiceHistory.concat(this.filteredPaymentHistory)
+    // .concat(filteredOpeningBalances);
     console.log(this.paymentInvoiceCombined);
     
     let simplifiedData: any[] = [];

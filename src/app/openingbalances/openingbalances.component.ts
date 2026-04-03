@@ -106,16 +106,17 @@ export class OpeningbalancesComponent implements OnInit {
             _id: ob._id
           });
         });
-      } else {
-        // Show empty record for this customer
-        this.displayData.push({
-          customerName: customer.customerName,
-          customerId: customer._id || customer.id,
-          fy: this.getPreviousFinancialYear(),
-          balanceAmount: null,
-          _id: null
-        });
-      }
+      } 
+      // else {
+      //   // Show empty record for this customer
+      //   this.displayData.push({
+      //     customerName: customer.customerName,
+      //     customerId: customer._id || customer.id,
+      //     fy: new Date().getFullYear().toString().slice(-2) + '-' + (new Date().getFullYear() + 1).toString().slice(-2),
+      //     balanceAmount: null,
+      //     _id: null
+      //   });
+      // }
     });
 
     // Add any balances that don't match a current customer (e.g. deleted customers)
@@ -153,7 +154,7 @@ export class OpeningbalancesComponent implements OnInit {
 
   resetForm() {
     this.selectedCustomer = null;
-    this.fy = this.getPreviousFinancialYear();
+    this.fy = new Date().getFullYear().toString().slice(-2) + '-' + (new Date().getFullYear() + 1).toString().slice(-2);
     this.balanceAmount = null;
     this.dateofReceipt = '';
   }
