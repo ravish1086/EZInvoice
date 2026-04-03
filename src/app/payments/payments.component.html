@@ -75,9 +75,15 @@
           <span>₹{{pay.amountReceived | number : '1.2-2'}}</span>
           <span>{{pay.modeofPayment}}</span>
           <span>{{pay.paymentDetails || '-'}}</span>
-          <span>
-            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" (click)="editPayment(pay)" title="Edit Payment">
+          <span style="display: flex; gap: 0.5rem; align-items: center;">
+            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;"
+              (click)="editPayment(pay)" title="Edit Payment">
               <i class="pi pi-pencil"></i>
+            </button>
+            <button class="btn btn-outline"
+              style="padding: 0.25rem 0.5rem; font-size: 0.75rem; color: #dc3545; border-color: #dc3545;"
+              (click)="confirmDelete(pay, $event)" title="Delete Payment">
+              <i class="pi pi-trash"></i>
             </button>
           </span>
         </div>
@@ -92,9 +98,17 @@
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end;">
               <span class="amount">₹{{pay.amountReceived | number : '1.0-0'}}</span>
-              <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem; margin-top: 0.35rem;" (click)="editPayment(pay)">
-                <i class="pi pi-pencil"></i> Edit
-              </button>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.35rem;">
+                <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"
+                  (click)="editPayment(pay)">
+                  <i class="pi pi-pencil"></i> Edit
+                </button>
+                <button class="btn btn-outline"
+                  style="padding: 0.2rem 0.4rem; font-size: 0.7rem; color: #dc3545; border-color: #dc3545;"
+                  (click)="confirmDelete(pay, $event)">
+                  <i class="pi pi-trash"></i> Delete
+                </button>
+              </div>
             </div>
           </div>
           <div class="mobile-card-body">
@@ -312,6 +326,10 @@
   </form>
   <ng-template pTemplate="footer">
     <button class="btn btn-secondary" type="button" (click)="closePaymentFormModal()">Cancel</button>
-    <button class="btn btn-primary" type="button" (click)="submitDetails()" [disabled]="paymentForm.invalid">{{ isEditMode ? 'Update Details' : 'Submit Details' }}</button>
+    <button class="btn btn-primary" type="button" (click)="submitDetails()" [disabled]="paymentForm.invalid">{{
+      isEditMode ? 'Update Details' : 'Submit Details' }}</button>
   </ng-template>
 </p-dialog>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000"></p-confirmDialog>

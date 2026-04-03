@@ -75,6 +75,9 @@ export class OtherdataService {
   updatePaymentDetails(reqJson: any): Observable<any> {
     return this.http.patch(environment.expressAppApiUrl + ApiPathExpressServer.updatePaymentDetails, reqJson).pipe(catchError(this.handleError));
   }
+  deletePaymentDetails(id: string): Observable<any> {
+    return this.http.delete(`${environment.expressAppApiUrl}${ApiPathExpressServer.deletePaymentDetails}?id=${id}`).pipe(catchError(this.handleError));
+  }
   fetchPaymentDetails():Observable<any>
   {
     return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllPaymentDetails).pipe(catchError(this.handleError));

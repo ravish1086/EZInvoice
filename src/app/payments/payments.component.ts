@@ -5,18 +5,20 @@ import { InvoiceService } from '../services/invoice.service';
 import { OtherdataService } from '../services/otherdata.service';
 import { forkJoin } from 'rxjs';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css'],
   standalone: true,
-  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, DialogModule, NgxSpinnerModule]
+  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, DialogModule, NgxSpinnerModule, ConfirmDialogModule],
+  providers: [ConfirmationService]
 })
 export class PaymentsComponent implements OnInit {
   paymentForm!: FormGroup;
@@ -49,7 +51,8 @@ export class PaymentsComponent implements OnInit {
   isEditMode: boolean = false;
   currentEditId: string | null = null;
   constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
-    private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef
+    private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef,
+    private confirmationService:ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -173,7 +176,7 @@ export class PaymentsComponent implements OnInit {
       next: (res) => {
         console.log(res);
         this.paymentHistory = res;
-        this.filteredPaymentHistory = this.paymentHistory;
+        this.filterRecords(this.filterValue);
         this.loader.hide();
         this.cdr.markForCheck();
       },
@@ -361,6 +364,32 @@ export class PaymentsComponent implements OnInit {
       modeofPayment: payment.modeofPayment,
       paymentDetails: payment.paymentDetails,
       lastFYBalance: payment.lastFYBalance
+    });
+  }
+
+  confirmDelete(payment: any, event: Event) {
+    if (event) event.stopPropagation();
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this payment record?',
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        if(payment._id) {
+          this.loader.show();
+          this.dateservice.deletePaymentDetails(payment._id).subscribe({
+            next: (res) => {
+              this.loader.hide();
+              this.messageService.add({severity:'success', summary:'Success', detail:'Payment deleted successfully'});
+              this.fetchPaymentDetails();
+            },
+            error: (err) => {
+              this.loader.hide();
+              this.messageService.add({severity:'error', summary:'Error', detail:'Failed to delete payment'});
+              console.error(err);
+            }
+          });
+        }
+      }
     });
   }
 
