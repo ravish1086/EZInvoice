@@ -82,6 +82,14 @@ export class OtherdataService {
   {
     return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllPaymentDetails).pipe(catchError(this.handleError));
   }
+  fetchOpeningBalances():Observable<any>
+  {
+    return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllOpeningBalances).pipe(catchError(this.handleError));
+  }
+  saveOpeningBalance(reqJson: any):Observable<any>
+  {
+    return this.http.post(environment.expressAppApiUrl+ApiPathExpressServer.saveOpeningBalance, reqJson).pipe(catchError(this.handleError));
+  }
 
   authenticate(request: any): Observable<any> {
     return this.http.post(environment.expressAppApiUrl + ApiPathExpressServer.login, request).pipe(catchError(this.handleError));

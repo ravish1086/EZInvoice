@@ -34,6 +34,7 @@ export class PaymentsComponent implements OnInit {
   };
   paymentHistory: any[] = [];
   invoiceHistory: any[] = [];
+  openingBalancesHistory: any[] = [];
   customerList: any[] = [];
   filteredPaymentHistory: any[] = [];
   filteredInvoiceHistory: any[] = [];
@@ -63,13 +64,15 @@ export class PaymentsComponent implements OnInit {
       })
       let $obspaymentdetails =  this.dateservice.fetchPaymentDetails();
       let $obsinvoicedetails =  this.invoiceservice.getAllInvoicesDetails();
+      let $obsopeningbalances = this.dateservice.fetchOpeningBalances();
       this.loader.show();
-      forkJoin([$obsinvoicedetails,$obspaymentdetails]).subscribe({
+      forkJoin([$obsinvoicedetails,$obspaymentdetails, $obsopeningbalances]).subscribe({
         next : (data)=>{
           this.invoiceHistory=data[0];
         this.filteredInvoiceHistory=data[0];
           this.paymentHistory=data[1];
         this.filteredPaymentHistory=data[1];
+          this.openingBalancesHistory=data[2];
         this.filterRecords("all");
         this.loader.hide();
         this.cdr.markForCheck();
@@ -129,43 +132,50 @@ export class PaymentsComponent implements OnInit {
     this.paymentEntry.amountReceived = formValue.amountReceived ? Number(formValue.amountReceived) : 0;
     this.paymentEntry.modeofPayment = formValue.modeofPayment ? formValue.modeofPayment : "";
     this.paymentEntry.paymentDetails = formValue.paymentDetails ? formValue.paymentDetails : "";
-    this.paymentEntry.lastFYBalance = formValue.lastFYBalance ? Number(formValue.lastFYBalance) : null;
-
-    if(this.paymentEntry.lastFYBalance && this.paymentEntry.lastFYBalance > 0){
-      // Set date to start of financial year if last FY balance is provided
+    
+    let lastFYBal = formValue.lastFYBalance ? Number(formValue.lastFYBalance) : null;
+    let openingBalanceEntry: any = null;
+    if(lastFYBal && lastFYBal > 0){
       const currentYear = new Date().getFullYear();
-      const financialYearStart = new Date(currentYear, 3, 1); // April 1st
-      this.paymentEntry.dateofReceipt = financialYearStart.toDateString();
+      const financialYearStart = new Date(currentYear, 3, 1);
+      openingBalanceEntry = {
+          customerName: this.paymentEntry.customerName,
+          gst: this.paymentEntry.gst,
+          balanceAmount: lastFYBal,
+          dateofReceipt: financialYearStart.toISOString()
+      };
     }
 
-    console.log(this.paymentEntry);
+    let observables = [];
+    if (this.isEditMode && this.paymentEntry._id) {
+        observables.push(this.dateservice.updatePaymentDetails(this.paymentEntry));
+    } else if (this.paymentEntry.amountReceived > 0) {
+        observables.push(this.dateservice.insertPaymentDetails(this.paymentEntry));
+    }
+    
+    if (openingBalanceEntry) {
+      observables.push(this.dateservice.saveOpeningBalance(openingBalanceEntry));
+    }
 
-    if (this.isEditMode) {
-      this.dateservice.updatePaymentDetails(this.paymentEntry).subscribe({
+    if (observables.length > 0) {
+      this.loader.show();
+      forkJoin(observables).subscribe({
         next: (res) => {
-          this.messageService.add({severity:'success', summary: 'Success', detail: 'Payment details updated successfully.'});
+          this.loader.hide();
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Details saved successfully.'});
           this.showPaymentFormModal = false;
-          this.fetchPaymentDetails();
-        },
-        error: (err) => {
-          console.error(err);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to update payment details.'});
-        }
-      });
-    } else {
-      this.dateservice.insertPaymentDetails(this.paymentEntry).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.messageService.add({severity:'success', summary: 'Success', detail: 'Payment details saved successfully.'});
           setTimeout(() => {
             location.reload();
           }, 1000);
         },
         error: (err) => {
+          this.loader.hide();
           console.error(err);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to save payment details.'});
+          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to save details.'});
         }
       });
+    } else {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Please provide either payment amount or opening balance.'});
     }
   }
 
@@ -232,16 +242,22 @@ export class PaymentsComponent implements OnInit {
       if(this.paymentHistory[i].customerName === name || name === "all")
       {
         this.filteredPaymentHistory.push(this.paymentHistory[i]);
-        // Get last FY balance from first payment record
-        if (lastFYBalance === 0) {
-          lastFYBalance = this.paymentHistory[i].lastFYBalance || 0;
-        }
         this.netPaymentReceived += Number(this.paymentHistory[i].amountReceived || 0);
       }
     }
 
+    let filteredOpeningBalances = [];
+    for(let i = 0; i < this.openingBalancesHistory.length; i++)
+    {
+      if(this.openingBalancesHistory[i].customerName === name || name === "all")
+      {
+        filteredOpeningBalances.push(this.openingBalancesHistory[i]);
+        lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
+      }
+    }
+
     // Combine and process data for simplified report
-    this.paymentInvoiceCombined = this.filteredInvoiceHistory.concat(this.filteredPaymentHistory);
+    this.paymentInvoiceCombined = this.filteredInvoiceHistory.concat(this.filteredPaymentHistory).concat(filteredOpeningBalances);
     console.log(this.paymentInvoiceCombined);
     
     let simplifiedData: any[] = [];
@@ -249,10 +265,18 @@ export class PaymentsComponent implements OnInit {
     this.paymentInvoiceCombined.forEach((obj: any) => {
       let tempObj: any = {};
       
-      if(obj.lastFYBalance > 0)
+      if(obj.balanceAmount && obj.balanceAmount > 0)
+      {
+        tempObj['firmName'] = obj.customerName;
+        tempObj['lastFy'] = obj.balanceAmount;
+        tempObj['date'] = obj.createdAt || new Date(new Date().getFullYear() - 1, 3, 1).toISOString();
+        simplifiedData.unshift(tempObj);
+      }
+      else if(obj.lastFYBalance > 0)
       {
         tempObj['firmName'] = obj.customerName;
         tempObj['lastFy'] = obj.lastFYBalance;
+        tempObj['date'] = obj.dateofReceipt || new Date(new Date().getFullYear() - 1, 3, 1).toISOString();
         simplifiedData.unshift(tempObj);
       }
       else if(obj.invoiceDate)

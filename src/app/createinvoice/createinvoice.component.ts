@@ -404,6 +404,7 @@ export class CreateinvoiceComponent implements OnInit {
           console.log(this.customers[i].customerAddress);
         }
       }
+        this.customer._id=this.customers[i]._id;
         this.customer.customerAddress=this.customers[i].customerAddress
         this.customer.customerContact=this.customers[i].customerContact
         this.customer.customerPan=this.customers[i].customerPan
