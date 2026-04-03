@@ -254,7 +254,7 @@ export class PaymentsComponent implements OnInit {
       {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
-        this.lastFYBalance = this.openingBalancesHistory[i].balanceAmount;
+       
       }
     }
 

@@ -173,6 +173,14 @@ export class DashboardComponent {
           this.onMenuItemClick();
           this.router.navigate(['/dashboard/payments']);
         },
+      },
+      {
+        label: 'Opening Balances',
+        icon: 'pi pi-wallet',
+        command: () => {
+          this.onMenuItemClick();
+          this.router.navigate(['/dashboard/openingBalances']);
+        },
       }
     ];
   }

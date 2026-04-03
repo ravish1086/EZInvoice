@@ -82,13 +82,26 @@ export class OtherdataService {
   {
     return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllPaymentDetails).pipe(catchError(this.handleError));
   }
-  fetchOpeningBalances():Observable<any>
+  fetchOpeningBalances(financialYear?: string, allData?: boolean):Observable<any>
   {
-    return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllOpeningBalances).pipe(catchError(this.handleError));
+    let url = environment.expressAppApiUrl+ApiPathExpressServer.getAllOpeningBalances;
+    let queryParams = [];
+    if (financialYear) queryParams.push(`financialYear=${financialYear}`);
+    if (allData) queryParams.push(`allData=true`);
+    if (queryParams.length > 0) {
+      url += '?' + queryParams.join('&');
+    }
+    return this.http.get(url).pipe(catchError(this.handleError));
   }
   saveOpeningBalance(reqJson: any):Observable<any>
   {
     return this.http.post(environment.expressAppApiUrl+ApiPathExpressServer.saveOpeningBalance, reqJson).pipe(catchError(this.handleError));
+  }
+  updateOpeningBalance(reqJson: any): Observable<any> {
+    return this.http.patch(environment.expressAppApiUrl + ApiPathExpressServer.updateOpeningBalance, reqJson).pipe(catchError(this.handleError));
+  }
+  deleteOpeningBalance(id: string): Observable<any> {
+    return this.http.delete(environment.expressAppApiUrl + ApiPathExpressServer.deleteOpeningBalance, { body: { _id: id } }).pipe(catchError(this.handleError));
   }
 
   authenticate(request: any): Observable<any> {

@@ -41,5 +41,7 @@ getLastInvoiceNumber: '/invoices/getLastInvoiceNumber',
 setLastInvoiceNumber: '/invoices/setLastInvoiceNumber',
 getAllOpeningBalances: '/openingBalances/getAllOpeningBalances',
 saveOpeningBalance: '/openingBalances/saveOpeningBalance',
+updateOpeningBalance: '/openingBalances/updateOpeningBalance',
+deleteOpeningBalance: '/openingBalances/deleteOpeningBalance',
 getTotalValueOfInvoiceAndReceivedAmount: '/invoices/getTotalInvoiceValue'
 }

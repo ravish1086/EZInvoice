@@ -1,0 +1,141 @@
+<div class="main-component-container">
+  <div class="button-row">
+    <button pButton type="button" label="History {{showAllHistory ? 'ON' : 'OFF'}}" (click)="toggleHistory()" class="filter-btn mr-2" icon="pi pi-history"></button>
+    <button pButton type="button" label="Add Opening Balance" (click)="showForm()" class="filter-btn" icon="pi pi-plus-circle"></button>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon revenue">
+        <i class="pi pi-wallet"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Total Balance</div>
+        <div class="metric-value">{{ totalOpeningBalance | currency:'INR' }}</div>
+        <div class="metric-subtitle">Total outstanding</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon customers">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Customers Involved</div>
+        <div class="metric-value">{{ customersWithBalance.toLocaleString() }}</div>
+        <div class="metric-subtitle">With balance > 0</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon avg-value">
+        <i class="pi pi-calculator"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Avg Balance</div>
+        <div class="metric-value">{{ averageBalance | currency:'INR' }}</div>
+        <div class="metric-subtitle">Per customer average</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-2 container-box2">
+    <p-table
+      #dt1
+      [value]="displayData"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [paginator]="true"
+      [rows]="10"
+      [globalFilterFields]="['customerName', 'fy']"
+      sortMode="single"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex">
+          <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+          <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal(searchValue, 'contains')" placeholder="Search keyword" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="customerName">Customer Name <p-sortIcon field="customerName"></p-sortIcon></th>
+          <th pSortableColumn="fy">Financial Year <p-sortIcon field="fy"></p-sortIcon></th>
+          <th pSortableColumn="balanceAmount">Balance Amount <p-sortIcon field="balanceAmount"></p-sortIcon></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-entry let-rowIndex="rowIndex">
+        <tr>
+          <td>{{ entry.customerName }}</td>
+          <td>
+            <div class="editmode2" style="display:block">
+              {{ entry.fy }}
+            </div>
+            <div class="editmode1" style="display:none">
+              <select class="inputBox p-inputtext" [(ngModel)]="entry.fy">
+                <option *ngFor="let year of financialYears" [value]="year">{{ year }}</option>
+              </select>
+            </div>
+          </td>
+          <td>
+            <div class="editmode2" style="display:block">
+              {{ entry.balanceAmount | currency:'INR' }}
+            </div>
+            <div class="editmode1" style="display:none">
+              <input type="number" class="inputBox" [(ngModel)]="entry.balanceAmount" />
+            </div>
+          </td>
+          <td>
+            <div class="editmode2" style="display:block">
+              <button pButton icon="pi pi-file-edit" title="Edit" label="Edit" class="mr-2 btn-gap" (click)="toggleEdit(rowIndex)"></button>
+              <button *ngIf="entry._id" pButton icon="pi pi-trash" title="Delete" label="Delete" class="p-button-danger btn-gap" (click)="deleteRecord(entry)"></button>
+            </div>
+            <div class="editmode1" style="display:none">
+              <button pButton icon="pi pi-save" title="Save" label="Save" class="mr-2" (click)="saveRecord(entry, rowIndex)"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog header="Add Opening Balance" [(visible)]="addBalanceForm" [modal]="true" [style]="{ width: '40vw' }" [draggable]="false" [resizable]="false">
+  <div class="form-container">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="customer">Customer</label>
+        <select id="customer" [(ngModel)]="selectedCustomer" class="inputBox p-inputtext">
+          <option [ngValue]="null">Select a Customer</option>
+          <option *ngFor="let cust of savedCustomers" [ngValue]="cust">{{ cust.customerName }}</option>
+        </select>
+      </div>
+
+      <div class="p-field mt-3">
+        <label for="fy">Financial Year</label>
+        <select id="fy" [(ngModel)]="fy" class="inputBox p-inputtext">
+          <option *ngFor="let year of financialYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+
+      <div class="p-field mt-3">
+        <label for="balanceAmount">Balance Amount</label>
+        <input id="balanceAmount" type="number" [(ngModel)]="balanceAmount" class="inputBox p-inputtext" />
+      </div>
+
+      <div class="p-field mt-3">
+        <label for="dateofReceipt">Receipt Date (Optional)</label>
+        <input id="dateofReceipt" type="date" [(ngModel)]="dateofReceipt" class="inputBox p-inputtext" />
+      </div>
+
+      <div class="p-field mt-4" style="text-align: right;">
+        <button pButton label="Save Details" icon="pi pi-check" (click)="addOpeningBalance()"></button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
