@@ -332,6 +332,22 @@
   background-color: #f1f5f9;
 }
 
+/* Frozen Column Highlight */
+::v-deep .p-datatable-modern th.p-frozen-column,
+::v-deep .p-datatable-modern td.p-frozen-column {
+  box-shadow: -4px 0 8px -2px rgba(0, 0, 0, 0.1) !important;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+::v-deep .p-datatable-modern .p-datatable-thead > tr > th.p-frozen-column {
+  background-color: #f8fafc;
+}
+
+::v-deep .p-datatable-modern .p-datatable-tbody > tr:hover > td.p-frozen-column {
+  background-color: #f1f5f9;
+}
+
 .customer-info {
   display: flex;
   flex-direction: column;

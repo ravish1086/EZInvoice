@@ -2,7 +2,7 @@
 <ngx-spinner name="sp2" type="ball-scale-multiple"></ngx-spinner> -->
 
 <div class="payments-container">
-  <div class="actions-bar">
+  <div class="actions-bar" id="actions-bar">
     <button class="btn btn-primary add-payment-btn" type="button" (click)="openPaymentFormModal()">
       <i class="pi pi-plus-circle"></i>
       Add Payment Entry
@@ -251,9 +251,11 @@
       </div>
     </div>
 
-    <div class="totals">
+    <div class="totals table-row">
+      <div></div>
+      <div></div>
       <div>
-        <span>Total Due</span>
+        <span>Total Due (Current FY)</span>
         <strong>
           <span *ngIf="simpleReport[0]?.lastFy">₹{{netInvoiceAmount+simpleReport[0]?.lastFy | number : '1.2-2'}}</span>
           <span *ngIf="!simpleReport[0]?.lastFy">₹{{netInvoiceAmount | number : '1.2-2'}}</span>
@@ -264,7 +266,7 @@
         <strong>₹{{netPaymentReceived | number : '1.2-2'}}</strong>
       </div>
       <div>
-        <span>Balance</span>
+        <span>Net Balance (Including Last FY Balance) (if Any)</span>
         <strong>₹{{balanceRemaining | number : '1.2-2'}}</strong>
       </div>
     </div>

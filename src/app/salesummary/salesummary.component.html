@@ -122,7 +122,7 @@
           <th class="text-right">CGST</th>
           <th class="text-right">SGST</th>
           <th class="text-right">Total Tax</th>
-          <th class="text-center">Actions</th>
+          <th class="text-center" alignFrozen="right" pFrozenColumn>Actions</th>
         </tr>
       </ng-template>
 
@@ -160,7 +160,7 @@
             ₹{{detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 +
             detail.taxAmtsgstorcgst5+detail.taxAmtsgstorcgst12+detail.taxAmtsgstorcgst18+detail.taxAmtsgstorcgst28 +
             detail.taxAmtIgst5+detail.taxAmtIgst12+detail.taxAmtIgst18+detail.taxAmtIgst28 | number : '1.2-2'}}</td>
-          <td>
+          <td alignFrozen="right" pFrozenColumn>
             <div class="row-actions">
               <button class="action-btn edit" (click)="editInvoice(detail._id, detail.invoiceType)" title="Edit">
                 <i class="pi pi-pencil"></i>

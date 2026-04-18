@@ -423,6 +423,18 @@ select {
     .p-datatable-tbody>tr {
         height: auto;
     }
+
+    /* Frozen action column highlight */
+    th.p-frozen-column,
+    td.p-frozen-column {
+        box-shadow: -4px 0 8px -2px rgba(0, 0, 0, 0.1) !important;
+        background-color: #ffffff;
+        z-index: 1;
+    }
+
+    .p-datatable-thead>tr>th.p-frozen-column {
+        background-color: #f8f9fa;
+    }
 }
 
 /* Mobile Card View Styles */

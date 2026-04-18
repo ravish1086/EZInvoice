@@ -75,7 +75,7 @@
 
     <!-- Desktop Table View -->
     <div class="invoice-items-desktop desktop-view" *ngIf="customerName">
-        <p-table [value]="invoiceView" [scrollable]="false" styleClass="invoice-items-table" [resizableColumns]="true"
+        <p-table [value]="invoiceView" [scrollable]="true" styleClass="invoice-items-table" [resizableColumns]="true"
             [reorderableColumns]="true">
             <ng-template pTemplate="header">
                 <tr>
@@ -90,7 +90,7 @@
                     <th style="width: 8%" *ngIf="!interstate">CGST</th>
                     <th style="width: 16%" *ngIf="interstate">IGST</th>
                     <th style="width: 8%">Amount</th>
-                    <th>Action</th>
+                    <th alignFrozen="right" pFrozenColumn>Action</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-invoice let-i="rowIndex">
@@ -147,7 +147,7 @@
                         <input pInputText type="text" [(ngModel)]="invoice.amount" [readonly]="true"
                             class="p-inputtext-sm w-full">
                     </td>
-                    <td>
+                    <td alignFrozen="right" pFrozenColumn>
                         <img (click)="deleteRow()" class="delete-row-btn" src="./assets/img/icons8-remove-48.png"
                             alt="Delete" height="35px" width="35px">
                     </td>

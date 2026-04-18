@@ -324,7 +324,7 @@ export class PaymentsComponent implements OnInit {
   }
   printReport()
   {
-    const elementsToHide = ['ul-div', 'pbutton', 'labelTohide', 'dropdowntohide', 'toggleButton'];
+    const elementsToHide = ['ul-div', 'pbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar'];
     const contentOutlet = document.getElementsByClassName('content-outlet')[0];
     
     // Hide elements
