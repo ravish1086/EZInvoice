@@ -295,18 +295,16 @@
         </div>
 
         <!-- Summary Totals Section -->
-        <div class="footer-section footer-summary-section">
+        <div class="footer-section footer-summary-section" [class.halfview]="!showTaxBrief">
             <table class="summary-table" *ngIf="!showTaxBrief">
                 <tr>
-                    <td class="summary-label">Total Tax:</td>
+                    <th class="summary-label">Total Tax:</th>
                     <td class="summary-value">Rs. {{totalTax | number:'1.2-2'}}</td>
-                </tr>
-                <tr>
-                    <td class="summary-label">Total Taxable Value:</td>
+
+                    <th class="summary-label">Total Taxable Value:</th>
                     <td class="summary-value">Rs. {{totalTaxableValue | number:'1.2-2'}}</td>
-                </tr>
-                <tr>
-                    <td class="summary-label">Total Invoice Value:</td>
+
+                    <th class="summary-label">Total Invoice Value:</th>
                     <td class="summary-value">Rs. {{totalInvoiceValue | number:'1.2-2'}}</td>
                 </tr>
             </table>

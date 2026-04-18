@@ -55,11 +55,26 @@ select {
     overflow-x: auto;
 }
 
+.halfview.footer-summary-section {
+    flex: 1;
+    justify-content: center;
+    min-width: 800px;
+
+    tr {
+        gap: 10px
+    }
+
+    tr>td {
+        margin-right: 20px;
+    }
+}
+
 .footer-summary-section {
     flex: 1;
     justify-content: center;
     min-width: 200px;
 }
+
 
 .invTotal {
     display: block;
