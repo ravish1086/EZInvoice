@@ -31,7 +31,7 @@
     #sectionToPrint {
         padding-left: 4%;
         padding-right: 1%;
-        /* overflow: scroll; */
+        overflow: scroll;
     }
 }
 
