@@ -324,7 +324,7 @@ export class PaymentsComponent implements OnInit {
   }
   printReport()
   {
-    const elementsToHide = ['ul-div', 'pbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar'];
+    const elementsToHide = ['ul-div', 'pbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar', 'filter-div', 'header-div', 'nav-div'];
     const contentOutlet = document.getElementsByClassName('content-outlet')[0];
     
     // Hide elements
@@ -341,13 +341,12 @@ export class PaymentsComponent implements OnInit {
     }
     
     // Print
-    window.print();
-    
-    // Restore elements
-    elementsToHide.forEach(id => {
+    setTimeout(() => {
+      window.print();
+          elementsToHide.forEach(id => {
       const element = document.getElementById(id);
       if (element) {
-        element.style.display = "inline-block";
+        element.style.display = "block";
       }
     });
     
@@ -355,6 +354,10 @@ export class PaymentsComponent implements OnInit {
     if (contentOutlet) {
       this.renderer.removeClass(contentOutlet, 'printPadding');
     }
+    }, 100);
+    
+    // Restore elements
+
   }
 
   openPaymentFormModal(): void {

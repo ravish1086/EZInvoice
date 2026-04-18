@@ -14,9 +14,12 @@
   </div>
 
   <!-- Filters & KPIs -->
+  <h3 id="firmName" style="text-align: center; margin-top:10px;">{{simpleReport[0]?.firmName}}</h3>
+
   <section class="card summary-card">
     <div class="summary-header">
-      <div class="filter-control">
+
+      <div class="filter-control" id="filter-div">
         <label id="labelTohide">Filter Records</label>
         <div class="input-wrapper" id="dropdowntohide">
           <i class="pi pi-filter"></i>
@@ -181,7 +184,7 @@
   <!-- Simplified Report -->
   <section class="card simplified-report" *ngIf="!splitView">
     <div class="simplified-header" *ngIf="simpleReport.length">
-      <h3>{{simpleReport[0]?.firmName}}</h3>
+      <!-- <h3>{{simpleReport[0]?.firmName}}</h3> -->
       <p>Chronological view of invoices and payments</p>
     </div>
 

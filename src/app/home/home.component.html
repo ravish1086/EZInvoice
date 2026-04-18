@@ -7,12 +7,7 @@
         <h2>Stock Entry Management</h2>
       </div>
       <div class="header-actions">
-        <button 
-          (click)="openStockEntryModal()" 
-          pButton 
-          pRipple 
-          label="Add Stock Entry" 
-          icon="pi pi-plus"
+        <button (click)="openStockEntryModal()" pButton pRipple label="Add Stock Entry" icon="pi pi-plus"
           class="p-button-primary btn-add-entry">
         </button>
       </div>
@@ -20,13 +15,8 @@
   </div>
 
   <!-- Stock Entry Form Modal -->
-  <p-dialog 
-    header="Add Stock Entry" 
-    [modal]="true" 
-    [(visible)]="showStockEntryModal" 
-    [style]="{ width: '90vw', maxWidth: '900px' }"
-    [closable]="true"
-    styleClass="stock-entry-dialog">
+  <p-dialog header="Add Stock Entry" [modal]="true" [(visible)]="showStockEntryModal"
+    [style]="{ width: '90vw', maxWidth: '900px' }" [closable]="true" styleClass="stock-entry-dialog">
     <div class="form-section">
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
@@ -35,14 +25,8 @@
               <i class="pi pi-file"></i>
               Invoice Number <span class="required">*</span>
             </label>
-            <input 
-              id="float-input" 
-              type="text" 
-              pInputText 
-              name="invoiceNum" 
-              formControlName="invoiceNum"
-              placeholder="Enter invoice number"
-              class="form-input">
+            <input id="float-input" type="text" pInputText name="invoiceNum" formControlName="invoiceNum"
+              placeholder="Enter invoice number" class="form-input">
           </div>
 
           <div class="form-group">
@@ -50,11 +34,7 @@
               <i class="pi pi-building"></i>
               Purchased From <span class="required">*</span>
             </label>
-            <input 
-              id="seller" 
-              list="sellers" 
-              formControlName="purchasedFrom"
-              placeholder="Select or enter seller name"
+            <input id="seller" list="sellers" formControlName="purchasedFrom" placeholder="Select or enter seller name"
               class="form-input">
             <datalist id="sellers">
               <option [value]="seller.sellerName" *ngFor="let seller of sellers">{{seller.sellerName}}</option>
@@ -66,13 +46,8 @@
               <i class="pi pi-box"></i>
               Product Name <span class="required">*</span>
             </label>
-            <input 
-              id="product" 
-              list="products" 
-              formControlName="productName" 
-              (change)="mapSelectedProduct()"
-              placeholder="Select or enter product name"
-              class="form-input">
+            <input id="product" list="products" formControlName="productName" (change)="mapSelectedProduct()"
+              placeholder="Select or enter product name" class="form-input">
             <datalist id="products">
               <option [value]="product.productName" *ngFor="let product of products">{{product.productName}}</option>
             </datalist>
@@ -83,11 +58,7 @@
               <i class="pi pi-calendar"></i>
               Date of Purchase <span class="required">*</span>
             </label>
-            <input 
-              type="date" 
-              name="datePurchase" 
-              formControlName="datePurchase"
-              class="form-input">
+            <input type="date" name="datePurchase" formControlName="datePurchase" class="form-input">
           </div>
 
           <div class="form-group">
@@ -95,11 +66,7 @@
               <i class="pi pi-sort-numeric-up"></i>
               Quantity <span class="required">*</span>
             </label>
-            <input 
-              type="number" 
-              name="quantity" 
-              formControlName="quantity"
-              placeholder="Enter quantity"
+            <input type="number" name="quantity" formControlName="quantity" placeholder="Enter quantity"
               class="form-input">
           </div>
 
@@ -108,10 +75,7 @@
               <i class="pi pi-tag"></i>
               Unit <span class="required">*</span>
             </label>
-            <select 
-              name="unit" 
-              formControlName="unit"
-              class="form-input">
+            <select name="unit" formControlName="unit" class="form-input">
               <option value="">Select unit</option>
               <option [value]="product.productUnit" *ngFor="let product of products">{{product.productUnit}}</option>
             </select>
@@ -122,12 +86,7 @@
               <i class="pi pi-dollar"></i>
               Rate <span class="required">*</span>
             </label>
-            <input 
-              type="number" 
-              name="rate" 
-              formControlName="rate"
-              placeholder="Enter rate"
-              step="0.01"
+            <input type="number" name="rate" formControlName="rate" placeholder="Enter rate" step="0.01"
               class="form-input">
           </div>
 
@@ -136,28 +95,17 @@
               <i class="pi pi-money-bill"></i>
               Amount <span class="required">*</span>
             </label>
-            <input 
-              type="number" 
-              name="amount" 
-              formControlName="amount"
-              placeholder="Enter amount"
-              step="0.01"
+            <input type="number" name="amount" formControlName="amount" placeholder="Enter amount" step="0.01"
               class="form-input">
           </div>
         </div>
 
         <div class="form-actions">
-          <button 
-            type="submit" 
-            [disabled]="!productForm.valid" 
-            class="btn btn-primary btn-submit">
+          <button type="submit" [disabled]="!productForm.valid" class="btn btn-primary btn-submit">
             <i class="pi pi-check"></i>
             <span>Add Entry</span>
           </button>
-          <button 
-            type="button" 
-            (click)="closeStockEntryModal()" 
-            class="btn btn-secondary btn-cancel">
+          <button type="button" (click)="closeStockEntryModal()" class="btn btn-secondary btn-cancel">
             <i class="pi pi-times"></i>
             <span>Cancel</span>
           </button>
@@ -177,12 +125,7 @@
 
     <!-- Desktop Table View -->
     <div class="table-wrapper desktop-view" *ngIf="NetTotalForEachCustomer">
-      <p-table 
-        [value]="NetTotalForEachCustomer" 
-        [paginator]="true" 
-        [rows]="20" 
-     
-        [rowsPerPageOptions]="[10, 20, 50, 100]"
+      <p-table [value]="NetTotalForEachCustomer" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[10, 20, 50, 100]"
         styleClass="p-datatable-striped summary-table">
         <ng-template pTemplate="header">
           <tr>
@@ -199,7 +142,8 @@
             <td class="customer-name">{{record.customerName}}</td>
             <td class="amount-cell invoice-value">Rs. {{record.netInvoiceValue | number:'1.2-2'}}</td>
             <td class="amount-cell payment-value">Rs. {{record.totalPaymentReceived | number:'1.2-2'}}</td>
-            <td class="amount-cell balance-value" [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
+            <td class="amount-cell balance-value"
+              [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
               Rs. {{(record.netInvoiceValue - record.totalPaymentReceived) | number:'1.2-2'}}
             </td>
           </tr>
@@ -246,7 +190,8 @@
               <i class="pi pi-wallet"></i>
               Balance
             </span>
-            <span class="summary-value balance-value" [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
+            <span class="summary-value balance-value"
+              [class.negative-balance]="(record.netInvoiceValue - record.totalPaymentReceived) < 0">
               Rs. {{(record.netInvoiceValue - record.totalPaymentReceived) | number:'1.2-2'}}
             </span>
           </div>
