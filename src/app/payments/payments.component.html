@@ -7,14 +7,15 @@
       <i class="pi pi-plus-circle"></i>
       Add Payment Entry
     </button>
-    <button class="btn btn-secondary" type="button" (click)="toggleReportView()">
+    <!-- <button class="btn btn-secondary" type="button" (click)="toggleReportView()">
       <i class="pi pi-eye"></i>
       {{viewButtonLabel}}
-    </button>
+    </button> -->
   </div>
 
   <!-- Filters & KPIs -->
-  <h3 id="firmName" style="text-align: center; margin-top:10px;">{{simpleReport[0]?.firmName}}</h3>
+  <h3 *ngIf="filterValue != 'all'" id="firmName" style="text-align: center; margin-top:10px;">
+    {{simpleReport[0]?.firmName}}</h3>
 
   <section class="card summary-card">
     <div class="summary-header">
@@ -35,10 +36,10 @@
           <span class="label">Invoice Amount</span>
           <strong>₹{{netInvoiceAmount | number : '1.2-2'}}</strong>
         </div>
-        <!-- <div class="badge" *ngIf="filterValue != 'all'">
-          <span class="label">Last FY Balance</span>
-          <strong>₹{{simpleReport[0]?.lastFy | number : '1.2-2'}}</strong>
-        </div> -->
+        <div class="badge" *ngIf="filterValue != 'all'">
+          <span class="label">Opening Balance</span>
+          <strong>₹{{lastFYBalance | number : '1.2-2'}}</strong>
+        </div>
         <div class="badge">
           <span class="label">Credit Received</span>
           <strong>₹{{netPaymentReceived | number : '1.2-2'}}</strong>
@@ -51,7 +52,7 @@
     </div>
 
     <!-- Opening Balance for selected customer -->
-    <div class="opening-balance-section" *ngIf="filterValue != 'all' && selectedCustomerOpeningBalances.length > 0">
+    <!-- <div class="opening-balance-section" *ngIf="filterValue != 'all' && selectedCustomerOpeningBalances.length > 0">
       <div class="ob-header">
         <i class="pi pi-wallet"></i>
         <span>Opening Balances for <strong>{{ filterValue }}</strong></span>
@@ -62,12 +63,12 @@
           <span class="ob-amount">₹{{ ob.balanceAmount | number:'1.2-2' }}</span>
         </div>
       </div>
-    </div>
-    <div class="opening-balance-section no-balance"
+    </div> -->
+    <!-- <div class="opening-balance-section no-balance"
       *ngIf="filterValue != 'all' && selectedCustomerOpeningBalances.length === 0">
       <i class="pi pi-info-circle"></i>
       <span>No opening balance recorded for <strong>{{ filterValue }}</strong></span>
-    </div>
+    </div> -->
   </section>
 
   <!-- Split View -->

@@ -220,7 +220,7 @@ export class PaymentsComponent implements OnInit {
   filterRecords(name: string)
   {
     this.simpleReport = [];
-    let lastFYBalance = 0;
+    this.lastFYBalance = 0;
     console.log(name);
     this.filteredInvoiceHistory = [];
     this.filteredPaymentHistory = [];
@@ -254,7 +254,7 @@ export class PaymentsComponent implements OnInit {
       if(this.openingBalancesHistory[i].customerName === name || name === "all")
       {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
-        lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
+        this.lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
       }
     }
     this.selectedCustomerOpeningBalances = filteredOpeningBalances;
@@ -316,7 +316,7 @@ export class PaymentsComponent implements OnInit {
       
     console.log(simplifiedData);
     this.simpleReport = simplifiedData;
-    this.balanceRemaining = this.calculateBalance(this.netInvoiceAmount, this.netPaymentReceived, lastFYBalance);
+    this.balanceRemaining = this.calculateBalance(this.netInvoiceAmount, this.netPaymentReceived, this.lastFYBalance);
   }
 
   calculateBalance(netinvoiceamt: number, netpaymentReceived: number, lastFYBalance: number): number {
