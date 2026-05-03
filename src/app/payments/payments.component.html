@@ -23,12 +23,11 @@
       <div class="filter-control" id="filter-div">
         <label id="labelTohide">Filter Records</label>
         <div class="input-wrapper" id="dropdowntohide">
-          <i class="pi pi-filter"></i>
-          <select #selection (change)="filterRecords(selection.value)" [(ngModel)]="filterValue">
-            <option value="all">All Customers</option>
-            <option value="{{customer.customerName}}" *ngFor="let customer of customerList; let i=index;">
-              {{customer.customerName}}</option>
-          </select>
+          <!-- <i class="pi pi-filter"></i> -->
+          <p-select [options]="customerFilterOptions" [(ngModel)]="filterValue" filterBy="label" optionLabel="label"
+            [filter]="true" [appendTo]="'body'" optionValue="value" (onChange)="filterRecords($event.value)"
+            [style]="{'width':'100%'}" styleClass="custom-dropdown">
+          </p-select>
         </div>
       </div>
       <div class="summary-badges">
@@ -296,11 +295,11 @@
       <div class="form-group">
         <label>Customer Name</label>
         <div class="input-wrapper">
-          <i class="pi pi-user"></i>
-          <select formControlName="customerNameIndex">
-            <option value="" disabled>Select customer</option>
-            <option value="{{i}}" *ngFor="let customer of customerList; let i=index;">{{customer.customerName}}</option>
-          </select>
+          <!-- <i class="pi pi-user"></i> -->
+          <p-select [options]="customerList" formControlName="customerNameIndex" optionLabel="customerName"
+            [filter]="true" [appendTo]="'body'" optionValue="customerName" filterBy="customerName"
+            placeholder="Select customer" [style]="{'width':'100%'}" styleClass="custom-dropdown">
+          </p-select>
         </div>
       </div>
 

@@ -12,12 +12,14 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
+import { SelectModule } from 'primeng/select';
+
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css'],
   standalone: true,
-  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, DialogModule, NgxSpinnerModule, ConfirmDialogModule],
+  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, DialogModule, NgxSpinnerModule, ConfirmDialogModule, SelectModule],
   providers: [ConfirmationService]
 })
 export class PaymentsComponent implements OnInit {
@@ -36,6 +38,7 @@ export class PaymentsComponent implements OnInit {
   invoiceHistory: any[] = [];
   openingBalancesHistory: any[] = [];
   customerList: any[] = [];
+  customerFilterOptions: any[] = [];
   filteredPaymentHistory: any[] = [];
   filteredInvoiceHistory: any[] = [];
   filterValue="all"
@@ -63,6 +66,10 @@ export class PaymentsComponent implements OnInit {
     this.dateservice.getCustomerDetails().subscribe(res=>
       {
         this.customerList=res;
+        this.customerFilterOptions = [
+          { label: 'All Customers', value: 'all' },
+          ...this.customerList.map(c => ({ label: c.customerName, value: c.customerName }))
+        ];
       })
       let $obspaymentdetails =  this.dateservice.fetchPaymentDetails();
       let $obsinvoicedetails =  this.invoiceservice.getAllInvoicesDetails();
@@ -114,7 +121,7 @@ export class PaymentsComponent implements OnInit {
       return;
     }
     const formValue = this.paymentForm.value;
-    let index = Number(formValue.customerNameIndex);
+    let index = this.customerList.findIndex(c => c.customerName === formValue.customerNameIndex);
     
     // Add validation for customer index
     if (index < 0 || index >= this.customerList.length) {
@@ -374,8 +381,6 @@ export class PaymentsComponent implements OnInit {
     this.paymentEntry._id = payment._id;
     this.showPaymentFormModal = true;
         
-    let customerIndex = this.customerList.findIndex(c => c.customerName === payment.customerName);
-        
     let dateString = '';
     if (payment.dateofReceipt) {
       let receiptDate = new Date(payment.dateofReceipt);
@@ -385,7 +390,7 @@ export class PaymentsComponent implements OnInit {
     }
         
     this.paymentForm.patchValue({
-      customerNameIndex: customerIndex >= 0 ? customerIndex : '',
+      customerNameIndex: payment.customerName || '',
       dateofReceipt: dateString,
       amountReceived: payment.amountReceived,
       modeofPayment: payment.modeofPayment,
