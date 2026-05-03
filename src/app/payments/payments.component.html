@@ -33,19 +33,19 @@
       <div class="summary-badges">
         <div class="badge">
           <span class="label">Invoice Amount<br>(Current FY)</span>
-          <strong>₹{{netInvoiceAmount | number : '1.2-2'}}</strong>
+          <strong>Rs. {{netInvoiceAmount | number : '1.2-2'}}</strong>
         </div>
         <div class="badge" *ngIf="filterValue != 'all'">
           <span class="label">Opening Balance</span>
-          <strong>₹{{lastFYBalance | number : '1.2-2'}}</strong>
+          <strong>Rs. {{lastFYBalance | number : '1.2-2'}}</strong>
         </div>
         <div class="badge">
           <span class="label">Credit Received</span>
-          <strong>₹{{netPaymentReceived | number : '1.2-2'}}</strong>
+          <strong>Rs. {{netPaymentReceived | number : '1.2-2'}}</strong>
         </div>
         <div class="badge highlight">
           <span class="label">Balance Due</span>
-          <strong>₹{{balanceRemaining | number : '1.2-2'}}</strong>
+          <strong>Rs. {{balanceRemaining | number : '1.2-2'}}</strong>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@
       <div class="ob-list">
         <div class="ob-item" *ngFor="let ob of selectedCustomerOpeningBalances">
           <span class="ob-fy">FY {{ ob.fy }}</span>
-          <span class="ob-amount">₹{{ ob.balanceAmount | number:'1.2-2' }}</span>
+          <span class="ob-amount">Rs. {{ ob.balanceAmount | number:'1.2-2' }}</span>
         </div>
       </div>
     </div> -->
@@ -93,8 +93,8 @@
         <div class="table-row" *ngFor="let pay of filteredPaymentHistory; let i=index;" [class.alt]="i%2!=0">
           <span>{{pay.customerName}}</span>
           <span>{{pay.dateofReceipt | date:'dd-MMM-yyyy'}}</span>
-          <!-- <span>{{pay.lastFYBalance ? '₹' + (pay.lastFYBalance | number : '1.2-2') : '-'}}</span> -->
-          <span>₹{{pay.amountReceived | number : '1.2-2'}}</span>
+          <!-- <span>{{pay.lastFYBalance ? 'Rs. ' + (pay.lastFYBalance | number : '1.2-2') : '-'}}</span> -->
+          <span>Rs. {{pay.amountReceived | number : '1.2-2'}}</span>
           <span>{{pay.modeofPayment}}</span>
           <span>{{pay.paymentDetails || '-'}}</span>
           <span style="display: flex; gap: 0.5rem; align-items: center;">
@@ -119,7 +119,7 @@
               <p>{{pay.dateofReceipt | date:'dd-MMM-yyyy'}}</p>
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end;">
-              <span class="amount">₹{{pay.amountReceived | number : '1.0-0'}}</span>
+              <span class="amount">Rs. {{pay.amountReceived | number : '1.0-0'}}</span>
               <div style="display: flex; gap: 0.5rem; margin-top: 0.35rem;">
                 <button class="btn btn-outline" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;"
                   (click)="editPayment(pay)">
@@ -136,7 +136,7 @@
           <div class="mobile-card-body">
             <div><strong>Mode:</strong> {{pay.modeofPayment}}</div>
             <div><strong>Details:</strong> {{pay.paymentDetails || '-'}}</div>
-            <div><strong>Last FY:</strong> {{pay.lastFYBalance ? '₹' + (pay.lastFYBalance | number : '1.2-2') : '-'}}
+            <div><strong>Last FY:</strong> {{pay.lastFYBalance ? 'Rs. ' + (pay.lastFYBalance | number : '1.2-2') : '-'}}
             </div>
           </div>
         </div>
@@ -160,7 +160,7 @@
         <div class="table-row" *ngFor="let hist of filteredInvoiceHistory; let i=index;" [class.alt]="i%2!=0">
           <span>{{hist.customer.customerName}}</span>
           <span>{{hist.invoiceDate | date:'dd-MMM-yyyy'}}</span>
-          <span>₹{{hist.totalInvoiceValue.toFixed(0) }}</span>
+          <span>Rs. {{hist.totalInvoiceValue.toFixed(0) }}</span>
         </div>
       </div>
 
@@ -171,7 +171,7 @@
               <h4>{{hist.customer.customerName}}</h4>
               <p>{{hist.invoiceDate | date:'dd-MMM-yyyy'}}</p>
             </div>
-            <span class="amount">₹{{hist.totalInvoiceValue.toFixed(0) }}</span>
+            <span class="amount">Rs. {{hist.totalInvoiceValue.toFixed(0) }}</span>
           </div>
           <div class="mobile-card-body">
             <div><strong>Invoice #:</strong> {{hist.invoiceNo}}</div>
@@ -201,7 +201,7 @@
         <div class="table-row" *ngIf="lastFYBalance > 0">
           <span>{{fyStartDate | date:'dd-MMM-yyyy'}}</span>
           <span>Opening Balance</span>
-          <span>₹{{lastFYBalance.toFixed(0) }}</span>
+          <span>Rs. {{lastFYBalance.toFixed(0) }}</span>
           <span>-</span>
           <span>-</span>
         </div>
@@ -210,11 +210,11 @@
           <span>{{hist.date | date:'dd-MMM-yyyy'}}</span>
           <span>{{hist.invoiceNumber || '-'}}</span>
           <span>
-            <span *ngIf="hist.invoiceValue">₹{{hist.invoiceValue?.toFixed(0) }}</span>
+            <span *ngIf="hist.invoiceValue">Rs. {{hist.invoiceValue?.toFixed(0) }}</span>
             <span *ngIf="!hist.invoiceValue">-</span>
           </span>
           <span>
-            <span *ngIf="hist.paymentReceived">₹{{hist.paymentReceived}}</span>
+            <span *ngIf="hist.paymentReceived">Rs. {{hist.paymentReceived}}</span>
             <span *ngIf="!hist.paymentReceived">-</span>
           </span>
           <span>{{hist.modeofPayment || '-'}}</span>
@@ -229,7 +229,7 @@
             <h4>Opening Balance</h4>
             <p>{{fyStartDate | date:'dd-MMM-yyyy'}}</p>
           </div>
-          <span class="amount">₹{{lastFYBalance.toFixed(0) }}</span>
+          <span class="amount">Rs. {{lastFYBalance.toFixed(0) }}</span>
         </div>
         <div class="mobile-card-body">
         </div>
@@ -241,12 +241,12 @@
             <h4>{{hist.invoiceNumber ? 'Invoice #' + hist.invoiceNumber : 'Payment'}}</h4>
             <p>{{hist.date | date:'dd-MMM-yyyy'}}</p>
           </div>
-          <span class="amount" *ngIf="hist.invoiceValue">₹{{hist.invoiceValue?.toFixed(0) }}</span>
+          <span class="amount" *ngIf="hist.invoiceValue">Rs. {{hist.invoiceValue?.toFixed(0) }}</span>
           <span class="amount positive"
-            *ngIf="hist.paymentReceived && !hist.invoiceValue">₹{{hist.paymentReceived}}</span>
+            *ngIf="hist.paymentReceived && !hist.invoiceValue">Rs. {{hist.paymentReceived}}</span>
         </div>
         <div class="mobile-card-body">
-          <div *ngIf="hist.paymentReceived"><strong>Received:</strong> ₹{{hist.paymentReceived | number : '1.2-2'}}
+          <div *ngIf="hist.paymentReceived"><strong>Received:</strong> Rs. {{hist.paymentReceived | number : '1.2-2'}}
           </div>
           <div *ngIf="hist.modeofPayment"><strong>Mode:</strong> {{hist.modeofPayment}}</div>
         </div>
@@ -259,17 +259,17 @@
       <div>
         <span>Total Due</span>
         <strong>
-          <span *ngIf="lastFYBalance > 0">₹{{netInvoiceAmount+lastFYBalance | number : '1.2-2'}}</span>
-          <span *ngIf="!(lastFYBalance > 0)">₹{{netInvoiceAmount | number : '1.2-2'}}</span>
+          <span *ngIf="lastFYBalance > 0">Rs. {{netInvoiceAmount+lastFYBalance | number : '1.2-2'}}</span>
+          <span *ngIf="!(lastFYBalance > 0)">Rs. {{netInvoiceAmount | number : '1.2-2'}}</span>
         </strong>
       </div>
       <div>
         <span>Received</span>
-        <strong>₹{{netPaymentReceived | number : '1.2-2'}}</strong>
+        <strong>Rs. {{netPaymentReceived | number : '1.2-2'}}</strong>
       </div>
       <div>
         <span>Net Balance (Including Last FY Balance) (if Any)</span>
-        <strong>₹{{balanceRemaining | number : '1.2-2'}}</strong>
+        <strong>Rs. {{balanceRemaining | number : '1.2-2'}}</strong>
       </div>
     </div>
   </section>
