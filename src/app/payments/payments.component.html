@@ -33,7 +33,7 @@
       </div>
       <div class="summary-badges">
         <div class="badge">
-          <span class="label">Invoice Amount</span>
+          <span class="label">Invoice Amount<br>(Current FY)</span>
           <strong>₹{{netInvoiceAmount | number : '1.2-2'}}</strong>
         </div>
         <div class="badge" *ngIf="filterValue != 'all'">
@@ -198,13 +198,13 @@
         <span>Mode</span>
       </div>
 
-      <ng-container *ngIf="simpleReport.length>0">
-        <div class="table-row" *ngIf="simpleReport[0]?.lastFy">
-          <span>{{simpleReport[0].date | date:'dd-MMM-yyyy'}}</span>
+      <ng-container *ngIf="simpleReport.length>0 || lastFYBalance > 0">
+        <div class="table-row" *ngIf="lastFYBalance > 0">
+          <span>{{fyStartDate | date:'dd-MMM-yyyy'}}</span>
+          <span>Opening Balance</span>
+          <span>₹{{lastFYBalance.toFixed(0) }}</span>
           <span>-</span>
-          <span>₹{{simpleReport[0]?.lastFy?.toFixed(0) }}</span>
           <span>-</span>
-          <!-- <span>Last FY Balance</span> -->
         </div>
 
         <div class="table-row" *ngFor="let hist of simpleReport; let i=index;" [class.alt]="i%2!=0">
@@ -223,17 +223,16 @@
       </ng-container>
     </div>
 
-    <div class="mobile-card-list" *ngIf="simpleReport.length>0">
-      <div class="mobile-card" *ngIf="simpleReport[0]?.lastFy">
+    <div class="mobile-card-list" *ngIf="simpleReport.length>0 || lastFYBalance > 0">
+      <div class="mobile-card" *ngIf="lastFYBalance > 0">
         <div class="mobile-card-header">
           <div>
             <h4>Opening Balance</h4>
-            <p>{{simpleReport[0].date | date:'dd-MMM-yyyy'}}</p>
+            <p>{{fyStartDate | date:'dd-MMM-yyyy'}}</p>
           </div>
-          <span class="amount">₹{{simpleReport[0]?.lastFy?.toFixed(0) }}</span>
+          <span class="amount">₹{{lastFYBalance.toFixed(0) }}</span>
         </div>
         <div class="mobile-card-body">
-          <!-- <div>Last FY Balance</div> -->
         </div>
       </div>
 
@@ -259,10 +258,10 @@
       <div></div>
       <div></div>
       <div>
-        <span>Total Due (Current FY)</span>
+        <span>Total Due</span>
         <strong>
-          <span *ngIf="simpleReport[0]?.lastFy">₹{{netInvoiceAmount+simpleReport[0]?.lastFy | number : '1.2-2'}}</span>
-          <span *ngIf="!simpleReport[0]?.lastFy">₹{{netInvoiceAmount | number : '1.2-2'}}</span>
+          <span *ngIf="lastFYBalance > 0">₹{{netInvoiceAmount+lastFYBalance | number : '1.2-2'}}</span>
+          <span *ngIf="!(lastFYBalance > 0)">₹{{netInvoiceAmount | number : '1.2-2'}}</span>
         </strong>
       </div>
       <div>

@@ -47,6 +47,7 @@ export class PaymentsComponent implements OnInit {
   paymentInvoiceCombined: any;
   splitView=true
   simpleReport:any[]=[]
+  fyStartDate: string = '';
   viewButtonLabel='Show Simplifield Report';
   showPaymentFormModal: boolean = false;
   isEditMode: boolean = false;
@@ -245,6 +246,9 @@ export class PaymentsComponent implements OnInit {
       {
         this.filteredPaymentHistory.push(this.paymentHistory[i]);
         this.netPaymentReceived += Number(this.paymentHistory[i].amountReceived || 0);
+        if (this.paymentHistory[i].lastFYBalance) {
+          this.lastFYBalance += Number(this.paymentHistory[i].lastFYBalance);
+        }
       }
     }
 
@@ -266,24 +270,16 @@ export class PaymentsComponent implements OnInit {
     
     let simplifiedData: any[] = [];
     
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const fyStartYear = currentMonth >= 3 ? currentYear : currentYear - 1;
+    this.fyStartDate = new Date(fyStartYear, 3, 1).toISOString();
+
     this.paymentInvoiceCombined.forEach((obj: any) => {
       let tempObj: any = {};
       
-      if(obj.balanceAmount && obj.balanceAmount > 0)
-      {
-        tempObj['firmName'] = obj.customerName;
-        tempObj['lastFy'] = obj.balanceAmount;
-        tempObj['date'] = obj.createdAt || new Date(new Date().getFullYear() - 1, 3, 1).toISOString();
-        simplifiedData.unshift(tempObj);
-      }
-      else if(obj.lastFYBalance > 0)
-      {
-        tempObj['firmName'] = obj.customerName;
-        tempObj['lastFy'] = obj.lastFYBalance;
-        tempObj['date'] = obj.dateofReceipt || new Date(new Date().getFullYear() - 1, 3, 1).toISOString();
-        simplifiedData.unshift(tempObj);
-      }
-      else if(obj.invoiceDate)
+      if(obj.invoiceDate)
       {
         tempObj['firmName'] = obj.customer?.customerName;
         tempObj['date'] = obj.invoiceDate;

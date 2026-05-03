@@ -34,7 +34,7 @@
 .card-header {
   padding: 1.5rem;
   border-bottom: 1px solid rgba(15, 23, 42, 0.1);
-  background: linear-gradient(120deg, rgba(102,126,234,.1), rgba(118,75,162,.05));
+  background: linear-gradient(120deg, rgba(102, 126, 234, .1), rgba(118, 75, 162, .05));
 }
 
 .eyebrow {
@@ -100,7 +100,7 @@
   outline: none;
   border-color: #6366f1;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
 }
 
 .form-actions {
@@ -138,7 +138,7 @@
 }
 
 .btn-secondary {
-  background: rgba(99,102,241,.1);
+  background: rgba(99, 102, 241, .1);
   color: #4c1d95;
 }
 
@@ -199,7 +199,7 @@
 }
 
 .badge.highlight {
-  background: linear-gradient(120deg, rgba(16,185,129,.12), rgba(59,130,246,.12));
+  background: linear-gradient(120deg, rgba(16, 185, 129, .12), rgba(59, 130, 246, .12));
   border: none;
 }
 
@@ -207,8 +207,8 @@
 .opening-balance-section {
   margin-top: 1rem;
   padding: 0.85rem 1rem;
-  background: linear-gradient(120deg, rgba(99,102,241,.06), rgba(118,75,162,.06));
-  border: 1px solid rgba(99,102,241,0.15);
+  background: linear-gradient(120deg, rgba(99, 102, 241, .06), rgba(118, 75, 162, .06));
+  border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -251,7 +251,7 @@
   align-items: center;
   gap: 0.5rem;
   background: #fff;
-  border: 1px solid rgba(99,102,241,0.15);
+  border: 1px solid rgba(99, 102, 241, 0.15);
   border-radius: 8px;
   padding: 0.4rem 0.85rem;
 }
@@ -442,7 +442,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .form-actions {
     flex-direction: column;
     align-items: stretch;
