@@ -478,15 +478,15 @@
     flex-direction: column;
   }
 
-  :not(.desktop-layout) .summary-badges {
+  .report-content:not(.desktop-layout) .summary-badges {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  :not(.desktop-layout) .desktop-table {
+  .report-content:not(.desktop-layout) .desktop-table {
     display: none;
   }
 
-  :not(.desktop-layout) .mobile-card-list {
+  .report-content:not(.desktop-layout) .mobile-card-list {
     display: flex;
   }
 
@@ -510,7 +510,7 @@
     border-radius: 12px;
   }
 
-  :not(.desktop-layout) .summary-badges {
+  .report-content:not(.desktop-layout) .summary-badges {
     grid-template-columns: 1fr;
   }
 }
@@ -585,7 +585,7 @@
 }
 
 /* Desktop layout styling for pdf capture */
-.desktop-layout.simplified-report {
+.desktop-layout .simplified-report {
   background: #ffffff !important;
   color: #111827 !important;
   font-size: 14px !important;
