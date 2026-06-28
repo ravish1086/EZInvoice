@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReceivedPayments } from '../models/payments.model';
 import { InvoiceService } from '../services/invoice.service';
 import { OtherdataService } from '../services/otherdata.service';
+import { PdfShareService } from '../services/pdf-share.service';
 import { forkJoin } from 'rxjs';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -23,6 +24,7 @@ import { SelectModule } from 'primeng/select';
   providers: [ConfirmationService]
 })
 export class PaymentsComponent implements OnInit {
+  @ViewChild('reportContent') reportContent!: ElementRef;
   paymentForm!: FormGroup;
   gst: any;
   paymentEntry: ReceivedPayments = {
@@ -56,9 +58,11 @@ export class PaymentsComponent implements OnInit {
   isEditMode: boolean = false;
   currentEditId: string | null = null;
   selectedCustomerOpeningBalances: any[] = [];
+  isPdfProcessing: boolean = false;
+
   constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
     private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef,
-    private confirmationService:ConfirmationService
+    private confirmationService:ConfirmationService, private pdfShareService: PdfShareService
   ) { }
 
   ngOnInit(): void {
@@ -327,7 +331,7 @@ export class PaymentsComponent implements OnInit {
   }
   printReport()
   {
-    const elementsToHide = ['ul-div', 'pbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar', 'filter-div', 'header-div', 'nav-div'];
+    const elementsToHide = ['ul-div', 'pbutton', 'dbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar', 'filter-div', 'header-div', 'nav-div'];
     const contentOutlet = document.getElementsByClassName('content-outlet')[0];
     
     // Hide elements
@@ -361,6 +365,32 @@ export class PaymentsComponent implements OnInit {
     
     // Restore elements
 
+  }
+
+  async downloadReportPdf() {
+    if (!this.reportContent) {
+      console.error('Report content element not found.');
+      return;
+    }
+
+    this.isPdfProcessing = true;
+    this.cdr.markForCheck();
+
+    try {
+      const element = this.reportContent.nativeElement;
+      const customerName = this.filterValue === 'all' ? 'All_Customers' : this.filterValue;
+      const filename = `Report_${customerName.replace(/\s+/g, '_')}.pdf`;
+
+      // Generate the PDF Blob, excluding the filter dropdown wrapper
+      const pdfBlob = await this.pdfShareService.generatePdfBlob(element, ['#filter-div']);
+      this.pdfShareService.downloadPdf(pdfBlob, filename);
+    } catch (error) {
+      console.error('Error generating or downloading report PDF:', error);
+      alert('An error occurred while generating or downloading the report PDF.');
+    } finally {
+      this.isPdfProcessing = false;
+      this.cdr.markForCheck();
+    }
   }
 
   openPaymentFormModal(): void {

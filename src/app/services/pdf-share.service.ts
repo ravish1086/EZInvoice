@@ -9,7 +9,7 @@ export class PdfShareService {
 
   constructor() { }
 
-  async generatePdfBlob(element: HTMLElement): Promise<Blob> {
+  async generatePdfBlob(element: HTMLElement, excludeSelectors: string[] = []): Promise<Blob> {
     // Create an invisible container to hold the clone within viewport layout bounds
     const container = document.createElement('div');
     container.style.position = 'fixed';
@@ -22,6 +22,12 @@ export class PdfShareService {
 
     // Clone the element to render it offscreen in desktop size
     const clone = element.cloneNode(true) as HTMLElement;
+    
+    // Remove excluded elements from the clone
+    excludeSelectors.forEach(selector => {
+      clone.querySelectorAll(selector).forEach(el => el.remove());
+    });
+
     clone.classList.add('desktop-layout');
     clone.style.width = '1024px'; // Force standard desktop layout width
     clone.style.height = 'auto';

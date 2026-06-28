@@ -13,6 +13,7 @@
     </button> -->
   </div>
 
+  <div #reportContent>
   <!-- Filters & KPIs -->
   <h3 *ngIf="filterValue != 'all'" id="firmName" style="text-align: center; margin-top:10px;">
     {{simpleReport[0]?.firmName}}</h3>
@@ -182,7 +183,7 @@
   </div>
 
   <!-- Simplified Report -->
-  <section class="card simplified-report" *ngIf="!splitView">
+  <section class="card simplified-report" #simplifiedReportSection *ngIf="!splitView">
     <div class="simplified-header" *ngIf="simpleReport.length">
       <!-- <h3>{{simpleReport[0]?.firmName}}</h3> -->
       <p>Chronological view of invoices and payments</p>
@@ -273,10 +274,18 @@
       </div>
     </div>
   </section>
+  </div>
 </div>
 
 <!-- Actions -->
 <div class="floating-actions">
+  <button *ngIf="!splitView" (click)="downloadReportPdf()" id="dbutton" [disabled]="isPdfProcessing" class="btn btn-outline btn-download-report">
+    <svg *ngIf="!isPdfProcessing" class="download-icon" viewBox="0 0 24 24" width="16" height="16" style="margin-right: 4px; vertical-align: middle;">
+        <path fill="currentColor" d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+    </svg>
+    <span class="spinner" *ngIf="isPdfProcessing" style="margin-right: 4px; vertical-align: middle;"></span>
+    {{ isPdfProcessing ? 'Generating PDF...' : 'Download PDF' }}
+  </button>
   <button (click)="printReport()" id="pbutton" class="btn btn-outline">
     <i class="pi pi-print"></i>
     Print Report
