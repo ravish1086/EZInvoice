@@ -11,18 +11,20 @@
 @media screen and (max-width: 568px) {
     #sectionToPrint:not(.desktop-layout) {
         width: 100%;
-        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: visible;
         position: relative;
         padding-left: 0;
         padding-right: 0;
+        display: block;
     }
 
     #sectionToPrint:not(.desktop-layout) .inv {
         width: 800px;
         min-width: 800px;
-        transform: scale(calc((100vw - 20px) / 800));
+        transform: scale(calc((100vw - 80px) / 800));
         transform-origin: top left;
-        margin: 10px;
+        margin: 20px 40px;
         box-sizing: border-box;
     }
 

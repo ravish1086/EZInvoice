@@ -478,15 +478,15 @@
     flex-direction: column;
   }
 
-  .summary-badges {
+  :not(.desktop-layout) .summary-badges {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .desktop-table {
+  :not(.desktop-layout) .desktop-table {
     display: none;
   }
 
-  .mobile-card-list {
+  :not(.desktop-layout) .mobile-card-list {
     display: flex;
   }
 
@@ -510,7 +510,7 @@
     border-radius: 12px;
   }
 
-  .summary-badges {
+  :not(.desktop-layout) .summary-badges {
     grid-template-columns: 1fr;
   }
 }

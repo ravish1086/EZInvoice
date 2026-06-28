@@ -199,10 +199,10 @@ ngOnInit(): void {
         const element = this.invoiceSection.nativeElement.querySelector('.inv');
         if (element) {
           const originalHeight = element.scrollHeight;
-          const scaleRatio = (window.innerWidth - 20) / 800;
+          const scaleRatio = (window.innerWidth - 80) / 800;
           const parent = this.invoiceSection.nativeElement;
           if (parent) {
-            parent.style.height = `${originalHeight * scaleRatio + 40}px`;
+            parent.style.height = `${originalHeight * scaleRatio + 50}px`;
           }
         }
       } else if (this.invoiceSection) {
