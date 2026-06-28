@@ -1,5 +1,5 @@
 
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import jsPDF from 'jspdf';
 import { InvoiceService } from '../services/invoice.service';
@@ -163,6 +163,7 @@ ngOnInit(): void {
         this.balancerows.push(i);
       }
       this.cdr.markForCheck();
+      this.adjustInvoiceScale();
     });
    
     this.otherDataService.getAppConfig().subscribe(res => {
@@ -182,9 +183,33 @@ ngOnInit(): void {
       this.area = this.otherDataService.appConfig.area
       this.pan = this.otherDataService.appConfig.pan
       this.cdr.markForCheck();
+      this.adjustInvoiceScale();
     });
   })
 }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.adjustInvoiceScale();
+  }
+
+  adjustInvoiceScale() {
+    setTimeout(() => {
+      if (window.innerWidth <= 568 && this.invoiceSection) {
+        const element = this.invoiceSection.nativeElement.querySelector('.inv');
+        if (element) {
+          const originalHeight = element.scrollHeight;
+          const scaleRatio = (window.innerWidth - 20) / 800;
+          const parent = this.invoiceSection.nativeElement;
+          if (parent) {
+            parent.style.height = `${originalHeight * scaleRatio + 40}px`;
+          }
+        }
+      } else if (this.invoiceSection) {
+        this.invoiceSection.nativeElement.style.height = 'auto';
+      }
+    }, 50);
+  }
 
 inWords(num: number): string {
   const numStr = Number(num).toFixed(0);

@@ -9,29 +9,25 @@
 }
 
 @media screen and (max-width: 568px) {
-    #sectionToPrint:not(.desktop-layout) .inv {
-        margin-left: 10px;
-        margin-right: 10px;
-        font-size: 10px;
-        margin: 0 auto;
-        transform-origin: top left;
+    #sectionToPrint:not(.desktop-layout) {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     #sectionToPrint:not(.desktop-layout) .inv {
-        /* transform: scale(0.6);  */
-        zoom: 0.6;
-        width: calc(210mm / 0.6);
-        /* maintain layout width accounting for scale */
+        width: 800px;
+        min-width: 800px;
+        transform: scale(calc((100vw - 20px) / 800));
+        transform-origin: top left;
+        margin: 10px;
+        box-sizing: border-box;
     }
 
     .bg-color {
         background-color: #c7c2c2;
-    }
-
-    #sectionToPrint:not(.desktop-layout) {
-        padding-left: 4%;
-        padding-right: 1%;
-        overflow: scroll;
     }
 }
 
