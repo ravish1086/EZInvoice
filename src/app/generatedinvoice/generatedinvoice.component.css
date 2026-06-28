@@ -78,3 +78,114 @@
 .align-center {
     text-align: center;
 }
+
+/* Premium Share Button styling */
+.btn-share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(18, 140, 126, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.btn-share:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(18, 140, 126, 0.4);
+    filter: brightness(1.05);
+}
+
+.btn-share:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(18, 140, 126, 0.3);
+}
+
+.btn-share:disabled {
+    background: linear-gradient(135deg, #a5d6a7, #80cbc4);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.share-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.btn-share:hover:not(:disabled) .share-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Loading spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Premium Download Button styling */
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.btn-download:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(99, 102, 241, 0.4);
+    filter: brightness(1.05);
+}
+
+.btn-download:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
+}
+
+.btn-download:disabled {
+    background: linear-gradient(135deg, #c7d2fe, #a5b4fc);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.download-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.btn-download:hover:not(:disabled) .download-icon {
+    transform: translateY(2px);
+}

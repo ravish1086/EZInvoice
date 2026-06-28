@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import jsPDF from 'jspdf';
 import { InvoiceService } from '../services/invoice.service';
 import { OtherdataService } from '../services/otherdata.service';
+import { PdfShareService } from '../services/pdf-share.service';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,7 +18,7 @@ import { CommonModule } from '@angular/common';
 })
 export class GeneratedinvoiceComponent implements OnInit {
   
-  @ViewChild('sectionToPrint', { static: true }) sectionToPrint!: ElementRef;  
+  @ViewChild('invoiceSection') invoiceSection!: ElementRef;  
   generatedInvoice: any;
   gstin: any;
   companyName: any;
@@ -36,41 +37,64 @@ export class GeneratedinvoiceComponent implements OnInit {
   invoiceNum: any;
   invoiceType: string = "Original";
   interstate: boolean = false;
-  public SavePDF(): void {  
-    let content=this.sectionToPrint.nativeElement;  
-    let doc = new jsPDF();  
+  isProcessing: boolean = false;
 
-    // let _elementHandlers =  
-    // {  
-    //   '#editor':function(element,renderer){  
-    //     return true;  
-    //   }  
-    // };  
-     doc = new jsPDF('p', 'px', 'a4')
-  //   doc.html(content, {
-  //     html2canvas: {
-  //         scale: 1,
-  //     },
-  //     x: 0,
-  //     y: 0,
-  //     width:1366,
-  //     callback: function (doc) {
-  //         window.open(doc.output('bloburl'));
-  //     }
-  // });
-    // doc.save("abc.pdf")
-    // ({
-    //   orientation: "landscape",
-    //   unit: "in",
-    //   format: [4, 2]
-    // });
-    // doc.h(content.innerHTML,15,15,{  
-  
-    //   'width':1366,  
-    //   'elementHandlers':_elementHandlers  
-    // });  
-  
-    // doc.save('test.pdf');  
+  public SavePDF(): void {  
+    if (!this.invoiceSection) return;
+    let content = this.invoiceSection.nativeElement;  
+    let doc = new jsPDF('p', 'px', 'a4');
+  } 
+
+  async shareToWhatsApp() {
+    if (!this.invoiceSection) {
+      console.error('Invoice section element not found.');
+      return;
+    }
+
+    this.isProcessing = true;
+    this.cdr.markForCheck();
+
+    try {
+      const element = this.invoiceSection.nativeElement;
+      const invoiceNo = this.generatedInvoice?.invoiceNo || 'Invoice';
+      const filename = `Invoice_${invoiceNo}.pdf`;
+      const title = `Invoice ${invoiceNo}`;
+      const text = `Please find attached my invoice ${invoiceNo}.`;
+
+      const pdfBlob = await this.pdfShareService.generatePdfBlob(element);
+      await this.pdfShareService.shareOrDownloadPdf(pdfBlob, filename, title, text);
+    } catch (error) {
+      console.error('Error generating or sharing PDF:', error);
+      alert('An error occurred while generating or sharing the PDF.');
+    } finally {
+      this.isProcessing = false;
+      this.cdr.markForCheck();
+    }
+  } 
+
+  async downloadInvoicePdf() {
+    if (!this.invoiceSection) {
+      console.error('Invoice section element not found.');
+      return;
+    }
+
+    this.isProcessing = true;
+    this.cdr.markForCheck();
+
+    try {
+      const element = this.invoiceSection.nativeElement;
+      const invoiceNo = this.generatedInvoice?.invoiceNo || 'Invoice';
+      const filename = `Invoice_${invoiceNo}.pdf`;
+
+      const pdfBlob = await this.pdfShareService.generatePdfBlob(element);
+      this.pdfShareService.downloadPdf(pdfBlob, filename);
+    } catch (error) {
+      console.error('Error generating or downloading PDF:', error);
+      alert('An error occurred while generating or downloading the PDF.');
+    } finally {
+      this.isProcessing = false;
+      this.cdr.markForCheck();
+    }
   } 
   onPrintO(divName: any) {
     // this.SavePDF()
@@ -113,7 +137,14 @@ toggleOD(type: any) {
   this.invoiceType = type;
 }
 
-constructor(private invoiceService: InvoiceService, private otherDataService: OtherdataService, private router: Router, private route: ActivatedRoute, private cdr:ChangeDetectorRef) { }
+  constructor(
+    private invoiceService: InvoiceService, 
+    private otherDataService: OtherdataService, 
+    private router: Router, 
+    private route: ActivatedRoute, 
+    private cdr: ChangeDetectorRef,
+    private pdfShareService: PdfShareService
+  ) { }
 
 ngOnInit(): void {
   this.route.params.subscribe(params => {
