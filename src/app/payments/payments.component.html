@@ -286,6 +286,13 @@
     <span class="spinner" *ngIf="isPdfProcessing" style="margin-right: 4px; vertical-align: middle;"></span>
     {{ isPdfProcessing ? 'Generating PDF...' : 'Download PDF' }}
   </button>
+  <button *ngIf="!splitView" (click)="shareReportPdf()" id="wbutton" [disabled]="isPdfProcessing" class="btn btn-outline btn-whatsapp-share">
+    <svg *ngIf="!isPdfProcessing" class="share-icon" viewBox="0 0 24 24" width="16" height="16" style="margin-right: 4px; vertical-align: middle;">
+        <path fill="currentColor" d="M12.012 2c-5.506 0-9.988 4.482-9.988 9.988 0 1.76.46 3.413 1.261 4.867L2 22l5.303-1.391a9.924 9.924 0 0 0 4.709 1.18c5.507 0 9.989-4.483 9.989-9.989 0-5.506-4.482-9.988-9.988-9.988zm-3.08 5.617c.135 0 .27-.005.385-.01.127-.005.27-.015.412-.015.176 0 .385.064.55.424.195.429.66 1.62.716 1.734.055.114.093.249.015.405-.078.155-.114.249-.23.385-.114.135-.24.3-.343.4-.114.114-.233.24-.1.47.135.23.6 1.002 1.287 1.613.882.784 1.626 1.028 1.857 1.142.23.114.364.094.498-.063.134-.155.576-.67.732-.9.155-.23.311-.19.524-.11.213.08 1.348.636 1.577.75.23.114.385.171.442.27.057.098.057.57-.171 1.218-.23.648-1.348 1.26-1.857 1.287-.51.027-.99-.176-2.22-.676-1.503-.61-2.484-2.148-3.23-3.14-.078-.104-.668-.89-.668-1.701 0-.81.424-1.21.575-1.37.15-.16.332-.2.443-.2z" />
+    </svg>
+    <span class="spinner" *ngIf="isPdfProcessing" style="margin-right: 4px; vertical-align: middle;"></span>
+    {{ isPdfProcessing ? 'Generating PDF...' : 'Share via WhatsApp' }}
+  </button>
   <button (click)="printReport()" id="pbutton" class="btn btn-outline">
     <i class="pi pi-print"></i>
     Print Report

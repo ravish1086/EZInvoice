@@ -43,56 +43,55 @@ export class PaymentsComponent implements OnInit {
   customerFilterOptions: any[] = [];
   filteredPaymentHistory: any[] = [];
   filteredInvoiceHistory: any[] = [];
-  filterValue="all"
-  typeofpayments=["Cheque","Online","Cash","NA"];
-  netPaymentReceived:number=0;
-  netInvoiceAmount:number=0;
-  lastFYBalance:number=0
-  balanceRemaining:number=0;
+  filterValue = "all"
+  typeofpayments = ["Cheque", "Online", "Cash", "NA"];
+  netPaymentReceived: number = 0;
+  netInvoiceAmount: number = 0;
+  lastFYBalance: number = 0
+  balanceRemaining: number = 0;
   paymentInvoiceCombined: any;
-  splitView=true
-  simpleReport:any[]=[]
+  splitView = false
+  simpleReport: any[] = []
   fyStartDate: string = '';
-  viewButtonLabel='Show Simplifield Report';
+  viewButtonLabel = 'Show Simplifield Report';
   showPaymentFormModal: boolean = false;
   isEditMode: boolean = false;
   currentEditId: string | null = null;
   selectedCustomerOpeningBalances: any[] = [];
   isPdfProcessing: boolean = false;
 
-  constructor(private dateservice:OtherdataService,private invoiceservice:InvoiceService, private renderer:Renderer2,
-    private loader:NgxSpinnerService, private fb: FormBuilder, private messageService:MessageService, private cdr:ChangeDetectorRef,
-    private confirmationService:ConfirmationService, private pdfShareService: PdfShareService
+  constructor(private dateservice: OtherdataService, private invoiceservice: InvoiceService, private renderer: Renderer2,
+    private loader: NgxSpinnerService, private fb: FormBuilder, private messageService: MessageService, private cdr: ChangeDetectorRef,
+    private confirmationService: ConfirmationService, private pdfShareService: PdfShareService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.dateservice.getCustomerDetails().subscribe(res=>
-      {
-        this.customerList=res;
-        this.customerFilterOptions = [
-          { label: 'All Customers', value: 'all' },
-          ...this.customerList.map(c => ({ label: c.customerName, value: c.customerName }))
-        ];
-      })
-      let $obspaymentdetails =  this.dateservice.fetchPaymentDetails();
-      let $obsinvoicedetails =  this.invoiceservice.getAllInvoicesDetails();
-      let $obsopeningbalances = this.dateservice.fetchOpeningBalances();
-      this.loader.show();
-      forkJoin([$obsinvoicedetails,$obspaymentdetails, $obsopeningbalances]).subscribe({
-        next : (data)=>{
-          this.invoiceHistory=data[0];
-        this.filteredInvoiceHistory=data[0];
-          this.paymentHistory=data[1];
-        this.filteredPaymentHistory=data[1];
-          this.openingBalancesHistory=data[2];
+    this.dateservice.getCustomerDetails().subscribe(res => {
+      this.customerList = res;
+      this.customerFilterOptions = [
+        { label: 'All Customers', value: 'all' },
+        ...this.customerList.map(c => ({ label: c.customerName, value: c.customerName }))
+      ];
+    })
+    let $obspaymentdetails = this.dateservice.fetchPaymentDetails();
+    let $obsinvoicedetails = this.invoiceservice.getAllInvoicesDetails();
+    let $obsopeningbalances = this.dateservice.fetchOpeningBalances();
+    this.loader.show();
+    forkJoin([$obsinvoicedetails, $obspaymentdetails, $obsopeningbalances]).subscribe({
+      next: (data) => {
+        this.invoiceHistory = data[0];
+        this.filteredInvoiceHistory = data[0];
+        this.paymentHistory = data[1];
+        this.filteredPaymentHistory = data[1];
+        this.openingBalancesHistory = data[2];
         this.filterRecords("all");
         this.loader.hide();
         this.cdr.markForCheck();
-        }
-      })
-      // this.fetchPaymentDetails();
-      // this.fetchInvoiceDetails();
+      }
+    })
+    // this.fetchPaymentDetails();
+    // this.fetchInvoiceDetails();
   }
 
   initForm() {
@@ -106,49 +105,46 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  toggleReportView()
-  {
-    this.splitView=!this.splitView;
-    if(this.splitView)
-    {
+  toggleReportView() {
+    this.splitView = !this.splitView;
+    if (this.splitView) {
       this.viewButtonLabel = 'Show Simplifield Report'
     }
-    else{
+    else {
       this.viewButtonLabel = 'Show Split Report View'
     }
   }
-  submitDetails()
-  {
+  submitDetails() {
     if (this.paymentForm.invalid) {
       this.paymentForm.markAllAsTouched();
-      this.messageService.add({severity:'error', summary: 'Invalid Form', detail: 'Please fill all the required fields.'});
+      this.messageService.add({ severity: 'error', summary: 'Invalid Form', detail: 'Please fill all the required fields.' });
       return;
     }
     const formValue = this.paymentForm.value;
     let index = this.customerList.findIndex(c => c.customerName === formValue.customerNameIndex);
-    
+
     // Add validation for customer index
     if (index < 0 || index >= this.customerList.length) {
-      this.messageService.add({severity:'error', summary: 'Invalid Customer', detail: 'Please select a valid customer.'});
+      this.messageService.add({ severity: 'error', summary: 'Invalid Customer', detail: 'Please select a valid customer.' });
       return;
     }
-    
+
     console.log(formValue.customerNameIndex);
     this.gst = this.customerList[index].customerGst;
-    this.paymentEntry.gst = this.gst?this.gst:null;
+    this.paymentEntry.gst = this.gst ? this.gst : null;
     this.paymentEntry.customerName = this.customerList[index].customerName;
-    
+
     // Fix date handling - use proper date conversion
     const receiptDate = new Date(formValue.dateofReceipt);
     this.paymentEntry.dateofReceipt = receiptDate.toDateString();
-    
+
     this.paymentEntry.amountReceived = formValue.amountReceived ? Number(formValue.amountReceived) : 0;
     this.paymentEntry.modeofPayment = formValue.modeofPayment ? formValue.modeofPayment : "";
     this.paymentEntry.paymentDetails = formValue.paymentDetails ? formValue.paymentDetails : "";
-    
+
     let lastFYBal = formValue.lastFYBalance ? Number(formValue.lastFYBalance) : null;
     let openingBalanceEntry: any = null;
-    if(lastFYBal && lastFYBal > 0){
+    if (lastFYBal && lastFYBal > 0) {
       const currentYear = new Date().getFullYear();
       const financialYearStart = new Date(currentYear, 3, 1);
       openingBalanceEntry = {
@@ -162,11 +158,11 @@ export class PaymentsComponent implements OnInit {
 
     let observables = [];
     if (this.isEditMode && this.paymentEntry._id) {
-        observables.push(this.dateservice.updatePaymentDetails(this.paymentEntry));
+      observables.push(this.dateservice.updatePaymentDetails(this.paymentEntry));
     } else if (this.paymentEntry.amountReceived > 0) {
-        observables.push(this.dateservice.insertPaymentDetails(this.paymentEntry));
+      observables.push(this.dateservice.insertPaymentDetails(this.paymentEntry));
     }
-    
+
     if (openingBalanceEntry) {
       observables.push(this.dateservice.saveOpeningBalance(openingBalanceEntry));
     }
@@ -176,7 +172,7 @@ export class PaymentsComponent implements OnInit {
       forkJoin(observables).subscribe({
         next: (res) => {
           this.loader.hide();
-          this.messageService.add({severity:'success', summary: 'Success', detail: 'Details saved successfully.'});
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Details saved successfully.' });
           this.showPaymentFormModal = false;
           setTimeout(() => {
             location.reload();
@@ -185,16 +181,15 @@ export class PaymentsComponent implements OnInit {
         error: (err) => {
           this.loader.hide();
           console.error(err);
-          this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to save details.'});
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save details.' });
         }
       });
     } else {
-      this.messageService.add({severity:'error', summary: 'Error', detail: 'Please provide either payment amount or opening balance.'});
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please provide either payment amount or opening balance.' });
     }
   }
 
-  fetchPaymentDetails()
-  {
+  fetchPaymentDetails() {
     this.loader.show();
     this.dateservice.fetchPaymentDetails().subscribe({
       next: (res) => {
@@ -207,13 +202,12 @@ export class PaymentsComponent implements OnInit {
       error: (err) => {
         this.loader.hide();
         console.log(err);
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to fetch payment details.'});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch payment details.' });
       }
     });
   }
 
-  fetchInvoiceDetails()
-  {
+  fetchInvoiceDetails() {
     this.loader.show("sp1");
     this.invoiceservice.getAllInvoicesDetails().subscribe({
       next: (res) => {
@@ -224,13 +218,12 @@ export class PaymentsComponent implements OnInit {
       error: (err) => {
         this.loader.hide("sp1");
         console.log(err);
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Failed to fetch invoice details.'});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch invoice details.' });
       }
     });
   }
 
-  filterRecords(name: string)
-  {
+  filterRecords(name: string) {
     this.simpleReport = [];
     this.lastFYBalance = 0;
     console.log(name);
@@ -241,20 +234,16 @@ export class PaymentsComponent implements OnInit {
     this.balanceRemaining = 0;
 
     // Filter invoice history
-    for(let i = 0; i < this.invoiceHistory.length; i++)
-    {
-      if(this.invoiceHistory[i].customer?.customerName === name || name === "all")
-      {
+    for (let i = 0; i < this.invoiceHistory.length; i++) {
+      if (this.invoiceHistory[i].customer?.customerName === name || name === "all") {
         this.filteredInvoiceHistory.push(this.invoiceHistory[i]);
         this.netInvoiceAmount += Number(this.invoiceHistory[i].totalInvoiceValue || 0);
       }
     }
-  
+
     // Filter payment history and calculate totals
-    for(let i = 0; i < this.paymentHistory.length; i++)
-    {
-      if(this.paymentHistory[i].customerName === name || name === "all")
-      {
+    for (let i = 0; i < this.paymentHistory.length; i++) {
+      if (this.paymentHistory[i].customerName === name || name === "all") {
         this.filteredPaymentHistory.push(this.paymentHistory[i]);
         this.netPaymentReceived += Number(this.paymentHistory[i].amountReceived || 0);
         if (this.paymentHistory[i].lastFYBalance) {
@@ -264,10 +253,8 @@ export class PaymentsComponent implements OnInit {
     }
 
     let filteredOpeningBalances = [];
-    for(let i = 0; i < this.openingBalancesHistory.length; i++)
-    {
-      if(this.openingBalancesHistory[i].customerName === name || name === "all")
-      {
+    for (let i = 0; i < this.openingBalancesHistory.length; i++) {
+      if (this.openingBalancesHistory[i].customerName === name || name === "all") {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         this.lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
       }
@@ -278,9 +265,9 @@ export class PaymentsComponent implements OnInit {
     this.paymentInvoiceCombined = this.filteredInvoiceHistory.concat(this.filteredPaymentHistory)
     // .concat(filteredOpeningBalances);
     console.log(this.paymentInvoiceCombined);
-    
+
     let simplifiedData: any[] = [];
-    
+
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
@@ -289,28 +276,25 @@ export class PaymentsComponent implements OnInit {
 
     this.paymentInvoiceCombined.forEach((obj: any) => {
       let tempObj: any = {};
-      
-      if(obj.invoiceDate)
-      {
+
+      if (obj.invoiceDate) {
         tempObj['firmName'] = obj.customer?.customerName;
         tempObj['date'] = obj.invoiceDate;
         tempObj['invoiceValue'] = obj.totalInvoiceValue;
         tempObj['invoiceNumber'] = obj.invoiceNo;
-        simplifiedData.push(tempObj); 
-      } 
-      else if(obj.dateofReceipt)
-      {
-        if(obj.amountReceived > 0)
-        {
+        simplifiedData.push(tempObj);
+      }
+      else if (obj.dateofReceipt) {
+        if (obj.amountReceived > 0) {
           tempObj['firmName'] = obj.customerName;
           tempObj['date'] = obj.dateofReceipt;
           tempObj['paymentReceived'] = obj.amountReceived;
           tempObj['modeofPayment'] = obj.modeofPayment;
-          simplifiedData.push(tempObj); 
+          simplifiedData.push(tempObj);
         }
       }
     });
-      
+
     // Sort by date
     simplifiedData.sort((a, b) => {
       const keyA = new Date(a.date);
@@ -320,7 +304,7 @@ export class PaymentsComponent implements OnInit {
       if (keyA > keyB) return 1;
       return 0;
     });
-      
+
     console.log(simplifiedData);
     this.simpleReport = simplifiedData;
     this.balanceRemaining = this.calculateBalance(this.netInvoiceAmount, this.netPaymentReceived, this.lastFYBalance);
@@ -329,11 +313,10 @@ export class PaymentsComponent implements OnInit {
   calculateBalance(netinvoiceamt: number, netpaymentReceived: number, lastFYBalance: number): number {
     return (netinvoiceamt + lastFYBalance - netpaymentReceived);
   }
-  printReport()
-  {
-    const elementsToHide = ['ul-div', 'pbutton', 'dbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar', 'filter-div', 'header-div', 'nav-div'];
+  printReport() {
+    const elementsToHide = ['ul-div', 'pbutton', 'dbutton', 'wbutton', 'labelTohide', 'dropdowntohide', 'toggleButton', 'actions-bar', 'filter-div', 'header-div', 'nav-div'];
     const contentOutlet = document.getElementsByClassName('content-outlet')[0];
-    
+
     // Hide elements
     elementsToHide.forEach(id => {
       const element = document.getElementById(id);
@@ -341,28 +324,28 @@ export class PaymentsComponent implements OnInit {
         element.style.display = "none";
       }
     });
-    
+
     // Add print padding class
     if (contentOutlet) {
       this.renderer.addClass(contentOutlet, 'printPadding');
     }
-    
+
     // Print
     setTimeout(() => {
       window.print();
-          elementsToHide.forEach(id => {
-      const element = document.getElementById(id);
-      if (element) {
-        element.style.display = "block";
+      elementsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.style.display = "block";
+        }
+      });
+
+      // Remove print padding class
+      if (contentOutlet) {
+        this.renderer.removeClass(contentOutlet, 'printPadding');
       }
-    });
-    
-    // Remove print padding class
-    if (contentOutlet) {
-      this.renderer.removeClass(contentOutlet, 'printPadding');
-    }
     }, 100);
-    
+
     // Restore elements
 
   }
@@ -393,6 +376,34 @@ export class PaymentsComponent implements OnInit {
     }
   }
 
+  async shareReportPdf() {
+    if (!this.reportContent) {
+      console.error('Report content element not found.');
+      return;
+    }
+
+    this.isPdfProcessing = true;
+    this.cdr.markForCheck();
+
+    try {
+      const element = this.reportContent.nativeElement;
+      const customerName = this.filterValue === 'all' ? 'All_Customers' : this.filterValue;
+      const filename = `Report_${customerName.replace(/\s+/g, '_')}.pdf`;
+      const title = `Report for ${customerName}`;
+      const text = `Please find attached the report for ${customerName}.`;
+
+      // Generate the PDF Blob, excluding the filter dropdown wrapper
+      const pdfBlob = await this.pdfShareService.generatePdfBlob(element, ['#filter-div']);
+      await this.pdfShareService.shareOrDownloadPdf(pdfBlob, filename, title, text);
+    } catch (error) {
+      console.error('Error generating or sharing report PDF:', error);
+      alert('An error occurred while generating or sharing the report PDF.');
+    } finally {
+      this.isPdfProcessing = false;
+      this.cdr.markForCheck();
+    }
+  }
+
   openPaymentFormModal(): void {
     this.showPaymentFormModal = true;
     this.isEditMode = false;
@@ -410,7 +421,7 @@ export class PaymentsComponent implements OnInit {
     this.currentEditId = payment._id;
     this.paymentEntry._id = payment._id;
     this.showPaymentFormModal = true;
-        
+
     let dateString = '';
     if (payment.dateofReceipt) {
       let receiptDate = new Date(payment.dateofReceipt);
@@ -418,7 +429,7 @@ export class PaymentsComponent implements OnInit {
         dateString = receiptDate.toISOString().substring(0, 10);
       }
     }
-        
+
     this.paymentForm.patchValue({
       customerNameIndex: payment.customerName || '',
       dateofReceipt: dateString,
@@ -436,17 +447,17 @@ export class PaymentsComponent implements OnInit {
       header: 'Confirm Deletion',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        if(payment._id) {
+        if (payment._id) {
           this.loader.show();
           this.dateservice.deletePaymentDetails(payment._id).subscribe({
             next: (res) => {
               this.loader.hide();
-              this.messageService.add({severity:'success', summary:'Success', detail:'Payment deleted successfully'});
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment deleted successfully' });
               this.fetchPaymentDetails();
             },
             error: (err) => {
               this.loader.hide();
-              this.messageService.add({severity:'error', summary:'Error', detail:'Failed to delete payment'});
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete payment' });
               console.error(err);
             }
           });
