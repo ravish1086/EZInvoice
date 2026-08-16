@@ -406,6 +406,9 @@
 
 .simplified-report {
   padding-bottom: 1rem;
+  .table-row{
+    font-size: 0.65rem;
+  }
 }
 
 .simplified-header {
