@@ -59,6 +59,9 @@ export class PaymentsComponent implements OnInit {
   currentEditId: string | null = null;
   selectedCustomerOpeningBalances: any[] = [];
   isPdfProcessing: boolean = false;
+  fontScale = 1;
+
+  private readonly fontScaleStorageKey = 'ezinvoice-payments-font-scale';
 
   constructor(private dateservice: OtherdataService, private invoiceservice: InvoiceService, private renderer: Renderer2,
     private loader: NgxSpinnerService, private fb: FormBuilder, private messageService: MessageService, private cdr: ChangeDetectorRef,
@@ -66,6 +69,7 @@ export class PaymentsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadFontScale();
     this.initForm();
     this.dateservice.getCustomerDetails().subscribe(res => {
       this.customerList = res;
@@ -92,6 +96,28 @@ export class PaymentsComponent implements OnInit {
     })
     // this.fetchPaymentDetails();
     // this.fetchInvoiceDetails();
+  }
+
+  adjustFontSize(change: number): void {
+    const nextScale = Math.min(1.25, Math.max(0.85, this.fontScale + change));
+    this.fontScale = Number(nextScale.toFixed(2));
+
+    try {
+      localStorage.setItem(this.fontScaleStorageKey, String(this.fontScale));
+    } catch {
+      // Font size controls should still work when browser storage is unavailable.
+    }
+  }
+
+  private loadFontScale(): void {
+    try {
+      const savedScale = Number(localStorage.getItem(this.fontScaleStorageKey));
+      if (savedScale >= 0.85 && savedScale <= 1.25) {
+        this.fontScale = savedScale;
+      }
+    } catch {
+      // Use the default scale when browser storage is unavailable.
+    }
   }
 
   initForm() {

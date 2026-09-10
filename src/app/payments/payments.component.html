@@ -1,12 +1,24 @@
 <!-- <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <ngx-spinner name="sp2" type="ball-scale-multiple"></ngx-spinner> -->
 
-<div class="payments-container">
+<div class="payments-container" [style.--payments-font-scale]="fontScale">
   <div class="actions-bar" id="actions-bar">
     <button class="btn btn-primary add-payment-btn" type="button" (click)="openPaymentFormModal()">
       <i class="pi pi-plus-circle"></i>
       Add Payment Entry
     </button>
+    <div class="font-size-controls" role="group" aria-label="Text size">
+      <span class="font-size-label">Text size</span>
+      <button class="btn btn-outline font-size-btn" type="button" (click)="adjustFontSize(-0.05)"
+        [disabled]="fontScale <= 0.85" aria-label="Decrease text size" title="Decrease text size">
+        <span aria-hidden="true">A−</span>
+      </button>
+      <span class="font-size-value" aria-live="polite">{{ fontScale * 100 | number:'1.0-0' }}%</span>
+      <button class="btn btn-outline font-size-btn" type="button" (click)="adjustFontSize(0.05)"
+        [disabled]="fontScale >= 1.25" aria-label="Increase text size" title="Increase text size">
+        <span aria-hidden="true">A+</span>
+      </button>
+    </div>
     <!-- <button class="btn btn-secondary" type="button" (click)="toggleReportView()">
       <i class="pi pi-eye"></i>
       {{viewButtonLabel}}
