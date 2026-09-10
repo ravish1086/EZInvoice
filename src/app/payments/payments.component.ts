@@ -237,7 +237,7 @@ export class PaymentsComponent implements OnInit {
     for (let i = 0; i < this.invoiceHistory.length; i++) {
       if (this.invoiceHistory[i].customer?.customerName === name || name === "all") {
         this.filteredInvoiceHistory.push(this.invoiceHistory[i]);
-        this.netInvoiceAmount += Number(this.invoiceHistory[i].totalInvoiceValue || 0);
+        this.netInvoiceAmount += Number(Math.round(this.invoiceHistory[i].totalInvoiceValue) || 0);
       }
     }
 
