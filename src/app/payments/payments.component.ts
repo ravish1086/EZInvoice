@@ -59,9 +59,6 @@ export class PaymentsComponent implements OnInit {
   currentEditId: string | null = null;
   selectedCustomerOpeningBalances: any[] = [];
   isPdfProcessing: boolean = false;
-  fontScale = 1;
-
-  private readonly fontScaleStorageKey = 'ezinvoice-payments-font-scale';
 
   constructor(private dateservice: OtherdataService, private invoiceservice: InvoiceService, private renderer: Renderer2,
     private loader: NgxSpinnerService, private fb: FormBuilder, private messageService: MessageService, private cdr: ChangeDetectorRef,
@@ -69,7 +66,6 @@ export class PaymentsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadFontScale();
     this.initForm();
     this.dateservice.getCustomerDetails().subscribe(res => {
       this.customerList = res;
@@ -96,28 +92,6 @@ export class PaymentsComponent implements OnInit {
     })
     // this.fetchPaymentDetails();
     // this.fetchInvoiceDetails();
-  }
-
-  adjustFontSize(change: number): void {
-    const nextScale = Math.min(1.25, Math.max(0.85, this.fontScale + change));
-    this.fontScale = Number(nextScale.toFixed(2));
-
-    try {
-      localStorage.setItem(this.fontScaleStorageKey, String(this.fontScale));
-    } catch {
-      // Font size controls should still work when browser storage is unavailable.
-    }
-  }
-
-  private loadFontScale(): void {
-    try {
-      const savedScale = Number(localStorage.getItem(this.fontScaleStorageKey));
-      if (savedScale >= 0.85 && savedScale <= 1.25) {
-        this.fontScale = savedScale;
-      }
-    } catch {
-      // Use the default scale when browser storage is unavailable.
-    }
   }
 
   initForm() {
@@ -261,7 +235,7 @@ export class PaymentsComponent implements OnInit {
 
     // Filter invoice history
     for (let i = 0; i < this.invoiceHistory.length; i++) {
-      if (this.invoiceHistory[i].customer?.customerName === name || name === "all") {
+      if (this.removeAllSpacesFromString(this.invoiceHistory[i].customer?.customerName) === this.removeAllSpacesFromString(name) || name === "all") {
         this.filteredInvoiceHistory.push(this.invoiceHistory[i]);
         this.netInvoiceAmount += Number(Math.round(this.invoiceHistory[i].totalInvoiceValue) || 0);
       }
@@ -269,7 +243,7 @@ export class PaymentsComponent implements OnInit {
 
     // Filter payment history and calculate totals
     for (let i = 0; i < this.paymentHistory.length; i++) {
-      if (this.paymentHistory[i].customerName === name || name === "all") {
+      if ((this.removeAllSpacesFromString(this.paymentHistory[i].customerName) === this.removeAllSpacesFromString(name) || name === "all")) {
         this.filteredPaymentHistory.push(this.paymentHistory[i]);
         this.netPaymentReceived += Number(this.paymentHistory[i].amountReceived || 0);
         if (this.paymentHistory[i].lastFYBalance) {
@@ -280,7 +254,7 @@ export class PaymentsComponent implements OnInit {
 
     let filteredOpeningBalances = [];
     for (let i = 0; i < this.openingBalancesHistory.length; i++) {
-      if (this.openingBalancesHistory[i].customerName === name || name === "all") {
+      if (this.removeAllSpacesFromString(this.openingBalancesHistory[i].customerName) === this.removeAllSpacesFromString(name) || name === "all") {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         this.lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
       }
@@ -494,5 +468,10 @@ export class PaymentsComponent implements OnInit {
 
   closePaymentFormModal(): void {
     this.showPaymentFormModal = false;
+  }
+
+  removeAllSpacesFromString(inputString: string): string {
+    //this function removes all spaces from the input string and returns the modified string
+    return inputString.replace(/\s+/g, '');    
   }
 }
