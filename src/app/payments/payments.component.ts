@@ -134,6 +134,7 @@ export class PaymentsComponent implements OnInit {
     this.gst = this.customerList[index].customerGst;
     this.paymentEntry.gst = this.gst ? this.gst : null;
     this.paymentEntry.customerName = this.customerList[index].customerName;
+    this.paymentEntry.customerId = this.customerList[index]._id;
 
     // Fix date handling - use proper date conversion
     const receiptDate = new Date(formValue.dateofReceipt);
