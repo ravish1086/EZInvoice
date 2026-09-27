@@ -433,7 +433,7 @@ export class PaymentsComponent implements OnInit {
     }
 
     this.paymentForm.patchValue({
-      customerNameIndex: payment.customerName || '',
+      customerNameIndex: payment.customerId || '',
       dateofReceipt: dateString,
       amountReceived: payment.amountReceived,
       modeofPayment: payment.modeofPayment,
