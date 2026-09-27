@@ -72,7 +72,7 @@ export class PaymentsComponent implements OnInit {
       this.customerList = res;
       this.customerFilterOptions = [
         { label: 'All Customers', value: 'all' },
-        ...this.customerList.map(c => ({ label: c.customerName, value: c.customerName }))
+        ...this.customerList.map(c => ({ label: c.customerName, value: c._id }))
       ];
     })
     let $obspaymentdetails = this.dateservice.fetchPaymentDetails();
@@ -225,10 +225,10 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  filterRecords(name: string) {
+  filterRecords(customerId: string) {
     this.simpleReport = [];
     this.lastFYBalance = 0;
-    console.log(name);
+    console.log(customerId);
     this.filteredInvoiceHistory = [];
     this.filteredPaymentHistory = [];
     this.netPaymentReceived = 0;
@@ -237,7 +237,7 @@ export class PaymentsComponent implements OnInit {
 
     // Filter invoice history
     for (let i = 0; i < this.invoiceHistory.length; i++) {
-      if (this.removeAllSpacesFromString(this.invoiceHistory[i].customer?.customerName) === this.removeAllSpacesFromString(name) || name === "all") {
+      if (this.invoiceHistory[i].customer?._id === customerId || customerId === "all") {
         this.filteredInvoiceHistory.push(this.invoiceHistory[i]);
         this.netInvoiceAmount += Number(Math.round(this.invoiceHistory[i].totalInvoiceValue) || 0);
       }
@@ -245,7 +245,7 @@ export class PaymentsComponent implements OnInit {
 
     // Filter payment history and calculate totals
     for (let i = 0; i < this.paymentHistory.length; i++) {
-      if ((this.removeAllSpacesFromString(this.paymentHistory[i].customerName) === this.removeAllSpacesFromString(name) || name === "all")) {
+      if ((this.paymentHistory[i].customerId === customerId || customerId === "all")) {
         this.filteredPaymentHistory.push(this.paymentHistory[i]);
         this.netPaymentReceived += Number(this.paymentHistory[i].amountReceived || 0);
         if (this.paymentHistory[i].lastFYBalance) {
@@ -256,7 +256,7 @@ export class PaymentsComponent implements OnInit {
 
     let filteredOpeningBalances = [];
     for (let i = 0; i < this.openingBalancesHistory.length; i++) {
-      if (this.removeAllSpacesFromString(this.openingBalancesHistory[i].customerName) === this.removeAllSpacesFromString(name) || name === "all") {
+      if (this.openingBalancesHistory[i].customerId === customerId || customerId === "all") {
         filteredOpeningBalances.push(this.openingBalancesHistory[i]);
         this.lastFYBalance += Number(this.openingBalancesHistory[i].balanceAmount || 0);
       }
