@@ -7,4 +7,5 @@ export interface ReceivedPayments {
     modeofPayment: string;
     paymentDetails: string;
     lastFYBalance: number | null;
+    customerId: string | null;
 }

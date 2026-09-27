@@ -34,7 +34,8 @@ export class PaymentsComponent implements OnInit {
     amountReceived: 0,
     modeofPayment: '',
     paymentDetails: '',
-    lastFYBalance: null
+    lastFYBalance: null,
+    customerId: null
   };
   paymentHistory: any[] = [];
   invoiceHistory: any[] = [];
