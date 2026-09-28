@@ -125,7 +125,7 @@ export class PaymentsComponent implements OnInit {
     let index = this.customerList.findIndex(c => c.customerName === formValue.customerNameIndex);
 
     // Add validation for customer index
-    if (index < 0 || index >= this.customerList.length) {
+    if (!formValue.customerNameIndex) {
       this.messageService.add({ severity: 'error', summary: 'Invalid Customer', detail: 'Please select a valid customer.' });
       return;
     }
