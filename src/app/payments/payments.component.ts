@@ -122,7 +122,7 @@ export class PaymentsComponent implements OnInit {
       return;
     }
     const formValue = this.paymentForm.value;
-    let index = this.customerList.findIndex(c => c.customerName === formValue.customerNameIndex);
+    let index = this.customerList.findIndex(c => c._id === formValue.customerNameIndex);
 
     // Add validation for customer index
     if (!formValue.customerNameIndex) {
