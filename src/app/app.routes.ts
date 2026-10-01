@@ -12,6 +12,7 @@ import { PaymentsComponent } from './payments/payments.component';
 import { SalesummaryComponent } from './salesummary/salesummary.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { OpeningbalancesComponent } from './openingbalances/openingbalances.component';
+import { PaymentAnalyticsComponent } from './payment-analytics/payment-analytics.component';
 
 import { SellerDetailsComponent } from './seller-details/seller-details.component';
 import { LoginComponent } from './login/login.component';
@@ -88,6 +89,10 @@ export const routes: Routes = [
       {
         path: 'analytics',
         component: AnalyticsComponent,
+      },
+      {
+        path: 'payment-analytics',
+        component: PaymentAnalyticsComponent,
       }
     ],
   },

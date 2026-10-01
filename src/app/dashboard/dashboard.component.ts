@@ -99,6 +99,7 @@ export class DashboardComponent {
         label: 'Stock Entries',
         icon: 'pi pi-chart-line',
         command: () => {
+          this.onMenuItemClick();
           this.router.navigate(['/dashboard/addedStockEntries']);
         },
       },
@@ -172,6 +173,14 @@ export class DashboardComponent {
         command: () => {
           this.onMenuItemClick();
           this.router.navigate(['/dashboard/payments']);
+        },
+      },
+      {
+        label: 'Payment Analytics',
+        icon: 'pi pi-chart-pie',
+        command: () => {
+          this.onMenuItemClick();
+          this.router.navigate(['/dashboard/payment-analytics']);
         },
       },
       {

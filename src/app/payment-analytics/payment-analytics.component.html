@@ -1,0 +1,206 @@
+<div class="pa-container">
+  <!-- Header -->
+  <div class="pa-header">
+    <h1 class="pa-title">
+      <i class="pi pi-wallet"></i>
+      Payment Analytics
+    </h1>
+    <div class="pa-filters">
+      <div class="filter-group">
+        <label for="filterCustomer">Customer</label>
+        <select id="filterCustomer" [(ngModel)]="filterCustomer" (change)="onFilterChange()">
+          <option value="all">All Customers</option>
+          <option *ngFor="let c of customerList" [value]="c._id">{{ c.customerName }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filterMode">Payment Mode</label>
+        <select id="filterMode" [(ngModel)]="filterMode" (change)="onFilterChange()">
+          <option value="all">All Modes</option>
+          <option value="Online">Online</option>
+          <option value="Cheque">Cheque</option>
+          <option value="Cash">Cash</option>
+          <option value="NA">NA</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filterFY">Financial Year</label>
+        <select id="filterFY" [(ngModel)]="filterFY" (change)="onFilterChange()">
+          <option value="all">All Years</option>
+          <option *ngFor="let fy of fyList" [value]="fy">{{ fy }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Loading payment analytics...</span>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics-grid" *ngIf="!loading">
+    <div class="metric-card">
+      <div class="metric-icon total-received">
+        <i class="pi pi-money-bill-wave"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Total Received</div>
+        <div class="metric-value">{{ formatCurrency(totalPaymentsReceived) }}</div>
+        <div class="metric-subtitle">All payments</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon transactions">
+        <i class="pi pi-list"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Transactions</div>
+        <div class="metric-value">{{ totalTransactions.toLocaleString() }}</div>
+        <div class="metric-subtitle">Payment records</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon customers">
+        <i class="pi pi-users"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Customers</div>
+        <div class="metric-value">{{ uniqueCustomers }}</div>
+        <div class="metric-subtitle">Unique payers</div>
+      </div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-icon avg-value">
+        <i class="pi pi-calculator"></i>
+      </div>
+      <div class="metric-content">
+        <div class="metric-label">Avg Payment</div>
+        <div class="metric-value">{{ formatCurrency(avgPaymentValue) }}</div>
+        <div class="metric-subtitle">Per transaction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts & Data -->
+  <div class="pa-content" *ngIf="!loading">
+    <!-- Monthly Chart -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Monthly Payments</h3>
+        <span class="chart-subtitle">Last 12 months</span>
+      </div>
+      <div class="chart-container">
+        <div class="sales-chart">
+          <div class="chart-bars">
+            <div 
+              class="bar-group" 
+              *ngFor="let data of monthlySummary"
+              [title]="`${data.month}: ${formatCurrency(data.amount)} (${data.count} payments)`">
+              <div class="bar" [style.height.%]="getBarHeight(data.amount)">
+                <div class="bar-label">{{ formatCurrency(data.amount) }}</div>
+              </div>
+              <div class="bar-date">{{ data.month }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="pa-grid">
+      <!-- Top Customers -->
+      <div class="data-card">
+        <div class="card-header">
+          <h3>Top Customers</h3>
+          <span class="card-subtitle">By total received</span>
+        </div>
+        <div class="data-list">
+          <div 
+            class="data-item" 
+            *ngFor="let customer of customerSummary; let i = index"
+            [class.top-item]="i === 0">
+            <div class="item-rank">{{ i + 1 }}</div>
+            <div class="item-info">
+              <div class="item-name">{{ customer.customerName }}</div>
+              <div class="item-details">
+                <span class="item-count">{{ customer.paymentCount }} transactions</span>
+              </div>
+            </div>
+            <div class="item-value">{{ formatCurrency(customer.totalReceived) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Modes -->
+      <div class="data-card">
+        <div class="card-header">
+          <h3>Payment Modes</h3>
+          <span class="card-subtitle">By method</span>
+        </div>
+        <div class="data-list">
+          <div 
+            class="data-item" 
+            *ngFor="let mode of modeSummary; let i = index"
+            [class.top-item]="i === 0">
+            <div class="item-rank" [style.background]="getModeColor(mode.mode) + '20'" [style.color]="getModeColor(mode.mode)">
+              <i class="pi" [ngClass]="getModeIcon(mode.mode)"></i>
+            </div>
+            <div class="item-info">
+              <div class="item-name">{{ mode.mode }}</div>
+              <div class="item-details">
+                <span class="item-count">{{ mode.count }} payments</span>
+              </div>
+            </div>
+            <div class="item-value">{{ formatCurrency(mode.totalAmount) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Payments Table -->
+    <div class="data-card">
+      <div class="card-header">
+        <h3>Recent Payments</h3>
+        <span class="card-subtitle">{{ filteredPayments.length }} records</span>
+      </div>
+      <div class="table-wrapper">
+        <table class="pa-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Mode</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredPayments; let i = index">
+              <td>{{ formatDate(p.dateofReceipt) }}</td>
+              <td class="customer-name">{{ p.customerName }}</td>
+              <td class="amount-cell">{{ formatCurrency(p.amountReceived) }}</td>
+              <td>
+                <span class="mode-badge" [style.background]="getModeColor(p.modeofPayment) + '15'" [style.color]="getModeColor(p.modeofPayment)">
+                  {{ p.modeofPayment }}
+                </span>
+              </td>
+              <td class="payment-details">{{ p.paymentDetails }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="empty-state" *ngIf="filteredPayments.length === 0">
+          <i class="pi pi-wallet"></i>
+          <h3>No Payments Found</h3>
+          <p>No payment records match the current filters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
