@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { InvoiceService } from '../services/invoice.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Table, TableModule } from 'primeng/table';
@@ -63,7 +63,8 @@ export class AnalyticsComponent implements OnInit {
 
   constructor(
     private invoiceService: InvoiceService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdk: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -77,6 +78,7 @@ export class AnalyticsComponent implements OnInit {
     try {
       const invoices = await this.invoiceService.getAllInvoicesDetails().toPromise();
       this.processAnalyticsData(invoices || []);
+      this.cdk.markForCheck();
     } catch (error) {
       console.error('Error loading analytics data:', error);
     } finally {
