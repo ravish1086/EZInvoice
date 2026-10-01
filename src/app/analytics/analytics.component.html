@@ -187,6 +187,31 @@
     </div>
   </div>
 
+  <!-- Invoice Type Summary -->
+  <div class="data-card" *ngIf="invoiceTypeSummary.length > 0">
+    <div class="card-header">
+      <h3>Invoice Type Summary</h3>
+      <span class="card-subtitle">By type</span>
+    </div>
+    <div class="tax-summary-grid">
+      <div 
+        class="tax-item" 
+        *ngFor="let type of invoiceTypeSummary">
+        <div class="tax-rate">{{ type.type }}</div>
+        <div class="tax-details">
+          <div class="tax-value">
+            <span class="label">Invoices:</span>
+            <span class="amount">{{ type.count }}</span>
+          </div>
+          <div class="tax-value">
+            <span class="label">Total:</span>
+            <span class="amount">{{ formatCurrency(type.totalAmount) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!loading && totalInvoices === 0">
     <i class="pi pi-chart-bar"></i>

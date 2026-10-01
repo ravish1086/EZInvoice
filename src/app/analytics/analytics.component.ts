@@ -29,6 +29,12 @@ interface TaxSummary {
   taxAmount: number;
 }
 
+interface InvoiceTypeSummary {
+  type: string;
+  count: number;
+  totalAmount: number;
+}
+
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
@@ -41,6 +47,7 @@ export class AnalyticsComponent implements OnInit {
   customerData: CustomerData[] = [];
   productData: ProductData[] = [];
   taxSummary: TaxSummary[] = [];
+  invoiceTypeSummary: InvoiceTypeSummary[] = [];
   
   totalRevenue: number = 0;
   totalInvoices: number = 0;
@@ -96,6 +103,9 @@ export class AnalyticsComponent implements OnInit {
 
     // Tax summary
     this.calculateTaxSummary(invoices);
+
+    // Invoice type summary
+    this.calculateInvoiceTypeSummary(invoices);
 
     // Derived values for template-safe calculations
     this.updateDerivedMaxValues();
@@ -179,7 +189,7 @@ export class AnalyticsComponent implements OnInit {
     
     invoices.forEach(inv => {
       inv.products.forEach((product: any) => {
-        const productId = product.productId;
+        const productId = product.productId != null ? product.productId : product.productName;
         
         if (!productMap.has(productId)) {
           productMap.set(productId, { 
@@ -220,6 +230,25 @@ export class AnalyticsComponent implements OnInit {
         });
       }
     });
+  }
+
+  calculateInvoiceTypeSummary(invoices: any[]) {
+    const typeMap = new Map<string, { type: string; count: number; totalAmount: number }>();
+
+    invoices.forEach(inv => {
+      const type = inv.invoiceType || 'Unknown';
+
+      if (!typeMap.has(type)) {
+        typeMap.set(type, { type, count: 0, totalAmount: 0 });
+      }
+
+      const entry = typeMap.get(type)!;
+      entry.count += 1;
+      entry.totalAmount += inv.totalInvoiceValue;
+    });
+
+    this.invoiceTypeSummary = Array.from(typeMap.values())
+      .sort((a, b) => b.totalAmount - a.totalAmount);
   }
 
   formatCurrency(amount: number): string {
