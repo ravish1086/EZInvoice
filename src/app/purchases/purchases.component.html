@@ -24,6 +24,15 @@
     </div>
 
     <div class="form-group">
+      <label for="invoiceNumber">
+        <i class="pi pi-file"></i>
+        Invoice Number <span class="required">*</span>
+      </label>
+      <input pInputText type="text" id="invoiceNumber" [(ngModel)]="invoiceNumber"
+        placeholder="Enter invoice number" class="form-input" required>
+    </div>
+
+    <div class="form-group">
       <label for="purchaseDate">
         <i class="pi pi-calendar"></i>
         Purchase Date <span class="required">*</span>
@@ -32,29 +41,40 @@
     </div>
 
     <div class="form-group">
+      <label for="purchaseCategory">
+        <i class="pi pi-tags"></i>
+        Purchase Category <span class="required">*</span>
+      </label>
+      <select id="purchaseCategory" [(ngModel)]="purchaseCategory" class="form-input" required>
+        <option value="">Select a category</option>
+        <option *ngFor="let category of purchaseCategories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf="isIntrastateSupply">
       <label for="sgstAmount">
         <i class="pi pi-percentage"></i>
         SGST Amount <span class="required">*</span>
       </label>
-      <input pInputText type="number" id="sgstAmount" [(ngModel)]="sgstAmount" placeholder="SGST amount"
+      <input pInputText type="number" id="sgstAmount" [(ngModel)]="sgstAmount" placeholder="SGST amount" required
         class="form-input">
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="isIntrastateSupply">
       <label for="cgstAmount">
         <i class="pi pi-percentage"></i>
         CGST Amount <span class="required">*</span>
       </label>
-      <input pInputText type="number" id="cgstAmount" [(ngModel)]="cgstAmount" placeholder="CGST amount"
+      <input pInputText type="number" id="cgstAmount" [(ngModel)]="cgstAmount" placeholder="CGST amount" required
         class="form-input">
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="!isIntrastateSupply">
       <label for="igstAmount">
         <i class="pi pi-percentage"></i>
         IGST Amount <span class="required">*</span>
       </label>
-      <input pInputText type="number" id="igstAmount" [(ngModel)]="igstAmount" placeholder="IGST amount"
+      <input pInputText type="number" id="igstAmount" [(ngModel)]="igstAmount" placeholder="IGST amount" required
         class="form-input">
     </div>
 
@@ -109,7 +129,7 @@
     <div class="search-wrapper">
       <i class="pi pi-search search-icon"></i>
       <input pInputText type="text" [(ngModel)]="searchValue" (input)="searchPurchases(searchValue)"
-        placeholder="Search purchases by seller name or purchase ID..." class="search-input" />
+        placeholder="Search purchases by seller, invoice number or category..." class="search-input" />
     </div>
     <button pButton label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(table1)" class="btn-clear">
     </button>
@@ -120,13 +140,15 @@
     <p-table #table1 [value]="savedPurchases" dataKey="_id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50, 100]"
       [scrollable]="true" [paginator]="false" scrollHeight="500px"
       [totalRecords]="savedPurchases.length"
-      [globalFilterFields]="['sellerName', 'purchaseDate', 'cgstAmount', 'sgstAmount', 'igstAmount', 'totalTaxableAmount', 'totalInvoiceAmount']"
+      [globalFilterFields]="['sellerName', 'invoiceNumber', 'purchaseDate', 'purchaseCategory', 'cgstAmount', 'sgstAmount', 'igstAmount', 'totalTaxableAmount', 'totalInvoiceAmount']"
       styleClass="p-datatable-striped purchases-table">
 
       <ng-template pTemplate="header">
         <tr>
           <th>Seller Name</th>
+          <th>Invoice Number</th>
           <th>Purchase Date</th>
+          <th>Category</th>
           <th>CGST</th>
           <th>SGST</th>
           <th>IGST</th>
@@ -143,9 +165,20 @@
               placeholder="Seller name">
             <span class="editmode2">{{entry.sellerName}}</span>
           </td>
+          <td>
+            <input class="editmode1 form-input-inline" type="text" [(ngModel)]="entry.invoiceNumber"
+              placeholder="Invoice number">
+            <span class="editmode2">{{entry.invoiceNumber || 'N/A'}}</span>
+          </td>
           <td class="purchase-date-cell">
             <input class="editmode1 form-input-inline" type="date" [(ngModel)]="entry.purchaseDate">
             <span class="editmode2">{{entry.purchaseDate ? (entry.purchaseDate | date:'mediumDate') : 'N/A'}}</span>
+          </td>
+          <td>
+            <select class="editmode1 form-input-inline" [(ngModel)]="entry.purchaseCategory">
+              <option *ngFor="let category of purchaseCategories" [value]="category">{{category}}</option>
+            </select>
+            <span class="editmode2">{{entry.purchaseCategory || 'N/A'}}</span>
           </td>
           <td class="amount-cell">
             <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.cgstAmount"
@@ -185,7 +218,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8" class="empty-message">
+          <td colspan="10" class="empty-message">
             <div class="empty-state">
               <i class="pi pi-inbox"></i>
               <p>No purchases found</p>
@@ -209,6 +242,10 @@
               placeholder="Seller name">
             <span class="editmode2-mobile">{{entry.sellerName}}</span>
           </h3>
+          <span class="purchase-id">
+            <i class="pi pi-file"></i>
+            Invoice: {{entry.invoiceNumber || 'N/A'}}
+          </span>
           <span class="purchase-id">
             <i class="pi pi-hashtag"></i>
             <input class="editmode1-mobile form-input-mobile" type="text" [(ngModel)]="entry.purchaseId"
@@ -237,6 +274,14 @@
               <input class="editmode1-mobile form-input-mobile" type="date" [(ngModel)]="entry.purchaseDate">
               <span class="editmode2-mobile">{{entry.purchaseDate || 'N/A'}}</span>
             </span>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-tags"></i>
+              Purchase Category
+            </span>
+            <span class="info-value">{{entry.purchaseCategory || 'N/A'}}</span>
           </div>
 
           <div class="info-item full-width">
