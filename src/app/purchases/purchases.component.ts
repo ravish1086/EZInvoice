@@ -143,22 +143,22 @@ export class PurchasesComponent implements OnInit {
 
   toggleEdit(index: number) {
     let element1 = document.getElementsByClassName('editmode1') as HTMLCollectionOf<HTMLElement>;
-    for (let i = index * 4; i < index * 4 + 4; i++) {
+    for (let i = index * 7; i < index * 7 + 7; i++) {
       if (element1[i]) element1[i].style.display = 'block';
     }
     let element2 = document.getElementsByClassName('editmode2') as HTMLCollectionOf<HTMLElement>;
-    for (let j = index * 4; j < index * 4 + 4; j++) {
+    for (let j = index * 7; j < index * 7 + 7; j++) {
       if (element2[j]) element2[j].style.display = 'none';
     }
   }
 
   saveRecord(entry: any, index: number) {
     let element1 = document.getElementsByClassName('editmode1') as HTMLCollectionOf<HTMLElement>;
-    for (let i = index * 4; i < index * 4 + 4; i++) {
+    for (let i = index * 7; i < index * 7 + 7; i++) {
       if (element1[i]) element1[i].style.display = 'none';
     }
     let element2 = document.getElementsByClassName('editmode2') as HTMLCollectionOf<HTMLElement>;
-    for (let j = index * 4; j < index * 4 + 4; j++) {
+    for (let j = index * 7; j < index * 7 + 7; j++) {
       if (element2[j]) element2[j].style.display = 'block';
     }
 
