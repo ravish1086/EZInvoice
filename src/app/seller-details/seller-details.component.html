@@ -7,7 +7,7 @@
         <i class="pi pi-user"></i>
         Seller Name <span class="required">*</span>
       </label>
-      <input pInputText type="text" id="sellerName" [(ngModel)]="customerName" placeholder="Enter seller name" class="form-input">
+      <input pInputText type="text" id="sellerName" [(ngModel)]="sellerName" placeholder="Enter seller name" class="form-input">
     </div>
 
     <div class="form-group">
@@ -15,7 +15,7 @@
         <i class="pi pi-id-card"></i>
         Seller GST <span class="required">*</span>
       </label>
-      <input pInputText type="text" id="sellerGst" [(ngModel)]="customerGst" placeholder="Enter GST number" maxlength="15" class="form-input">
+      <input pInputText type="text" id="sellerGst" [(ngModel)]="sellerGst" placeholder="Enter GST number" maxlength="15" class="form-input">
     </div>
 
     <div class="form-group">
@@ -23,7 +23,7 @@
         <i class="pi pi-credit-card"></i>
         Seller PAN
       </label>
-      <input pInputText type="text" id="sellerPan" [(ngModel)]="customerPan" placeholder="Enter PAN number" class="form-input">
+      <input pInputText type="text" id="sellerPan" [(ngModel)]="sellerPan" placeholder="Enter PAN number" class="form-input">
     </div>
 
     <div class="form-group">
@@ -31,7 +31,7 @@
         <i class="pi pi-phone"></i>
         Seller Contact
       </label>
-      <input pInputText type="text" id="sellerContact" [(ngModel)]="customerContact" placeholder="Enter contact number" class="form-input">
+      <input pInputText type="text" id="sellerContact" [(ngModel)]="sellerContact" placeholder="Enter contact number" class="form-input">
     </div>
 
     <div class="form-group">
@@ -39,7 +39,7 @@
         <i class="pi pi-map-marker"></i>
         Seller Address
       </label>
-      <input pInputText type="text" id="sellerAddress" [(ngModel)]="customerAddress" placeholder="Enter full address" class="form-input">
+      <input pInputText type="text" id="sellerAddress" [(ngModel)]="sellerAddress" placeholder="Enter full address" class="form-input">
     </div>
 
     <div class="form-row">
@@ -48,7 +48,7 @@
           <i class="pi pi-home"></i>
           City
         </label>
-        <input pInputText type="text" id="sellerCity" [(ngModel)]="customerCity" placeholder="Enter city" class="form-input">
+        <input pInputText type="text" id="sellerCity" [(ngModel)]="sellerCity" placeholder="Enter city" class="form-input">
       </div>
 
       <div class="form-group">
@@ -56,7 +56,7 @@
           <i class="pi pi-globe"></i>
           State
         </label>
-        <input pInputText type="text" id="sellerState" [(ngModel)]="customerState" placeholder="Enter state" class="form-input">
+        <input pInputText type="text" id="sellerState" [(ngModel)]="sellerState" placeholder="Enter state" class="form-input">
       </div>
     </div>
 
@@ -65,7 +65,7 @@
         <i class="pi pi-flag"></i>
         Country
       </label>
-      <input pInputText type="text" id="sellerCountry" [(ngModel)]="customerCountry" placeholder="Enter country" class="form-input">
+      <input pInputText type="text" id="sellerCountry" [(ngModel)]="sellerCountry" placeholder="Enter country" class="form-input">
     </div>
 
     <div class="form-actions">
@@ -109,36 +109,36 @@
     <tbody>
       <tr *ngFor="let entry of savedSellers; let i = index">
         <th scope="row">
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerName" placeholder="Seller name">
-          <span *ngIf="editingIndex !== i">{{entry.customerName}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerName" placeholder="Seller name">
+          <span *ngIf="editingIndex !== i">{{entry.sellerName}}</span>
         </th>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerGst" placeholder="GST">
-          <span *ngIf="editingIndex !== i">{{entry.customerGst || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerGst" placeholder="GST">
+          <span *ngIf="editingIndex !== i">{{entry.sellerGst || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerPan" placeholder="PAN">
-          <span *ngIf="editingIndex !== i">{{entry.customerPan || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerPan" placeholder="PAN">
+          <span *ngIf="editingIndex !== i">{{entry.sellerPan || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerContact" placeholder="Contact">
-          <span *ngIf="editingIndex !== i">{{entry.customerContact || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerContact" placeholder="Contact">
+          <span *ngIf="editingIndex !== i">{{entry.sellerContact || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerAddress" placeholder="Address">
-          <span *ngIf="editingIndex !== i">{{entry.customerAddress || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerAddress" placeholder="Address">
+          <span *ngIf="editingIndex !== i">{{entry.sellerAddress || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerCity" placeholder="City">
-          <span *ngIf="editingIndex !== i">{{entry.customerCity || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerCity" placeholder="City">
+          <span *ngIf="editingIndex !== i">{{entry.sellerCity || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerState" placeholder="State">
-          <span *ngIf="editingIndex !== i">{{entry.customerState || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerState" placeholder="State">
+          <span *ngIf="editingIndex !== i">{{entry.sellerState || 'N/A'}}</span>
         </td>
         <td>
-          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerCountry" placeholder="Country">
-          <span *ngIf="editingIndex !== i">{{entry.customerCountry || 'N/A'}}</span>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.sellerCountry" placeholder="Country">
+          <span *ngIf="editingIndex !== i">{{entry.sellerCountry || 'N/A'}}</span>
         </td>
         <td class="action-cell">
           <button *ngIf="editingIndex !== i" class="btn-action btn-edit" (click)="editSeller(i)" type="button" title="Edit">

@@ -25,14 +25,14 @@ export class SellerDetailsComponent implements OnInit {
   savedSellers: SellerModel[] = [];
   isImport=false;
   addSellerForm: boolean = false;
-  customerName: string = '';
-  customerGst: string = '';
-  customerPan: string = '';
-  customerContact: string = '';
-  customerAddress: string = '';
-  customerCity: string = '';
-  customerState: string = '';
-  customerCountry: string = '';
+  sellerName: string = '';
+  sellerGst: string = '';
+  sellerPan: string = '';
+  sellerContact: string = '';
+  sellerAddress: string = '';
+  sellerCity: string = '';
+  sellerState: string = '';
+  sellerCountry: string = '';
   editingIndex: number | null = null;
   constructor(private otherdataservice:OtherdataService, private messageService: MessageService, private loader: NgxSpinnerService) { }
 
@@ -51,14 +51,14 @@ export class SellerDetailsComponent implements OnInit {
           for(let i=0;i<res.length;i++)
           {
             let seller:SellerModel = {
-                customerGst:res[i].customerGst,
-            customerName:res[i].customerName,
-            customerPan:res[i].customerPan,
-            customerContact:res[i].customerContact,
-            customerAddress:res[i].customerAddress,
-            customerCity: res[i].customerCity || "",
-            customerState: res[i].customerState || "",
-            customerCountry: res[i].customerCountry || "",
+                sellerGst:res[i].sellerGst,
+            sellerName:res[i].sellerName,
+            sellerPan:res[i].sellerPan,
+            sellerContact:res[i].sellerContact,
+            sellerAddress:res[i].sellerAddress,
+            sellerCity: res[i].sellerCity || "",
+            sellerState: res[i].sellerState || "",
+            sellerCountry: res[i].sellerCountry || "",
             _id: res[i]._id
             };
             this.savedSellers.push(seller);
@@ -76,14 +76,14 @@ export class SellerDetailsComponent implements OnInit {
   addSeller()
   {
     let seller: SellerModel = {
-      customerName: this.customerName,
-      customerGst: this.customerGst,
-      customerPan: this.customerPan,
-      customerContact: this.customerContact,
-      customerAddress: this.customerAddress,
-      customerCity: this.customerCity,
-      customerState: this.customerState,
-      customerCountry: this.customerCountry,
+      sellerName: this.sellerName,
+      sellerGst: this.sellerGst,
+      sellerPan: this.sellerPan,
+      sellerContact: this.sellerContact,
+      sellerAddress: this.sellerAddress,
+      sellerCity: this.sellerCity,
+      sellerState: this.sellerState,
+      sellerCountry: this.sellerCountry,
       _id: ''
     };
     this.loader.show();
@@ -96,14 +96,14 @@ export class SellerDetailsComponent implements OnInit {
           this.messageService.add({severity:'success', summary:'Success', detail:'Seller added successfully'});
           seller._id = res._id || res.id || '';
           this.savedSellers.push(seller);
-          this.customerName = '';
-          this.customerGst = '';
-          this.customerPan = '';
-          this.customerContact = '';
-          this.customerAddress = '';
-          this.customerCity = '';
-          this.customerState = '';
-          this.customerCountry = '';
+          this.sellerName = '';
+          this.sellerGst = '';
+          this.sellerPan = '';
+          this.sellerContact = '';
+          this.sellerAddress = '';
+          this.sellerCity = '';
+          this.sellerState = '';
+          this.sellerCountry = '';
           this.addSellerForm = false;
         }
       },
@@ -163,52 +163,6 @@ export class SellerDetailsComponent implements OnInit {
       })
   }
   onFileChange(evt: any) {
-    const target : DataTransfer =  <DataTransfer>(evt.target);
-    
-    if (target.files.length !== 1) throw new Error('Cannot use multiple files');
-
-    const reader: FileReader = new FileReader();
-
-    reader.onload = (e: any) => {
-      const bstr: string = e.target.result;
-
-      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-      const wsname : string = wb.SheetNames[0];
-
-      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-      console.log(ws);
-
-      this.data = (XLSX.utils.sheet_to_json(ws, { header: 1 }));
-
-      console.log(this.data);
-
-      let x = this.data.slice(1);
-      console.log(x);
-        for(let i=1;i<this.data.length;i++)
-        {
-          
-          let seller:SellerModel = {
-            customerGst:this.data[i][3],
-          customerName:this.data[i][0],
-          customerPan:this.data[i][1],
-          customerContact:this.data[i][2],
-          customerAddress:this.data[i][4],
-          customerCity: "",
-          customerState: "",
-          customerCountry: ""
-          };
-
-          this.seller.push(seller);
-        }
-        console.log(this.seller);
-        this.otherdataservice.exportSellerData(this.seller).subscribe((res)=>
-        {
-          console.log(res);
-        })
-    };
-
-    reader.readAsBinaryString(target.files[0]);
+   
   }
 }
