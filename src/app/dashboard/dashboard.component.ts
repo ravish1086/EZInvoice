@@ -103,14 +103,14 @@ export class DashboardComponent {
           this.router.navigate(['/dashboard/addedStockEntries']);
         },
       },
-      // {
-      //   label: 'Seller Details',
-      //   icon: 'pi pi-list',
-      //   command: () => {
-      //     this.onMenuItemClick();
-      //     this.router.navigate(['/dashboard/sellerdetails']);
-      //   },
-      // },
+      {
+        label: 'Seller Details',
+        icon: 'pi pi-list',
+        command: () => {
+          this.onMenuItemClick();
+          this.router.navigate(['/dashboard/sellerdetails']);
+        },
+      },
       {
         label: 'Product Details',
         icon: 'pi pi-inbox',
@@ -133,6 +133,14 @@ export class DashboardComponent {
         command: () => {
           this.onMenuItemClick();
           this.router.navigate(['/dashboard/customers']);
+        },
+      },
+      {
+        label: 'Purchase Entries',
+        icon: 'pi pi-shopping-cart',
+        command: () => {
+          this.onMenuItemClick();
+          this.router.navigate(['/dashboard/purchases']);
         },
       },
       {

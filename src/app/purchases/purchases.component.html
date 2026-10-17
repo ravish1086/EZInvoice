@@ -1,0 +1,223 @@
+<!-- Add Purchase Dialog -->
+<p-dialog header="Add New Purchase Entry" [modal]="true" [(visible)]="addPurchaseForm"
+  [style]="{ width: '90vw', maxWidth: '800px' }" [closable]="true" styleClass="purchase-dialog">
+  <div class="purchase-form-container">
+    <div class="form-group">
+      <label for="purchaseId">
+        <i class="pi pi-hashtag"></i>
+        Purchase ID
+      </label>
+      <input pInputText type="text" id="purchaseId" [(ngModel)]="purchaseId" placeholder="Enter purchase ID (optional)"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="seller">
+        <i class="pi pi-users"></i>
+        Seller <span class="required">*</span>
+      </label>
+      <select id="seller" [(ngModel)]="selectedSeller" (change)="onSellerChange()" class="form-input">
+        <option [ngValue]="null">Select a Seller</option>
+        <option *ngFor="let seller of savedSellers" [ngValue]="seller">{{ seller.sellerName }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="sellerName">
+        <i class="pi pi-user"></i>
+        Seller Name <span class="required">*</span>
+      </label>
+      <input pInputText type="text" id="sellerName" [(ngModel)]="sellerName" placeholder="Seller name"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="purchaseDate">
+        <i class="pi pi-calendar"></i>
+        Purchase Date <span class="required">*</span>
+      </label>
+      <input pInputText type="date" id="purchaseDate" [(ngModel)]="purchaseDate" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="totalInvoiceAmount">
+        <i class="pi pi-money-bill"></i>
+        Total Invoice Amount <span class="required">*</span>
+      </label>
+      <input pInputText type="number" id="totalInvoiceAmount" [(ngModel)]="totalInvoiceAmount"
+        placeholder="Total amount" class="form-input">
+    </div>
+
+    <div class="form-actions">
+      <button (click)="savePurchase()" pButton pRipple label="Save Purchase" icon="pi pi-check"
+        class="p-button-success btn-add-customer">
+      </button>
+      <button (click)="showForm()" pButton pRipple label="Cancel" icon="pi pi-times"
+        class="p-button-secondary btn-cancel">
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Main Content -->
+<div class="purchases-container">
+  <!-- Header Section -->
+  <div class="purchases-header">
+    <div class="header-content">
+      <div class="header-title">
+        <i class="pi pi-shopping-cart"></i>
+        <h2>Purchase Entries</h2>
+      </div>
+      <div class="header-actions">
+        <button (click)="showForm()" pButton pRipple label="Add Purchase" icon="pi pi-plus"
+          class="p-button-primary btn-add-header">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section" *ngIf="savedPurchases">
+    <div class="search-wrapper">
+      <i class="pi pi-search search-icon"></i>
+      <input pInputText type="text" [(ngModel)]="searchValue" (input)="searchPurchases(searchValue)"
+        placeholder="Search purchases by seller name or purchase ID..." class="search-input" />
+    </div>
+    <button pButton label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(table1)" class="btn-clear">
+    </button>
+  </div>
+
+  <!-- Desktop Table View -->
+  <div class="table-wrapper desktop-view">
+    <p-table #table1 [value]="savedPurchases" dataKey="_id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [scrollable]="true" [paginator]="false" scrollHeight="500px"
+      [totalRecords]="savedPurchases.length"
+      [globalFilterFields]="['sellerName', 'purchaseId', 'totalInvoiceAmount']"
+      styleClass="p-datatable-striped purchases-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Seller Name</th>
+          <th>Purchase ID</th>
+          <th>Purchase Date</th>
+          <th>Total Amount</th>
+          <th class="actions-header">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-entry let-i="rowIndex">
+        <tr [class.bgRowOdd]="i%2!=0">
+          <td class="seller-name-cell">
+            <input class="editmode1 form-input-inline" type="text" [(ngModel)]="entry.sellerName"
+              placeholder="Seller name">
+            <span class="editmode2">{{entry.sellerName}}</span>
+          </td>
+          <td class="purchase-id-cell">
+            <input class="editmode1 form-input-inline" type="text" [(ngModel)]="entry.purchaseId"
+              placeholder="Purchase ID">
+            <span class="editmode2">{{entry.purchaseId || 'N/A'}}</span>
+          </td>
+          <td class="purchase-date-cell">
+            <input class="editmode1 form-input-inline" type="date" [(ngModel)]="entry.purchaseDate">
+            <span class="editmode2">{{entry.purchaseDate || 'N/A'}}</span>
+          </td>
+          <td class="amount-cell">
+            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.totalInvoiceAmount"
+              placeholder="Amount">
+            <span class="editmode2">{{ entry.totalInvoiceAmount | currency:'INR' }}</span>
+          </td>
+          <td class="action-buttons-cell">
+            <button class="btn-action btn-edit" (click)="toggleEdit(i)" type="button" title="Edit">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="btn-action btn-save" (click)="saveRecord(entry, i)" type="button" title="Save">
+              <i class="pi pi-check"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="empty-message">
+            <div class="empty-state">
+              <i class="pi pi-inbox"></i>
+              <p>No purchases found</p>
+              <button (click)="showForm()" pButton label="Add Your First Purchase" icon="pi pi-plus"
+                class="p-button-primary">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-view" *ngIf="savedPurchases">
+    <div class="purchase-card" *ngFor="let entry of savedPurchases; let i = index">
+      <div class="card-header">
+        <div class="card-title-section">
+          <h3 class="purchase-seller">
+            <input class="editmode1-mobile form-input-mobile" type="text" [(ngModel)]="entry.sellerName"
+              placeholder="Seller name">
+            <span class="editmode2-mobile">{{entry.sellerName}}</span>
+          </h3>
+          <span class="purchase-id">
+            <i class="pi pi-hashtag"></i>
+            <input class="editmode1-mobile form-input-mobile" type="text" [(ngModel)]="entry.purchaseId"
+              placeholder="Purchase ID">
+            <span class="editmode2-mobile">{{entry.purchaseId || 'N/A'}}</span>
+          </span>
+        </div>
+        <div class="card-actions">
+          <button class="btn-action btn-edit" (click)="toggleEdit(i)" type="button" title="Edit">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button class="btn-action btn-save" (click)="saveRecord(entry, i)" type="button" title="Save">
+            <i class="pi pi-check"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">
+              <i class="pi pi-calendar"></i>
+              Purchase Date
+            </span>
+            <span class="info-value">
+              <input class="editmode1-mobile form-input-mobile" type="date" [(ngModel)]="entry.purchaseDate">
+              <span class="editmode2-mobile">{{entry.purchaseDate || 'N/A'}}</span>
+            </span>
+          </div>
+
+          <div class="info-item full-width">
+            <span class="info-label">
+              <i class="pi pi-money-bill"></i>
+              Total Amount
+            </span>
+            <span class="info-value amount-value">
+              <input class="editmode1-mobile form-input-mobile" type="number" [(ngModel)]="entry.totalInvoiceAmount">
+              <span class="editmode2-mobile">{{ entry.totalInvoiceAmount | currency:'INR' }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button *ngIf="entry._id" class="p-button-danger btn-delete-card" (click)="deleteRecord(entry)">
+          <i class="pi pi-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state-mobile" *ngIf="!savedPurchases || savedPurchases.length === 0">
+      <i class="pi pi-inbox"></i>
+      <p>No purchases found</p>
+      <button (click)="showForm()" pButton label="Add Your First Purchase" icon="pi pi-plus" class="p-button-primary">
+      </button>
+    </div>
+  </div>
+</div>

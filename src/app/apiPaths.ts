@@ -43,5 +43,9 @@ getAllOpeningBalances: '/openingBalances/getAllOpeningBalances',
 saveOpeningBalance: '/openingBalances/saveOpeningBalance',
 updateOpeningBalance: '/openingBalances/updateOpeningBalance',
 deleteOpeningBalance: '/openingBalances/deleteOpeningBalance',
-getTotalValueOfInvoiceAndReceivedAmount: '/invoices/getTotalInvoiceValue'
+getTotalValueOfInvoiceAndReceivedAmount: '/invoices/getTotalInvoiceValue',
+  getAllPurchases:'/purchases/getAllPurchases',
+  savePurchase:'/purchases/savePurchase',
+  updatePurchase:'/purchases/updatePurchase',
+  deletePurchaseDetails:'/purchases/deletePurchaseDetails'
 }

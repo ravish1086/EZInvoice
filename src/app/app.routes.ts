@@ -5,6 +5,7 @@ import { CreateinvoiceComponent } from './createinvoice/createinvoice.component'
 import { CreatenegativeinvoiceComponent } from './createnegativeinvoice/createnegativeinvoice.component';
 import { CustomersComponent } from './customers/customers.component';
 import { GeneratedinvoiceComponent } from './generatedinvoice/generatedinvoice.component';
+import { PurchasesComponent } from './purchases/purchases.component';
 
 import { HomeComponent } from './home/home.component';
 import { HsnsummaryComponent } from './hsnsummary/hsnsummary.component';
@@ -53,6 +54,10 @@ export const routes: Routes = [
       {
         path: 'customers',
         component: CustomersComponent,
+      },
+      {
+        path: 'purchases',
+        component: PurchasesComponent,
       },
       {
         path: 'generatedInvoice/:invoicenum',

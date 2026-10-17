@@ -103,6 +103,20 @@ export class OtherdataService {
   deleteOpeningBalance(id: string): Observable<any> {
     return this.http.delete(environment.expressAppApiUrl + ApiPathExpressServer.deleteOpeningBalance, { body: { _id: id } }).pipe(catchError(this.handleError));
   }
+  getAllPurchases():Observable<any>
+  {
+    return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllPurchases).pipe(catchError(this.handleError));
+  }
+  savePurchase(reqJson: any):Observable<any>
+  {
+    return this.http.post(environment.expressAppApiUrl+ApiPathExpressServer.savePurchase, reqJson).pipe(catchError(this.handleError));
+  }
+  updatePurchase(reqJson: any): Observable<any> {
+    return this.http.patch(environment.expressAppApiUrl + ApiPathExpressServer.updatePurchase, reqJson).pipe(catchError(this.handleError));
+  }
+  deletePurchase(id: string): Observable<any> {
+    return this.http.delete(environment.expressAppApiUrl + ApiPathExpressServer.deletePurchaseDetails, { body: { _id: id } }).pipe(catchError(this.handleError));
+  }
 
   authenticate(request: any): Observable<any> {
     return this.http.post(environment.expressAppApiUrl + ApiPathExpressServer.login, request).pipe(catchError(this.handleError));
