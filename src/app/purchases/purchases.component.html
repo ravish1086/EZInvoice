@@ -1,5 +1,5 @@
 <!-- Add Purchase Dialog -->
-<p-dialog header="Add New Purchase Entry" [modal]="true" [(visible)]="addPurchaseForm"
+<p-dialog [header]="editingPurchaseId ? 'Edit Purchase Entry' : 'Add New Purchase Entry'" [modal]="true" [(visible)]="addPurchaseForm"
   [style]="{ width: '90vw', maxWidth: '680px' }" [closable]="true" styleClass="purchase-dialog">
   <div class="purchase-form-container">
 
@@ -97,10 +97,10 @@
     </div>
 
     <div class="form-actions">
-      <button (click)="savePurchase()" pButton pRipple label="Save Purchase" icon="pi pi-check"
+      <button (click)="savePurchase()" pButton pRipple [label]="editingPurchaseId ? 'Save Changes' : 'Save Purchase'" icon="pi pi-check"
         class="p-button-success btn-add-customer">
       </button>
-      <button (click)="showForm()" pButton pRipple label="Cancel" icon="pi pi-times"
+      <button (click)="closeForm()" pButton pRipple label="Cancel" icon="pi pi-times"
         class="p-button-secondary btn-cancel">
       </button>
     </div>
@@ -131,9 +131,77 @@
       <input pInputText type="text" [(ngModel)]="searchValue" (input)="searchPurchases(searchValue)"
         placeholder="Search purchases by seller, invoice number or category..." class="search-input" />
     </div>
-    <button pButton label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(table1)" class="btn-clear">
+    <button pButton label="Reset Filters" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(table1)" class="btn-clear">
     </button>
   </div>
+
+  <div class="purchase-filters">
+    <label class="filter-control">
+      <span>Month</span>
+      <input type="month" [(ngModel)]="monthFilter" (ngModelChange)="filterPurchases()">
+    </label>
+    <label class="filter-control">
+      <span>From</span>
+      <input type="date" [(ngModel)]="periodStart" (ngModelChange)="filterPurchases()">
+    </label>
+    <label class="filter-control">
+      <span>To</span>
+      <input type="date" [(ngModel)]="periodEnd" (ngModelChange)="filterPurchases()">
+    </label>
+    <label class="filter-control">
+      <span>Seller</span>
+      <select [(ngModel)]="sellerFilter" (ngModelChange)="filterPurchases()">
+        <option value="">All sellers</option>
+        <option *ngFor="let seller of savedSellers" [value]="seller.sellerName">{{seller.sellerName}}</option>
+      </select>
+    </label>
+    <label class="filter-control">
+      <span>Category</span>
+      <select [(ngModel)]="categoryFilter" (ngModelChange)="filterPurchases()">
+        <option value="">All categories</option>
+        <option *ngFor="let category of purchaseCategories" [value]="category">{{category}}</option>
+      </select>
+    </label>
+  </div>
+
+  <section class="purchase-analytics" aria-label="Purchase analytics">
+    <article class="analytics-card">
+      <span class="analytics-label">Displayed Purchases</span>
+      <strong>{{savedPurchases.length}}</strong>
+    </article>
+    <article class="analytics-card">
+      <span class="analytics-label">Invoice Value</span>
+      <strong>{{filteredAnalytics.invoiceValue | currency:'INR'}}</strong>
+      <div class="analytics-breakdown" *ngIf="filteredAnalytics.categoryBreakdown.length">
+        <div class="analytics-breakdown-row" *ngFor="let item of filteredAnalytics.categoryBreakdown">
+          <span>{{item.category}}</span>
+          <span>{{item.invoiceValue | currency:'INR'}}</span>
+        </div>
+      </div>
+    </article>
+    <article class="analytics-card">
+      <span class="analytics-label">Taxable Value</span>
+      <strong>{{filteredAnalytics.taxableValue | currency:'INR'}}</strong>
+    </article>
+    <article class="analytics-card">
+      <span class="analytics-label">Total Tax</span>
+      <strong>{{filteredAnalytics.taxValue | currency:'INR'}}</strong>
+      <div class="analytics-breakdown">
+        <div class="analytics-breakdown-row">
+          <span>CGST</span>
+          <span>{{filteredAnalytics.cgstAmount | currency:'INR'}}</span>
+        </div>
+        <div class="analytics-breakdown-row">
+          <span>SGST</span>
+          <span>{{filteredAnalytics.sgstAmount | currency:'INR'}}</span>
+        </div>
+        <div class="analytics-breakdown-row">
+          <span>IGST</span>
+          <span>{{filteredAnalytics.igstAmount | currency:'INR'}}</span>
+        </div>
+      </div>
+    </article>
+  </section>
 
   <!-- Desktop Table View -->
   <div class="table-wrapper desktop-view">
@@ -161,56 +229,35 @@
       <ng-template pTemplate="body" let-entry let-i="rowIndex">
         <tr [class.bgRowOdd]="i%2!=0">
           <td class="seller-name-cell">
-            <input class="editmode1 form-input-inline" type="text" [(ngModel)]="entry.sellerName"
-              placeholder="Seller name">
-            <span class="editmode2">{{entry.sellerName}}</span>
+            {{entry.sellerName}}
           </td>
           <td>
-            <input class="editmode1 form-input-inline" type="text" [(ngModel)]="entry.invoiceNumber"
-              placeholder="Invoice number">
-            <span class="editmode2">{{entry.invoiceNumber || 'N/A'}}</span>
+            {{entry.invoiceNumber || 'N/A'}}
           </td>
           <td class="purchase-date-cell">
-            <input class="editmode1 form-input-inline" type="date" [(ngModel)]="entry.purchaseDate">
-            <span class="editmode2">{{entry.purchaseDate ? (entry.purchaseDate | date:'mediumDate') : 'N/A'}}</span>
+            {{entry.purchaseDate ? (entry.purchaseDate | date:'mediumDate') : 'N/A'}}
           </td>
           <td>
-            <select class="editmode1 form-input-inline" [(ngModel)]="entry.purchaseCategory">
-              <option *ngFor="let category of purchaseCategories" [value]="category">{{category}}</option>
-            </select>
-            <span class="editmode2">{{entry.purchaseCategory || 'N/A'}}</span>
+            {{entry.purchaseCategory || 'N/A'}}
           </td>
           <td class="amount-cell">
-            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.cgstAmount"
-              placeholder="CGST">
-            <span class="editmode2">{{entry.cgstAmount | currency:'INR'}}</span>
+            {{entry.cgstAmount | currency:'INR'}}
           </td>
           <td class="amount-cell">
-            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.sgstAmount"
-              placeholder="SGST">
-            <span class="editmode2">{{entry.sgstAmount | currency:'INR'}}</span>
+            {{entry.sgstAmount | currency:'INR'}}
           </td>
           <td class="amount-cell">
-            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.igstAmount"
-              placeholder="IGST">
-            <span class="editmode2">{{entry.igstAmount | currency:'INR'}}</span>
+            {{entry.igstAmount | currency:'INR'}}
           </td>
           <td class="amount-cell">
-            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.totalTaxableAmount"
-              placeholder="Taxable value">
-            <span class="editmode2">{{entry.totalTaxableAmount | currency:'INR'}}</span>
+            {{entry.totalTaxableAmount | currency:'INR'}}
           </td>
           <td class="amount-cell">
-            <input class="editmode1 form-input-inline" type="number" [(ngModel)]="entry.totalInvoiceAmount"
-              placeholder="Invoice value">
-            <span class="editmode2">{{ entry.totalInvoiceAmount | currency:'INR' }}</span>
+            {{ entry.totalInvoiceAmount | currency:'INR' }}
           </td>
           <td class="action-buttons-cell">
-            <button class="btn-action btn-edit" (click)="toggleEdit(i)" type="button" title="Edit">
+            <button class="btn-action btn-edit" (click)="openEdit(entry)" type="button" title="Edit">
               <i class="pi pi-pencil"></i>
-            </button>
-            <button class="btn-action btn-save" (click)="saveRecord(entry, i)" type="button" title="Save">
-              <i class="pi pi-check"></i>
             </button>
           </td>
         </tr>
@@ -238,9 +285,7 @@
       <div class="card-header">
         <div class="card-title-section">
           <h3 class="purchase-seller">
-            <input class="editmode1-mobile form-input-mobile" type="text" [(ngModel)]="entry.sellerName"
-              placeholder="Seller name">
-            <span class="editmode2-mobile">{{entry.sellerName}}</span>
+            {{entry.sellerName}}
           </h3>
           <span class="purchase-id">
             <i class="pi pi-file"></i>
@@ -248,17 +293,12 @@
           </span>
           <span class="purchase-id">
             <i class="pi pi-hashtag"></i>
-            <input class="editmode1-mobile form-input-mobile" type="text" [(ngModel)]="entry.purchaseId"
-              placeholder="Purchase ID">
-            <span class="editmode2-mobile">{{entry.purchaseId || 'N/A'}}</span>
+            {{entry.purchaseId || 'N/A'}}
           </span>
         </div>
         <div class="card-actions">
-          <button class="btn-action btn-edit" (click)="toggleEdit(i)" type="button" title="Edit">
+          <button class="btn-action btn-edit" (click)="openEdit(entry)" type="button" title="Edit">
             <i class="pi pi-pencil"></i>
-          </button>
-          <button class="btn-action btn-save" (click)="saveRecord(entry, i)" type="button" title="Save">
-            <i class="pi pi-check"></i>
           </button>
         </div>
       </div>
@@ -271,8 +311,7 @@
               Purchase Date
             </span>
             <span class="info-value">
-              <input class="editmode1-mobile form-input-mobile" type="date" [(ngModel)]="entry.purchaseDate">
-              <span class="editmode2-mobile">{{entry.purchaseDate || 'N/A'}}</span>
+              {{entry.purchaseDate ? (entry.purchaseDate | date:'mediumDate') : 'N/A'}}
             </span>
           </div>
 
@@ -290,8 +329,7 @@
               Total Amount
             </span>
             <span class="info-value amount-value">
-              <input class="editmode1-mobile form-input-mobile" type="number" [(ngModel)]="entry.totalInvoiceAmount">
-              <span class="editmode2-mobile">{{ entry.totalInvoiceAmount | currency:'INR' }}</span>
+              {{ entry.totalInvoiceAmount | currency:'INR' }}
             </span>
           </div>
         </div>

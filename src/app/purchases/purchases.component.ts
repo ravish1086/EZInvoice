@@ -22,7 +22,13 @@ export class PurchasesComponent implements OnInit {
   savedPurchases: PurchaseModel[] = [];
   savedSellers: SellerModel[] = [];
   addPurchaseForm: boolean = false;
+  editingPurchaseId: string | null = null;
   searchValue: string = '';
+  monthFilter: string = '';
+  periodStart: string = '';
+  periodEnd: string = '';
+  sellerFilter: string = '';
+  categoryFilter: string = '';
 
   // Form fields
   purchaseId: string = '';
@@ -37,7 +43,6 @@ export class PurchasesComponent implements OnInit {
   igstAmount: number | null = null;
   totalTaxableAmount: number | null = null;
   totalInvoiceAmount: number | null = null;
-
   get isIntrastateSupply(): boolean {
     const sellerStateCode = this.selectedSeller?.sellerGst?.slice(0, 2);
     const companyStateCode = this.otherdataservice.appConfig?.companyGSTIN?.slice(0, 2);
@@ -74,7 +79,7 @@ export class PurchasesComponent implements OnInit {
       next: (res) => {
         this.loader.hide();
         this.purchases = res;
-        this.savedPurchases = res;
+        this.filterPurchases();
         this.cdr.markForCheck();
       },
       error: (err) => {
@@ -85,19 +90,90 @@ export class PurchasesComponent implements OnInit {
   }
 
   searchPurchases(inputStr: string) {
-    this.savedPurchases = this.purchases.filter(p =>
-      (p.sellerName || '').toLowerCase().includes(inputStr.toLowerCase()) ||
-      (p.purchaseId || '').toLowerCase().includes(inputStr.toLowerCase()) ||
-      (p.invoiceNumber || '').toLowerCase().includes(inputStr.toLowerCase()) ||
-      (p.purchaseCategory || '').toLowerCase().includes(inputStr.toLowerCase())
-    );
+    this.searchValue = inputStr;
+    this.filterPurchases();
+  }
+
+  filterPurchases() {
+    const search = this.searchValue.trim().toLowerCase();
+    this.savedPurchases = this.purchases.filter(purchase => {
+      const dateKey = this.getPurchaseDateKey(purchase.purchaseDate);
+      const matchesSearch = !search ||
+        (purchase.sellerName || '').toLowerCase().includes(search) ||
+        (purchase.purchaseId || '').toLowerCase().includes(search) ||
+        (purchase.invoiceNumber || '').toLowerCase().includes(search) ||
+        (purchase.purchaseCategory || '').toLowerCase().includes(search);
+      const matchesMonth = !this.monthFilter || dateKey?.startsWith(this.monthFilter);
+      const matchesPeriodStart = !this.periodStart || (!!dateKey && dateKey >= this.periodStart);
+      const matchesPeriodEnd = !this.periodEnd || (!!dateKey && dateKey <= this.periodEnd);
+      const matchesSeller = !this.sellerFilter || purchase.sellerName === this.sellerFilter;
+      const matchesCategory = !this.categoryFilter || purchase.purchaseCategory === this.categoryFilter;
+
+      return matchesSearch && matchesMonth && matchesPeriodStart && matchesPeriodEnd &&
+        matchesSeller && matchesCategory;
+    });
+  }
+
+  private getPurchaseDateKey(purchaseDate?: string): string | null {
+    if (!purchaseDate) return null;
+    if (/^\d{4}-\d{2}-\d{2}/.test(purchaseDate)) return purchaseDate.slice(0, 10);
+
+    const parsedDate = new Date(purchaseDate);
+    if (Number.isNaN(parsedDate.getTime())) return null;
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  get filteredAnalytics() {
+    return this.savedPurchases.reduce<{
+      invoiceValue: number;
+      taxableValue: number;
+      cgstAmount: number;
+      sgstAmount: number;
+      igstAmount: number;
+      taxValue: number;
+      categoryBreakdown: { category: string; invoiceValue: number }[];
+    }>((totals, purchase) => {
+      const invoiceValue = Number(purchase.totalInvoiceAmount) || 0;
+      totals.invoiceValue += invoiceValue;
+      totals.taxableValue += Number(purchase.totalTaxableAmount) || 0;
+      totals.cgstAmount += Number(purchase.cgstAmount) || 0;
+      totals.sgstAmount += Number(purchase.sgstAmount) || 0;
+      totals.igstAmount += Number(purchase.igstAmount) || 0;
+      totals.taxValue += (Number(purchase.cgstAmount) || 0) +
+        (Number(purchase.sgstAmount) || 0) +
+        (Number(purchase.igstAmount) || 0);
+      const category = purchase.purchaseCategory || 'Uncategorized';
+      const categoryTotal = totals.categoryBreakdown.find(item => item.category === category);
+      if (categoryTotal) {
+        categoryTotal.invoiceValue += invoiceValue;
+      } else {
+        totals.categoryBreakdown.push({ category, invoiceValue });
+      }
+      return totals;
+    }, {
+      invoiceValue: 0,
+      taxableValue: 0,
+      cgstAmount: 0,
+      sgstAmount: 0,
+      igstAmount: 0,
+      taxValue: 0,
+      categoryBreakdown: []
+    });
   }
 
   showForm() {
-    this.addPurchaseForm = !this.addPurchaseForm;
-    if (this.addPurchaseForm) {
-      this.resetForm();
-    }
+    this.resetForm();
+    this.editingPurchaseId = null;
+    this.addPurchaseForm = true;
+  }
+
+  closeForm() {
+    this.addPurchaseForm = false;
+    this.editingPurchaseId = null;
+    this.resetForm();
   }
 
   resetForm() {
@@ -122,7 +198,7 @@ export class PurchasesComponent implements OnInit {
 
   savePurchase() {
     if (
-      !this.selectedSeller ||
+      (!this.selectedSeller && !this.editingPurchaseId) ||
       !this.invoiceNumber.trim() ||
       (this.isIntrastateSupply && (this.cgstAmount === null || this.sgstAmount === null)) ||
       (!this.isIntrastateSupply && this.igstAmount === null) ||
@@ -135,7 +211,7 @@ export class PurchasesComponent implements OnInit {
     }
 
     const payload: any = {
-      sellerId: this.selectedSeller._id || this.selectedSeller.id,
+      sellerId: this.selectedSeller?._id || this.selectedSeller?.id,
       invoiceNumber: this.invoiceNumber.trim(),
       sellerName: this.sellerName,
       purchaseDate: this.purchaseDate,
@@ -151,54 +227,50 @@ export class PurchasesComponent implements OnInit {
     }
 
     this.loader.show();
-    this.otherdataservice.savePurchase(payload).subscribe({
+    const request = this.editingPurchaseId
+      ? this.otherdataservice.updatePurchase({ ...payload, _id: this.editingPurchaseId })
+      : this.otherdataservice.savePurchase(payload);
+    request.subscribe({
       next: (res) => {
         this.loader.hide();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase saved' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: this.editingPurchaseId ? 'Purchase updated' : 'Purchase saved'
+        });
         this.addPurchaseForm = false;
+        this.editingPurchaseId = null;
         this.getPurchases();
       },
       error: (err) => {
         this.loader.hide();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save purchase' });
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: this.editingPurchaseId ? 'Update failed' : 'Failed to save purchase'
+        });
         console.error(err);
       }
     });
   }
 
-  toggleEdit(index: number) {
-    let element1 = document.getElementsByClassName('editmode1') as HTMLCollectionOf<HTMLElement>;
-    for (let i = index * 9; i < index * 9 + 9; i++) {
-      if (element1[i]) element1[i].style.display = 'block';
-    }
-    let element2 = document.getElementsByClassName('editmode2') as HTMLCollectionOf<HTMLElement>;
-    for (let j = index * 9; j < index * 9 + 9; j++) {
-      if (element2[j]) element2[j].style.display = 'none';
-    }
-  }
-
-  saveRecord(entry: any, index: number) {
-    let element1 = document.getElementsByClassName('editmode1') as HTMLCollectionOf<HTMLElement>;
-    for (let i = index * 9; i < index * 9 + 9; i++) {
-      if (element1[i]) element1[i].style.display = 'none';
-    }
-    let element2 = document.getElementsByClassName('editmode2') as HTMLCollectionOf<HTMLElement>;
-    for (let j = index * 9; j < index * 9 + 9; j++) {
-      if (element2[j]) element2[j].style.display = 'block';
-    }
-
-    this.loader.show();
-    this.otherdataservice.updatePurchase(entry).subscribe({
-      next: (res) => {
-        this.loader.hide();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase updated' });
-        this.getPurchases();
-      },
-      error: (err) => {
-        this.loader.hide();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Update failed' });
-      }
-    });
+  openEdit(entry: PurchaseModel) {
+    this.resetForm();
+    this.editingPurchaseId = entry._id || null;
+    this.purchaseId = entry.purchaseId || '';
+    this.invoiceNumber = entry.invoiceNumber || '';
+    this.sellerName = entry.sellerName || '';
+    this.selectedSeller = this.savedSellers.find(seller =>
+      (seller._id && String(seller._id) === String(entry.sellerId)) || seller.sellerName === entry.sellerName
+    ) || null;
+    this.purchaseDate = this.getPurchaseDateKey(entry.purchaseDate) || '';
+    this.purchaseCategory = entry.purchaseCategory || '';
+    this.sgstAmount = Number(entry.sgstAmount) || 0;
+    this.cgstAmount = Number(entry.cgstAmount) || 0;
+    this.igstAmount = Number(entry.igstAmount) || 0;
+    this.totalTaxableAmount = Number(entry.totalTaxableAmount) || 0;
+    this.totalInvoiceAmount = Number(entry.totalInvoiceAmount) || 0;
+    this.addPurchaseForm = true;
   }
 
   deleteRecord(entry: any) {
@@ -222,5 +294,11 @@ export class PurchasesComponent implements OnInit {
   clear(table: Table) {
     table.clear();
     this.searchValue = '';
+    this.monthFilter = '';
+    this.periodStart = '';
+    this.periodEnd = '';
+    this.sellerFilter = '';
+    this.categoryFilter = '';
+    this.filterPurchases();
   }
 }
