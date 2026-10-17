@@ -1,24 +1,34 @@
-.title
-{
-    margin-left: 2%;
-    font-weight: 800;
-    font-size: 20px;
+// App shell – compact, calm styling
+
+.title {
+    margin-left: 1.5%;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.2px;
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.content-outlet
-{
-    
+
+.content-outlet {
     overflow-x: hidden;
 }
-.active-link
-{
+
+.active-link {
     background-color: #062c8d;
-    border-radius: 10px;
+    border-radius: 6px;
     color: white;
 }
-a{
+
+a {
     font-weight: 600;
-    padding: 7px;
-    margin: 2px;
+    font-size: 12.5px;
+    padding: 5px 9px;
+    margin: 1px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
+
+a:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+

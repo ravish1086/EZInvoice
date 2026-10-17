@@ -1,41 +1,72 @@
-.flex-jc-ac{
+.flex-jc-ac {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.login-container{
-    height: 500px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 2px 0px 2px #00000029;
-    border: 1px solid rgb(206, 206, 206);
-    width: 370px;
+
+.main-container-login {
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(160deg, #f4f6fa 0%, #e9edf7 100%);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.main-container-login{
-height: 100vh;
-width: 100vw;
+
+.login-container {
+    width: 320px;
+    height: auto;
+    padding: 18px 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(31, 38, 50, 0.08);
+    border: 1px solid #e3e7ee;
+    background: #fff;
+    font-size: 13.5px;
+    color: #2b3240;
 }
-.logo-icon{
-    height: 150px;
+
+.logo-icon {
+    height: 104px;
     border-radius: 50%;
 }
-.gap-20px{
-    gap: 20px;
+
+.app-logo {
+    background-color: #222229;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    width: fit-content;
 }
-.flex-d-col{
+
+.gap-20px {
+    gap: 12px;
+}
+
+.flex-d-col {
     flex-direction: column;
 }
 
-
-.margin-top-20px{
-    margin-top: 20px;
+.margin-top-20px {
+    margin-top: 14px;
 }
-.app-logo{
-    background-color: #222229;
-    color: white;
-    border-radius: 10px;
-    padding: 7px 20px;
-    font-size: 18px;
-    font-weight: 700;
-    width: fit-content;
+
+// login inputs & button – compact sizing
+.login-container input {
+    font-size: 13px;
+    padding: 0.4rem 0.65rem;
+}
+
+.login-container .p-inputgroup-addon {
+    font-size: 13px;
+    padding: 0.4rem 0.6rem;
+    color: #616b7d;
+    background: #f1f4f9;
+}
+
+.login-container .login-btn {
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    font-size: 13px;
+    font-weight: 600;
 }

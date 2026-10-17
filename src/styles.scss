@@ -1,32 +1,525 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================================
+   EZInvoice – global stylesheet
+   Compact, low-contrast, business-friendly theme (SCSS only, no HTML changes).
+
+   Contents
+    1. Design tokens
+    2. Base / page background / scrollbars
+    3. Typography (smaller heading scale)
+    4. Form controls
+    5. Buttons
+    6. Data tables (PrimeNG)
+    7. Cards & panels
+    8. PrimeNG widgets (dialog, toast, menu, tabs, select, paginator ...)
+    9. Layout helpers & utilities (kept from the original file)
+   10. Component compaction overrides (specificity-safe, no !important)
+   ========================================================================== */
 
 @import url(bootstrap/dist/css/bootstrap.min.css) layer(bootstrap);
-// @import url(node_modules/primeng/resources/themes/lara-light-blue/theme.css);
-// @import url(node_modules/primeng/resources/primeng.min.css);
 @import url(primeicons/primeicons.css);
 
-input {
-    font-size: 16px;
+/* ---------------------------------------------------------------------------
+   1. Design tokens
+   ------------------------------------------------------------------------ */
+$font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+
+$fs-body: 13.5px; // main reading size
+$fs-control: 12.5px; // inputs, buttons, table cells
+$fs-small: 12px;
+$fs-xs: 11px;
+
+$fs-h1: 1.3rem;
+$fs-h2: 1.12rem;
+$fs-h3: 1rem;
+$fs-h4: 0.92rem;
+
+$ink: #2b3240; // softened black – easier on the eyes
+$ink-strong: #1f2632;
+$ink-muted: #616b7d;
+$ink-soft: #8a94a6;
+$line: #e3e7ee; // hair line borders
+$line-soft: #edf0f5;
+$surface: #ffffff;
+$canvas: #f4f6fa; // page background
+$hover: #f2f6fd;
+$stripe: #fafbfd;
+$primary: #667eea; // matches the component gradients
+$primary-deep: #5a67d8;
+
+/* ---------------------------------------------------------------------------
+   2. Base
+   ------------------------------------------------------------------------ */
+html {
+    // one notch below the default 16px: every rem based size in the app
+    // (component CSS + Bootstrap + PrimeNG) becomes ~7% more compact
+    font-size: 15px;
+}
+
+body {
+    margin: 0;
+    font-family: $font-stack;
+    font-size: $fs-body;
+    line-height: 1.45;
+    color: $ink;
+    background-color: $canvas;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c6cdd9 transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c6cdd9;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a9b2c1;
+}
+
+::selection {
+    background: rgba(102, 126, 234, 0.22);
+}
+
+:focus-visible {
+    outline: 2px solid rgba(102, 126, 234, 0.45);
+    outline-offset: 1px;
+}
+
+img {
+    max-width: 100%;
 }
 
 .printPadding {
-    padding: 0px 20px;
+    padding: 0 20px;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Typography – smaller, calmer heading scale
+   ------------------------------------------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0 0 0.5rem;
+    color: $ink-strong;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: $fs-h1;
+}
+
+h2 {
+    font-size: $fs-h2;
+}
+
+h3 {
+    font-size: $fs-h3;
+}
+
+h4,
+h5,
+h6 {
+    font-size: $fs-h4;
+}
+
+p {
+    margin: 0 0 0.5rem;
+    font-size: $fs-body;
+}
+
+small {
+    font-size: $fs-xs;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4a5468;
+}
+
+a {
+    color: #3b5bdb;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+a:hover {
+    color: #2f4bc7;
+}
+
+strong,
+b {
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   4. Form controls
+   ------------------------------------------------------------------------ */
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: $fs-control;
+    color: $ink;
+}
+
+::placeholder {
+    color: $ink-soft;
+    opacity: 1;
+}
+
+.form-control,
+.form-select {
+    font-size: $fs-control;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    border-color: #d9dee7;
+    background-color: $surface;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: rgba(102, 126, 234, 0.6);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.14);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+    width: 14px;
+    height: 14px;
+    accent-color: $primary-deep;
+}
+
+/* ---------------------------------------------------------------------------
+   5. Buttons
+   ------------------------------------------------------------------------ */
+.btn {
+    font-size: $fs-control;
+    font-weight: 500;
+    padding: 0.32rem 0.7rem;
+    border-radius: 6px;
+    line-height: 1.35;
+}
+
+.btn-sm {
+    font-size: $fs-xs;
+    padding: 0.22rem 0.55rem;
+}
+
+.btn-primary {
+    background: $primary-deep;
+    border-color: $primary-deep;
+}
+
+.btn-primary:hover {
+    background: #4c58c9;
+    border-color: #4c58c9;
+}
+
+.btn-outline-primary {
+    color: $primary-deep;
+    border-color: #b9c1f0;
+}
+
+.btn-outline-primary:hover {
+    background: #eef0fe;
+    border-color: $primary-deep;
+}
+
+.login-btn {
+    width: 270px;
+    padding: 0.45rem 0.75rem;
+}
+
+/* ---------------------------------------------------------------------------
+   6. Data tables (PrimeNG)
+   ------------------------------------------------------------------------ */
+body .p-datatable {
+    font-size: $fs-control;
+    background: $surface;
+}
+
+body .p-datatable .p-datatable-header {
+    padding: 0.5rem 0.75rem;
+    font-size: $fs-small;
+    font-weight: 600;
+    background: $surface;
+    border-bottom: 1px solid $line-soft;
+}
+
+body .p-datatable .p-datatable-thead > tr > th {
+    padding: 0.45rem 0.75rem;
+    background: #eef1f6;
+    color: #404a5c;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-color: #dde3ec;
+}
+
+body .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.4rem 0.75rem;
+    font-size: $fs-control;
+    line-height: 1.4;
+    color: #333b4a;
+    border-color: $line-soft;
+    font-variant-numeric: tabular-nums; // aligned money columns
+}
+
+body .p-datatable .p-datatable-tbody > tr:nth-child(even) > td {
+    background: $stripe;
+}
+
+body .p-datatable .p-datatable-tbody > tr:hover > td {
+    background: $hover;
+}
+
+body .p-datatable-scrollable {
+    border: 1px solid $line;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body .p-datatable .p-datatable-tbody > tr > td .p-column-title {
+    font-size: $fs-xs;
+    font-weight: 600;
+    color: $ink-muted;
+}
+
+// paginator
+body .p-paginator {
+    padding: 0.4rem 0.6rem;
+    font-size: $fs-small;
+    background: $surface;
+    border-top: 1px solid $line-soft;
+}
+
+body .p-paginator .p-paginator-page,
+body .p-paginator .p-paginator-first,
+body .p-paginator .p-paginator-last,
+body .p-paginator .p-paginator-next,
+body .p-paginator .p-paginator-prev {
+    min-width: 28px;
+    height: 26px;
+    border-radius: 6px;
+    font-size: $fs-small;
+}
+
+/* ---------------------------------------------------------------------------
+   7. Cards & panels
+   ------------------------------------------------------------------------ */
+.card {
+    background: $surface;
+    border: 1px solid $line;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(31, 38, 50, 0.05);
+}
+
+.card-header,
+.card-footer {
+    padding: 0.6rem 0.85rem;
+    font-size: $fs-small;
+    background: transparent;
+    border-color: $line-soft;
+}
+
+.card-body {
+    padding: 0.85rem;
+}
+
+// generic content sections shared by several feature pages
+body .table-card.table-card,
+body .summary-card.summary-card {
+    background: $surface;
+    border: 1px solid $line;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(31, 38, 50, 0.05);
+}
+
+/* ---------------------------------------------------------------------------
+   8. PrimeNG widgets
+   ------------------------------------------------------------------------ */
+// buttons
+body .p-button {
+    font-size: $fs-control;
+    font-weight: 500;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    gap: 0.4rem;
+}
+
+body .p-button .p-button-icon {
+    font-size: 12px;
+}
+
+body .p-button.p-button-sm {
+    font-size: $fs-xs;
+    padding: 0.22rem 0.55rem;
+}
+
+body .p-button.p-button-text {
+    padding: 0.3rem 0.5rem;
+}
+
+// text inputs & dropdowns
+body .p-inputtext,
+body .p-select,
+body .p-dropdown,
+body .p-inputnumber-input,
+body .p-autocomplete-input,
+body .p-datepicker input,
+body .p-password input {
+    font-size: $fs-control;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    border-color: #d9dee7;
+    background: $surface;
+    color: $ink;
+}
+
+body .p-inputtext:focus,
+body .p-select:focus,
+body .p-dropdown:focus {
+    border-color: rgba(102, 126, 234, 0.6);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.14);
+}
+
+body .p-inputgroup .p-inputgroup-addon {
+    font-size: $fs-control;
+    padding: 0.35rem 0.6rem;
+    color: $ink-muted;
+    background: #f1f4f9;
+    border-color: #d9dee7;
+}
+
+// floating select / autocomplete panels
+body .p-select-panel,
+body .p-autocomplete-panel,
+body .p-multiselect-panel,
+body .p-datepicker-panel {
+    border: 1px solid $line;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(31, 38, 50, 0.12);
+}
+
+body .p-select-option,
+body .p-autocomplete-option,
+body .p-multiselect-option {
+    padding: 0.4rem 0.65rem;
+    font-size: $fs-control;
+}
+
+body .p-select-label,
+body .p-dropdown-label,
+body .p-multiselect-label {
+    font-size: $fs-control;
+}
+
+// dialogs
+body .p-dialog {
+    border-radius: 12px;
+    box-shadow: 0 18px 48px rgba(31, 38, 50, 0.22);
+    overflow: hidden;
+}
+
+body .p-dialog .p-dialog-header {
+    padding: 0.7rem 1rem;
+    font-size: 14px;
+    font-weight: 600;
+    color: $ink-strong;
+    background: $surface;
+    border-bottom: 1px solid $line-soft;
+}
+
+body .p-dialog .p-dialog-header-icons {
+    gap: 4px;
+}
+
+body .p-dialog .p-dialog-header .p-dialog-header-close {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+}
+
+body .p-dialog .p-dialog-content {
+    padding: 0.85rem 1rem;
+    font-size: $fs-body;
+    background: $surface;
+    color: $ink;
+}
+
+body .p-dialog .p-dialog-footer {
+    padding: 0.6rem 1rem;
+    background: #fafbfd;
+    border-top: 1px solid $line-soft;
+}
+
+body .p-confirmdialog .p-dialog-content {
+    font-size: $fs-body;
+    padding: 0.85rem 1rem;
+}
+
+// toast
+body .p-toast .p-toast-message {
+    padding: 0.6rem 0.85rem;
+    border-radius: 8px;
+    font-size: $fs-small;
+    box-shadow: 0 8px 24px rgba(31, 38, 50, 0.14);
+}
+
+body .p-toast .p-toast-detail {
+    font-size: $fs-small;
+    font-weight: 600;
+}
+
+// menus / menubar / tabs
+body .p-menu .p-menuitem-link,
+body .p-menubar .p-menubar-item-content {
+    padding: 0.4rem 0.65rem;
+    font-size: $fs-control;
+    border-radius: 6px;
+    gap: 0.45rem;
 }
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
-    padding: 0.5rem;
-    font-size: 14px;
+    padding: 0.4rem 0.7rem;
+    font-size: $fs-small;
     font-weight: 600;
-
+    gap: 0.4rem;
 }
 
-.p-inputtext {
-    font-size: 14px;
-
-    padding: 0.25rem 0.75rem;
-
+// tags / badges
+body .p-tag {
+    font-size: $fs-xs;
+    padding: 0.15rem 0.45rem;
+    border-radius: 5px;
 }
 
+
+/* ---------------------------------------------------------------------------
+   9. Layout helpers & utilities (kept from the original file)
+   ------------------------------------------------------------------------ */
 .container {
     max-width: 98vw;
     margin: auto;
@@ -34,107 +527,9 @@ input {
 
 .flex {
     display: flex;
-    // justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 12px; // was 20px – tighter rows of controls
 }
-
-.p-datatable .p-datatable-tbody>tr>td {
-    padding: 0.5rem 1rem;
-    font-size: 14px;
-}
-
-.p-datatable .p-datatable-thead>tr>th {
-    padding: 0.5rem 1rem;
-    background-color: #212129;
-    color: white;
-    font-weight: 500;
-}
-
-.p-datatable-scrollable {
-    // margin: 20px;
-    border: 1px solid black;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.p-datatable .p-datatable-header {
-    padding: 0.5rem 1rem;
-}
-
-.p-button {
-    padding: 0.25rem .75rem;
-    font-size: 1rem;
-
-}
-
-.login-btn {
-    width: 300px;
-    padding: 0.5rem 0.75rem;
-}
-
-// // Manual Bootstrap Grid System
-// .row {
-//     display: flex;
-//     flex-wrap: wrap;
-//     margin-right: -15px;
-//     margin-left: -15px;
-// }
-
-// [class*="col-"] {
-//     position: relative;
-//     width: 100%;
-//     padding-right: 15px;
-//     padding-left: 15px;
-// }
-
-// // Mobile first or base columns
-// @for $i from 1 through 12 {
-//     .col-#{$i} {
-//         flex: 0 0 calc(100% / 12 * #{$i});
-//         max-width: calc(100% / 12 * #{$i});
-//     }
-// }
-
-// // Small devices (landscape phones, 576px and up)
-// @media (min-width: 576px) {
-//     @for $i from 1 through 12 {
-//         .col-sm-#{$i} {
-//             flex: 0 0 calc(100% / 12 * #{$i});
-//             max-width: calc(100% / 12 * #{$i});
-//         }
-//     }
-// }
-
-// // Medium devices (tablets, 768px and up)
-// @media (min-width: 768px) {
-//     @for $i from 1 through 12 {
-//         .col-md-#{$i} {
-//             flex: 0 0 calc(100% / 12 * #{$i});
-//             max-width: calc(100% / 12 * #{$i});
-//         }
-//     }
-// }
-
-// // Large devices (desktops, 992px and up)
-// @media (min-width: 992px) {
-//     @for $i from 1 through 12 {
-//         .col-lg-#{$i} {
-//             flex: 0 0 calc(100% / 12 * #{$i});
-//             max-width: calc(100% / 12 * #{$i});
-//         }
-//     }
-// }
-
-// // Extra large devices (large desktops, 1200px and up)
-// @media (min-width: 1200px) {
-//     @for $i from 1 through 12 {
-//         .col-xl-#{$i} {
-//             flex: 0 0 calc(100% / 12 * #{$i});
-//             max-width: calc(100% / 12 * #{$i});
-//         }
-//     }
-// }
 
 // Basic Utility Classes
 .float-right {
@@ -191,3 +586,132 @@ input {
 .addPadding-right {
     padding-right: 15px !important;
 }
+
+/* ---------------------------------------------------------------------------
+   10. Component compaction overrides
+   Component stylesheets are view-encapsulated, so every rule below repeats the
+   class and is prefixed with `body`. That wins the cascade without !important
+   and leaves inline (print / PDF invoice) styles untouched.
+   ------------------------------------------------------------------------ */
+
+// ---- 10a. Typography ------------------------------------------------
+body .page-title.page-title {
+    font-size: 20px;
+    margin-bottom: 0.75rem;
+}
+
+body .page-title.page-title i {
+    font-size: 22px;
+}
+
+body .pa-title.pa-title {
+    font-size: 20px;
+    margin-bottom: 0.75rem;
+}
+
+body .pa-title.pa-title i {
+    font-size: 22px;
+}
+
+body .analytics-header.analytics-header,
+body .pa-header.pa-header {
+    margin-bottom: 18px;
+}
+
+body .chart-header.chart-header h3,
+body .card-header.card-header h3,
+body .table-header.table-header h3 {
+    font-size: 14.5px;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+body .card-header.card-header h2 {
+    font-size: 16px;
+}
+
+body .metric-value.metric-value {
+    font-size: 21px;
+}
+
+body .metric-icon.metric-icon {
+    font-size: 18px;
+}
+
+body .tax-rate.tax-rate {
+    font-size: 18px;
+}
+
+body .item-value.item-value {
+    font-size: 13.5px;
+}
+
+body .empty-state.empty-state h3 {
+    font-size: 15px;
+}
+
+body .title-group.title-group h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.35rem;
+}
+
+body .stat-info.stat-info .value {
+    font-size: 1.25rem;
+}
+
+body .summary-title.summary-title {
+    font-size: 1rem;
+}
+
+body .register-card.register-card .title {
+    font-size: 15px;
+    margin-bottom: 0.7rem;
+}
+
+body .table-header.table-header p,
+body .chart-subtitle.chart-subtitle {
+    font-size: $fs-xs;
+    color: $ink-muted;
+    margin-bottom: 0.35rem;
+}
+
+// ---- 10b. Spacing (desktop only – mobile keeps its own responsive rules)
+@media screen and (min-width: 769px) {
+    body .analytics-container.analytics-container,
+    body .pa-container.pa-container {
+        padding: 16px;
+    }
+
+    body .metric-card.metric-card,
+    body .chart-card.chart-card,
+    body .data-card.data-card {
+        padding: 16px;
+    }
+
+    body .analytics-grid.analytics-grid,
+    body .analytics-content.analytics-content,
+    body .metrics-grid.metrics-grid,
+    body .pa-grid.pa-grid,
+    body .pa-content.pa-content {
+        gap: 14px;
+    }
+
+    body .metrics-grid.metrics-grid {
+        margin-bottom: 22px;
+    }
+
+    body .summary-card.summary-card,
+    body .table-card.table-card {
+        margin-bottom: 12px;
+    }
+
+    body .actions-bar.actions-bar,
+    body .action-bar.action-bar {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+}
+
+
+
+
