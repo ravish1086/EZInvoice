@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { SellerModel } from '../models/seller.model';
 import { OtherdataService } from '../services/otherdata.service';
@@ -34,7 +34,7 @@ export class SellerDetailsComponent implements OnInit {
   sellerState: string = '';
   sellerCountry: string = '';
   editingIndex: number | null = null;
-  constructor(private otherdataservice:OtherdataService, private messageService: MessageService, private loader: NgxSpinnerService) { }
+  constructor(private otherdataservice:OtherdataService, private messageService: MessageService, private loader: NgxSpinnerService, private cdr:ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.getSellerDetails();
@@ -64,7 +64,8 @@ export class SellerDetailsComponent implements OnInit {
             this.savedSellers.push(seller);
           }
           console.log(this.savedSellers);
-          this.otherdataservice.loadedSeller=this.savedSellers;
+          this.otherdataservice.loadedSeller=this.savedSellers;;
+          this.cdr.markForCheck();
         },
         error : err=>
         {
@@ -84,7 +85,7 @@ export class SellerDetailsComponent implements OnInit {
       sellerCity: this.sellerCity,
       sellerState: this.sellerState,
       sellerCountry: this.sellerCountry,
-      _id: ''
+      
     };
     this.loader.show();
     this.otherdataservice.saveSeller(seller).subscribe(res=>
@@ -94,7 +95,7 @@ export class SellerDetailsComponent implements OnInit {
         if(res)
         {
           this.messageService.add({severity:'success', summary:'Success', detail:'Seller added successfully'});
-          seller._id = res._id || res.id || '';
+          seller._id = res._id || res.id || 0;
           this.savedSellers.push(seller);
           this.sellerName = '';
           this.sellerGst = '';
@@ -143,7 +144,7 @@ export class SellerDetailsComponent implements OnInit {
     this.editingIndex = null;
     this.getSellerDetails();
   }
-  deleteSeller(id: string | undefined, index:number)
+  deleteSeller(id: any | undefined, index:number)
   {
     if(!id || !confirm('Are you sure you want to delete this seller?')) return;
     this.loader.show();

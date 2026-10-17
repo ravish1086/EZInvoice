@@ -7,5 +7,5 @@ export interface SellerModel {
     sellerCity?: string;
     sellerState?: string;
     sellerCountry?: string;
-    _id?: string;
+    _id?: number;
 }
