@@ -29,6 +29,10 @@ export class PurchasesComponent implements OnInit {
   selectedSeller: any = null;
   sellerName: string = '';
   purchaseDate: string = '';
+  sgstAmount: number | null = null;
+  cgstAmount: number | null = null;
+  igstAmount: number | null = null;
+  totalTaxableAmount: number | null = null;
   totalInvoiceAmount: number | null = null;
 
   constructor(
@@ -90,6 +94,10 @@ export class PurchasesComponent implements OnInit {
     this.selectedSeller = null;
     this.sellerName = '';
     this.purchaseDate = '';
+    this.sgstAmount = null;
+    this.cgstAmount = null;
+    this.igstAmount = null;
+    this.totalTaxableAmount = null;
     this.totalInvoiceAmount = null;
   }
 
@@ -98,8 +106,8 @@ export class PurchasesComponent implements OnInit {
   }
 
   savePurchase() {
-    if (!this.selectedSeller || this.totalInvoiceAmount === null) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill required fields' });
+    if (!this.selectedSeller || this.sgstAmount === null || this.cgstAmount === null || this.igstAmount === null || this.totalTaxableAmount === null || this.totalInvoiceAmount === null) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all required fields' });
       return;
     }
 
@@ -107,6 +115,10 @@ export class PurchasesComponent implements OnInit {
       sellerId: this.selectedSeller._id || this.selectedSeller.id,
       sellerName: this.sellerName,
       purchaseDate: this.purchaseDate,
+      sgstAmount: this.sgstAmount,
+      cgstAmount: this.cgstAmount,
+      igstAmount: this.igstAmount,
+      totalTaxableAmount: this.totalTaxableAmount,
       totalInvoiceAmount: this.totalInvoiceAmount
     };
     if (this.purchaseId) {

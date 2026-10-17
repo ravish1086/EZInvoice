@@ -1,6 +1,6 @@
 <!-- Add Purchase Dialog -->
 <p-dialog header="Add New Purchase Entry" [modal]="true" [(visible)]="addPurchaseForm"
-  [style]="{ width: '90vw', maxWidth: '800px' }" [closable]="true" styleClass="purchase-dialog">
+  [style]="{ width: '90vw', maxWidth: '680px' }" [closable]="true" styleClass="purchase-dialog">
   <div class="purchase-form-container">
     <div class="form-group">
       <label for="purchaseId">
@@ -37,6 +37,42 @@
         Purchase Date <span class="required">*</span>
       </label>
       <input pInputText type="date" id="purchaseDate" [(ngModel)]="purchaseDate" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="sgstAmount">
+        <i class="pi pi-percentage"></i>
+        SGST Amount <span class="required">*</span>
+      </label>
+      <input pInputText type="number" id="sgstAmount" [(ngModel)]="sgstAmount" placeholder="SGST amount"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="cgstAmount">
+        <i class="pi pi-percentage"></i>
+        CGST Amount <span class="required">*</span>
+      </label>
+      <input pInputText type="number" id="cgstAmount" [(ngModel)]="cgstAmount" placeholder="CGST amount"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="igstAmount">
+        <i class="pi pi-percentage"></i>
+        IGST Amount <span class="required">*</span>
+      </label>
+      <input pInputText type="number" id="igstAmount" [(ngModel)]="igstAmount" placeholder="IGST amount"
+        class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="totalTaxableAmount">
+        <i class="pi pi-money-bill"></i>
+        Total Taxable Amount <span class="required">*</span>
+      </label>
+      <input pInputText type="number" id="totalTaxableAmount" [(ngModel)]="totalTaxableAmount"
+        placeholder="Taxable amount" class="form-input">
     </div>
 
     <div class="form-group">

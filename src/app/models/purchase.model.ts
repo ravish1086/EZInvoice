@@ -4,6 +4,10 @@ export interface PurchaseModel {
     sellerId?: string;
     sellerName?: string;
     purchaseDate?: string;
+    sgstAmount?: number;
+    cgstAmount?: number;
+    igstAmount?: number;
+    totalTaxableAmount?: number;
     totalInvoiceAmount?: number;
     isActive?: number;
     createdBy?: string;
