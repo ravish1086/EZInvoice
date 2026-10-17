@@ -4,4 +4,8 @@ export interface SellerModel {
     sellerGst: string;
     sellerName: string;
     sellerPan: string;
+    sellerCity?: string;
+    sellerState?: string;
+    sellerCountry?: string;
+    _id?: string;
 }

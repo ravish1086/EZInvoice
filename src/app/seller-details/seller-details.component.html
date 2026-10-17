@@ -1,40 +1,165 @@
-<div *ngIf="isImport">
-  <input type="file" (change)="onFileChange($event)" multiple="false" />
-  </div>
-<table>
-    <tbody>
-        <tr *ngFor="let row of data">
-                <td *ngFor="let cell of row">
-                        {{cell}}
-                </td>
-        </tr>
-    </tbody>
-</table>
+<!-- Add Seller Dialog -->
+<p-dialog header="Add New Seller" [modal]="true" [(visible)]="addSellerForm"
+  [style]="{ width: '90vw', maxWidth: '600px' }" [closable]="true" styleClass="seller-dialog">
+  <div class="seller-form-container">
+    <div class="form-group">
+      <label for="sellerName">
+        <i class="pi pi-user"></i>
+        Seller Name <span class="required">*</span>
+      </label>
+      <input pInputText type="text" id="sellerName" [(ngModel)]="customerName" placeholder="Enter seller name" class="form-input">
+    </div>
 
-<div class="container">
-    <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Seller Name</th>
-            <th scope="col">Seller GST</th>
-            <th scope="col">Seller Pan</th>
-            <th scope="col">Seller Contact</th>
-            <th scope="col">Seller Address</th>
-     
-            
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let entry of savedSellers">
-            <th scope="row">{{entry.sellerName}}</th>
-            <td>{{entry.sellerGst}}</td>
-            <td>{{entry.sellerPan}}</td>
-            <td>{{entry.sellerContact}}</td>
-            <td>{{entry.sellerAddress}}</td>
-            
-          </tr>
-         
-        </tbody>
-      </table>
+    <div class="form-group">
+      <label for="sellerGst">
+        <i class="pi pi-id-card"></i>
+        Seller GST <span class="required">*</span>
+      </label>
+      <input pInputText type="text" id="sellerGst" [(ngModel)]="customerGst" placeholder="Enter GST number" maxlength="15" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="sellerPan">
+        <i class="pi pi-credit-card"></i>
+        Seller PAN
+      </label>
+      <input pInputText type="text" id="sellerPan" [(ngModel)]="customerPan" placeholder="Enter PAN number" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="sellerContact">
+        <i class="pi pi-phone"></i>
+        Seller Contact
+      </label>
+      <input pInputText type="text" id="sellerContact" [(ngModel)]="customerContact" placeholder="Enter contact number" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label for="sellerAddress">
+        <i class="pi pi-map-marker"></i>
+        Seller Address
+      </label>
+      <input pInputText type="text" id="sellerAddress" [(ngModel)]="customerAddress" placeholder="Enter full address" class="form-input">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="sellerCity">
+          <i class="pi pi-home"></i>
+          City
+        </label>
+        <input pInputText type="text" id="sellerCity" [(ngModel)]="customerCity" placeholder="Enter city" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="sellerState">
+          <i class="pi pi-globe"></i>
+          State
+        </label>
+        <input pInputText type="text" id="sellerState" [(ngModel)]="customerState" placeholder="Enter state" class="form-input">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="sellerCountry">
+        <i class="pi pi-flag"></i>
+        Country
+      </label>
+      <input pInputText type="text" id="sellerCountry" [(ngModel)]="customerCountry" placeholder="Enter country" class="form-input">
+    </div>
+
+    <div class="form-actions">
+      <button (click)="addSeller()" pButton pRipple label="Add Seller" icon="pi pi-check" class="p-button-success btn-add-seller">
+      </button>
+      <button (click)="showForm()" pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-secondary btn-cancel">
+      </button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Excel Import Section -->
+<div *ngIf="isImport" class="import-section">
+  <label for="sellerFileInput" class="btn-import">
+    <i class="pi pi-upload"></i>
+    <span class="import-text">Import Excel</span>
+    <input type="file" id="sellerFileInput" (change)="onFileChange($event)" multiple="false" accept=".xlsx,.xls" style="display: none;">
+  </label>
 </div>
 
+<div class="p-toolbar">
+  <button (click)="showForm()" pButton pRipple label="Add Seller" icon="pi pi-plus" class="p-button-primary btn-add-header">
+  </button>
+</div>
+
+<div class="container">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Seller Name</th>
+        <th scope="col">Seller GST</th>
+        <th scope="col">Seller Pan</th>
+        <th scope="col">Seller Contact</th>
+        <th scope="col">Seller Address</th>
+        <th scope="col">City</th>
+        <th scope="col">State</th>
+        <th scope="col">Country</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entry of savedSellers; let i = index">
+        <th scope="row">
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerName" placeholder="Seller name">
+          <span *ngIf="editingIndex !== i">{{entry.customerName}}</span>
+        </th>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerGst" placeholder="GST">
+          <span *ngIf="editingIndex !== i">{{entry.customerGst || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerPan" placeholder="PAN">
+          <span *ngIf="editingIndex !== i">{{entry.customerPan || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerContact" placeholder="Contact">
+          <span *ngIf="editingIndex !== i">{{entry.customerContact || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerAddress" placeholder="Address">
+          <span *ngIf="editingIndex !== i">{{entry.customerAddress || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerCity" placeholder="City">
+          <span *ngIf="editingIndex !== i">{{entry.customerCity || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerState" placeholder="State">
+          <span *ngIf="editingIndex !== i">{{entry.customerState || 'N/A'}}</span>
+        </td>
+        <td>
+          <input *ngIf="editingIndex === i" class="edit-input" type="text" [(ngModel)]="entry.customerCountry" placeholder="Country">
+          <span *ngIf="editingIndex !== i">{{entry.customerCountry || 'N/A'}}</span>
+        </td>
+        <td class="action-cell">
+          <button *ngIf="editingIndex !== i" class="btn-action btn-edit" (click)="editSeller(i)" type="button" title="Edit">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button *ngIf="editingIndex === i" class="btn-action btn-save" (click)="saveSellerRecord(entry, i)" type="button" title="Save">
+            <i class="pi pi-check"></i>
+          </button>
+          <button *ngIf="editingIndex === i" class="btn-action btn-cancel-edit" (click)="cancelEdit()" type="button" title="Cancel">
+            <i class="pi pi-times"></i>
+          </button>
+          <button *ngIf="editingIndex !== i" class="btn-action btn-delete" (click)="deleteSeller(entry._id, i)" type="button" title="Delete">
+            <i class="pi pi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="savedSellers.length === 0">
+        <td colspan="9" class="empty-message">No sellers found. Add your first seller.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p-toast></p-toast>

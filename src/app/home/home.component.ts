@@ -194,7 +194,11 @@ export class HomeComponent implements OnInit {
                   sellerName: res[i].sellerName,
                   sellerPan: res[i].sellerPan,
                   sellerContact: res[i].sellerContact,
-                  sellerAddress: res[i].sellerAddress
+                  sellerAddress: res[i].sellerAddress,
+                  sellerCity: res[i].sellerCity || "",
+                  sellerState: res[i].sellerState || "",
+                  sellerCountry: res[i].sellerCountry || "",
+                  _id: res[i]._id
                 };
                 this.savedSellers.push(seller);
               }

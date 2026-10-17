@@ -5,45 +5,161 @@ import { OtherdataService } from '../services/otherdata.service';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-seller-details',
   templateUrl: './seller-details.component.html',
   styleUrls: ['./seller-details.component.css'],
   standalone: true,
-  imports: [TableModule, FormsModule, CommonModule]
+  imports: [TableModule, FormsModule, CommonModule, ButtonModule, DialogModule, ToastModule],
+  providers: [MessageService]
 })
 export class SellerDetailsComponent implements OnInit {
   seller: SellerModel[] = [];
   data: any;
   savedSellers: SellerModel[] = [];
   isImport=false;
-  constructor(private otherdataservice:OtherdataService) { }
+  addSellerForm: boolean = false;
+  customerName: string = '';
+  customerGst: string = '';
+  customerPan: string = '';
+  customerContact: string = '';
+  customerAddress: string = '';
+  customerCity: string = '';
+  customerState: string = '';
+  customerCountry: string = '';
+  editingIndex: number | null = null;
+  constructor(private otherdataservice:OtherdataService, private messageService: MessageService, private loader: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.getSellerDetails();
   }
   getSellerDetails()
   {
-    this.otherdataservice.getSellerDetails().subscribe(res=>
-      {
-        console.log(res);
+    this.loader.show();
+    this.otherdataservice.getSellerDetails().subscribe({
+      next : res=>
+        {
+          this.loader.hide();
+          console.log(res);
+          this.savedSellers = [];
           for(let i=0;i<res.length;i++)
           {
             let seller:SellerModel = {
-                sellerGst:res[i].sellerGst,
-            sellerName:res[i].sellerName,
-            sellerPan:res[i].sellerPan,
-            sellerContact:res[i].sellerContact,
-            sellerAddress:res[i].sellerAddress
+                customerGst:res[i].customerGst,
+            customerName:res[i].customerName,
+            customerPan:res[i].customerPan,
+            customerContact:res[i].customerContact,
+            customerAddress:res[i].customerAddress,
+            customerCity: res[i].customerCity || "",
+            customerState: res[i].customerState || "",
+            customerCountry: res[i].customerCountry || "",
+            _id: res[i]._id
             };
-          
             this.savedSellers.push(seller);
           }
-          
-         
           console.log(this.savedSellers);
           this.otherdataservice.loadedSeller=this.savedSellers;
+        },
+        error : err=>
+        {
+          this.loader.hide();
+          console.log(err);
+        }
+    })
+  }
+  addSeller()
+  {
+    let seller: SellerModel = {
+      customerName: this.customerName,
+      customerGst: this.customerGst,
+      customerPan: this.customerPan,
+      customerContact: this.customerContact,
+      customerAddress: this.customerAddress,
+      customerCity: this.customerCity,
+      customerState: this.customerState,
+      customerCountry: this.customerCountry,
+      _id: ''
+    };
+    this.loader.show();
+    this.otherdataservice.saveSeller(seller).subscribe(res=>
+      {
+        this.loader.hide();
+        console.log(res);
+        if(res)
+        {
+          this.messageService.add({severity:'success', summary:'Success', detail:'Seller added successfully'});
+          seller._id = res._id || res.id || '';
+          this.savedSellers.push(seller);
+          this.customerName = '';
+          this.customerGst = '';
+          this.customerPan = '';
+          this.customerContact = '';
+          this.customerAddress = '';
+          this.customerCity = '';
+          this.customerState = '';
+          this.customerCountry = '';
+          this.addSellerForm = false;
+        }
+      },
+      err=>{
+        this.loader.hide();
+        this.messageService.add({severity:'error', summary:'Error', detail:'Unable to save seller details'});
+      })
+  }
+  showForm()
+  {
+      this.addSellerForm=!this.addSellerForm;
+  }
+  editSeller(index:number)
+  {
+    this.editingIndex = index;
+  }
+  saveSellerRecord(entry:SellerModel, index:number)
+  {
+    this.loader.show();
+    this.otherdataservice.updateSeller(entry).subscribe(res=>
+      {
+        this.loader.hide();
+        console.log(res);
+        if(res)
+        {
+          this.messageService.add({severity:'success', summary:'Success', detail:'Seller updated successfully'});
+          this.editingIndex = null;
+        }
+      },
+      err=>{
+        this.loader.hide();
+        this.messageService.add({severity:'error', summary:'Error', detail:'Unable to update seller details'});
+      })
+  }
+  cancelEdit()
+  {
+    this.editingIndex = null;
+    this.getSellerDetails();
+  }
+  deleteSeller(id: string | undefined, index:number)
+  {
+    if(!id || !confirm('Are you sure you want to delete this seller?')) return;
+    this.loader.show();
+    this.otherdataservice.deleteSeller(id).subscribe(res=>
+      {
+        this.loader.hide();
+        console.log(res);
+        if(res)
+        {
+          this.messageService.add({severity:'success', summary:'Success', detail:'Seller deleted successfully'});
+          this.savedSellers.splice(index, 1);
+        }
+      },
+      err=>{
+        this.loader.hide();
+        this.messageService.add({severity:'error', summary:'Error', detail:'Unable to delete seller details'});
       })
   }
   onFileChange(evt: any) {
@@ -74,11 +190,14 @@ export class SellerDetailsComponent implements OnInit {
         {
           
           let seller:SellerModel = {
-            sellerGst:this.data[i][3],
-          sellerName:this.data[i][0],
-          sellerPan:this.data[i][1],
-          sellerContact:this.data[i][2],
-          sellerAddress:this.data[i][4]
+            customerGst:this.data[i][3],
+          customerName:this.data[i][0],
+          customerPan:this.data[i][1],
+          customerContact:this.data[i][2],
+          customerAddress:this.data[i][4],
+          customerCity: "",
+          customerState: "",
+          customerCountry: ""
           };
 
           this.seller.push(seller);
@@ -91,5 +210,5 @@ export class SellerDetailsComponent implements OnInit {
     };
 
     reader.readAsBinaryString(target.files[0]);
-}
+  }
 }

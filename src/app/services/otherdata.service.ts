@@ -37,6 +37,15 @@ export class OtherdataService {
   {
     return this.http.get(environment.expressAppApiUrl+ApiPathExpressServer.getAllSellers).pipe(catchError(this.handleError));
   }
+  saveSeller(reqJson: any): Observable<any> {
+    return this.http.post(environment.expressAppApiUrl + ApiPathExpressServer.saveSeller, reqJson).pipe(catchError(this.handleError));
+  }
+  updateSeller(reqJson: any): Observable<any> {
+    return this.http.patch(environment.expressAppApiUrl + ApiPathExpressServer.updateSeller, reqJson).pipe(catchError(this.handleError));
+  }
+  deleteSeller(id: string): Observable<any> {
+    return this.http.delete(`${environment.expressAppApiUrl}${ApiPathExpressServer.deleteSellerDetails}`, { body: { _id: id } }).pipe(catchError(this.handleError));
+  }
 
   exportProductDetails(reqJson: any): Observable<any> {
     return this.http.post(environment.apiurl + "/productdetails", reqJson).pipe(catchError(this.handleError));
