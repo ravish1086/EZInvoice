@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:vercel:prod":"ng build --configuration production --base-href 'https://ravish1086.github.io/EZInvoice/'",
+    "publish:vercel:prod":"npx angular-cli-ghpages --dir=dist/EZInvoice/browser",
     "watch": "ng build --watch --configuration development",
     "deploy-git-pages": "ng deploy --base-href=/EZInvoice/",
     "test": "ng test"
