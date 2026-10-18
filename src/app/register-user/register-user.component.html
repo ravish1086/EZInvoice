@@ -65,7 +65,20 @@
         <input type="checkbox" formControlName="isActive" /> -->
       </div>
     </div>
+    <details class="bank-details">
+      <summary>Bank Details</summary>
+      <label>Bank Name</label>
+      <input type="text" formControlName="bankName" />
 
+      <label>Bank Address</label>
+      <input type="text" formControlName="bankAddress" />
+
+      <label>Bank Account Number</label>
+      <input type="text" formControlName="bankAccountNo" />
+
+      <label>Bank IFSC Code</label>
+      <input type="text" formControlName="bankIFSCCode" />
+    </details>
     <div class="actions">
       <button type="submit" [disabled]="submitting">{{ submitting ? 'Submitting...' : 'Register' }}</button>
       <button type="button" class="secondary" (click)="registerForm.reset({ country: 'India', isActive: true })" [disabled]="submitting">Reset</button>

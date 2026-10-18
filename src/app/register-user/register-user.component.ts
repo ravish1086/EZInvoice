@@ -41,7 +41,11 @@ export class RegisterUserComponent implements OnInit {
 			country: ['India'],
 			houseNo: [''],
 			landMark: [''],
-			area: ['']
+			area: [''],
+			bankAddress: [''],
+			bankName: [''],
+			bankAccountNo: [''],
+			bankIFSCCode: ['']
 		});
 	}
 

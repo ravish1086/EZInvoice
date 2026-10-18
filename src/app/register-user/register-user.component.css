@@ -27,6 +27,8 @@ button.secondary { background: #f1f1f1; color: #333; }
 input.invalid { border-color: #e04b4b; }
 .row.small { display:flex; gap:10px; }
 .row.small > div { flex: 1; }
+.bank-details { margin-top: 16px; }
+.bank-details summary { cursor: pointer; font-weight: 600; color: #333; }
 
 @media (max-width: 640px) {
   .grid { flex-direction: column; }
