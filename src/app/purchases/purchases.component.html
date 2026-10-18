@@ -259,6 +259,10 @@
             <button class="btn-action btn-edit" (click)="openEdit(entry)" type="button" title="Edit">
               <i class="pi pi-pencil"></i>
             </button>
+            <button *ngIf="entry._id" class="btn-action btn-delete" (click)="deleteRecord(entry)" type="button"
+              title="Delete" aria-label="Delete purchase">
+              <i class="pi pi-trash"></i>
+            </button>
           </td>
         </tr>
       </ng-template>
